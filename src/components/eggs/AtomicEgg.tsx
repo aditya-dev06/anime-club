@@ -7,25 +7,25 @@ import AtomicCanvas, { type AtomicVfxPhase } from './atomic/AtomicCanvas';
 import { createDestructionController, type DestructionController } from './atomic/atomicDestruction';
 
 /**
- * AtomicEgg — "I AM ATOMIC" Cinematic Website Destruction Easter Egg.
+ * AtomicEgg — "I AM ATOMIC" Apocalyptic Website Destruction Easter Egg.
  *
  * Trigger: type "atomic" letter-by-letter anywhere on the page.
  *
  * Audio & Cinematic Timeline (10.02s track):
  *   0.00s – 4.50s [rune]     : Ominous bass hum. Rotating neon violet magic circle & runes.
- *                              Website visibly vibrates with micro-tremors (no blackout!).
- *   4.50s – 6.37s [crack]    : "...AM..." — Seismic tremors shake the website violently.
+ *                              Website visibly vibrates with escalating tremors.
+ *   4.50s – 6.37s [crack]    : "...AM..." — Violent seismic earthquake shakes the website.
  *                              Neon purple tectonic cracks spiderweb across the viewport.
  *                              Pre-blast vacuum implosion right before the strike.
- *   6.37s – 7.80s [detonate] : "...ATOMIC!" — 140ms instant supernova flash.
- *                              THE ENTIRE WEBSITE SHATTERS: Navbar snaps, title/hat blasts
- *                              upward, event cards scatter like blown debris in 3D, and
- *                              320+ glowing plasma & gold ash particles explode across the page.
- *   7.80s – 9.20s [ruins]    : The site remains visibly in shattered ruins, floating, with
- *                              lingering tremors and drifting ash.
+ *   6.37s – 7.80s [detonate] : "...ATOMIC!" — SEARING VIOLET LIGHT DETONATION BLAST!
+ *                              THE ENTIRE WEBSITE GETS DESTROYED LIKE A BOMB HIT IT:
+ *                              Navbar blown off, hero title/hat blasted across screen,
+ *                              all event cards scattered in 3D, and 420+ plasma & rubble particles.
+ *   7.80s – 9.20s [ruins]    : The site remains visibly destroyed in shattered ruins, floating,
+ *                              with lingering tremors, lightning bolts, and drifting ash.
  *   9.20s – 10.2s [restore]  : Magical Rewind: reverse gravitational vortex pulls all debris
  *                              back in; shattered cards & navbar snap back into place with
- *                              elastic spring physics; cracks weld shut with golden light.
+ *                              elastic spring physics; cracks weld shut with golden-violet light.
  *   10.20s        [idle]     : Complete restoration; "I AM ATOMIC" toast slides in.
  */
 
@@ -43,7 +43,7 @@ const TOAST = {
 export default function AtomicEgg() {
   const reducedMotion = usePrefersReducedMotion();
   const [phase, setPhase] = useState<AtomicVfxPhase>('idle');
-  const [bloomActive, setBloomActive] = useState(false);
+  const [violetBlastActive, setVioletBlastActive] = useState(false);
   const [vignetteActive, setVignetteActive] = useState(false);
 
   const reducedRef = useRef(false);
@@ -72,7 +72,6 @@ export default function AtomicEgg() {
     clearTimers();
 
     if (reducedRef.current) {
-      // Reduced motion: subtle aura + sound + toast, no violent shaking
       setPhase('rune');
       playSound('/sounds/atomic.webm', 0.8);
       later(() => {
@@ -88,7 +87,7 @@ export default function AtomicEgg() {
     const controller = controllerRef.current;
 
     // Start audio playback
-    playSound('/sounds/atomic.webm', 0.85);
+    playSound('/sounds/atomic.webm', 0.9);
 
     // 1. Build-up Phase: Neon Runes & Progressive Website Tremor
     setPhase('rune');
@@ -100,13 +99,13 @@ export default function AtomicEgg() {
       setPhase('crack');
     }, 4500);
 
-    // 3. ATOMIC DETONATION (6.37s)
+    // 3. ATOMIC DETONATION (6.37s) — SEARING VIOLET LIGHT BLAST
     later(() => {
       setPhase('detonate');
-      setBloomActive(true);
+      setVioletBlastActive(true);
       controller.triggerDetonation();
-      // Fast 140ms bloom decay so the shattered website is immediately visible!
-      later(() => setBloomActive(false), 140);
+      // Fast 240ms bloom decay so the destroyed website is immediately visible!
+      later(() => setVioletBlastActive(false), 240);
     }, 6370);
 
     // 4. Transition to Ruins (7.80s)
@@ -185,16 +184,15 @@ export default function AtomicEgg() {
 
   /* ---- Styles for Overlay Layers --------------------------------------- */
 
-  // Peripheral-only aura: leaves 60% of the center completely crystal clear!
   const vignetteStyle: CSSProperties = {
     opacity: vignetteActive ? 1 : 0,
     transition: 'opacity 600ms ease-out',
   };
 
-  // Instant explosive bloom with rapid dissipation
-  const bloomStyle: CSSProperties = {
-    opacity: bloomActive ? 1 : 0,
-    transition: bloomActive ? 'opacity 30ms ease-out' : 'opacity 320ms ease-out',
+  // Blinding Searing Violet Light Burst
+  const blastStyle: CSSProperties = {
+    opacity: violetBlastActive ? 1 : 0,
+    transition: violetBlastActive ? 'opacity 25ms ease-out' : 'opacity 380ms ease-out',
   };
 
   return (
@@ -203,7 +201,7 @@ export default function AtomicEgg() {
       className="pointer-events-none fixed inset-0 overflow-hidden"
       style={{ zIndex: 60 }}
     >
-      {/* 1. Subtle peripheral edge aura (NEVER blacks out the website) */}
+      {/* 1. Subtle peripheral edge aura (never blocks center) */}
       <div
         className="absolute inset-0"
         style={{
@@ -213,16 +211,28 @@ export default function AtomicEgg() {
         }}
       />
 
-      {/* 2. High-performance VFX Canvas (Runes, Cracks, Shockwaves, Debris Particles) */}
+      {/* 2. High-performance VFX Canvas (Death Ray, Lightning, Runes, Cracks, Particles) */}
       <AtomicCanvas phase={phase} reduced={reducedMotion} />
 
-      {/* 3. Instant 140ms Supernova White-Violet Flash */}
+      {/* 3. Searing VIOLET LIGHT Detonation Flash Dome */}
       <div
         className="absolute inset-0"
         style={{
           background:
-            'radial-gradient(circle at 50% 50%, rgba(255,255,255,1) 0%, rgba(240,210,255,0.95) 30%, rgba(168,85,247,0.7) 70%, rgba(88,28,135,0.3) 100%)',
-          ...bloomStyle,
+            'radial-gradient(circle at 50% 50%, rgba(250,232,255,1) 0%, rgba(240,171,252,0.98) 18%, rgba(192,38,211,0.92) 42%, rgba(147,51,234,0.8) 68%, rgba(88,28,135,0.4) 100%)',
+          mixBlendMode: 'screen',
+          ...blastStyle,
+        }}
+      />
+
+      {/* 4. Vertical Violet Pillar of Light */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            'linear-gradient(90deg, transparent 0%, rgba(168,85,247,0.35) 30%, rgba(255,255,255,0.95) 50%, rgba(168,85,247,0.35) 70%, transparent 100%)',
+          mixBlendMode: 'screen',
+          ...blastStyle,
         }}
       />
     </div>
