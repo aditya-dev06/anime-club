@@ -60,19 +60,34 @@ export function createDestructionController(reduced = false): DestructionControl
       );
     }
 
-    // 6.0s to 6.37s: Pre-detonation vacuum implosion
+    // 6.0s to 6.22s: Pre-detonation vacuum implosion
     tremorTimeline.to(
       root,
       {
         x: 0,
         y: 0,
-        scale: 0.96,
+        scale: 0.97,
         rotation: 0,
         filter: 'brightness(0.85) contrast(1.25) hue-rotate(260deg)',
-        duration: 0.35,
+        duration: 0.20,
         ease: 'power2.in',
       },
       6.02,
+    );
+
+    // 6.22s to 6.37s: Dead-air absolute silence & stillness before detonation (Cid's whisper)
+    tremorTimeline.to(
+      root,
+      {
+        x: 0,
+        y: 0,
+        scale: 0.965,
+        rotation: 0,
+        filter: 'brightness(0.78) contrast(1.35) hue-rotate(270deg)',
+        duration: 0.15,
+        ease: 'none',
+      },
+      6.22,
     );
 
     tremorTimeline.play(0);
@@ -114,16 +129,20 @@ export function createDestructionController(reduced = false): DestructionControl
       0.08,
     );
 
-    // 2. Heavy bomb shockwave jolt: elements shudder under the blast in place (NO flying away!)
-    blastTimeline.to(
+    // 2. Punch-zoom forward kick: instantaneous explosive shock forward (1.04), then recoils into 0.96
+    blastTimeline.fromTo(
       root,
+      {
+        scale: 1.04,
+        rotateX: -2,
+      },
       {
         transformPerspective: 900,
         rotateX: 6,
         rotateY: -4,
         scale: 0.96,
         y: 18,
-        duration: 0.35,
+        duration: 0.38,
         ease: 'power4.out',
       },
       0.05,
@@ -178,12 +197,11 @@ export function createDestructionController(reduced = false): DestructionControl
       );
     });
 
-    // Guaranteed complete cleanup
+    // Guaranteed complete cleanup (does NOT unhide root prematurely; WebsiteShatter handles exact contact fusion)
     restoreTimeline.call(() => {
       gsap.set([root, ...cards], { clearProps: 'all' });
       root.style.transform = '';
       root.style.filter = '';
-      root.style.opacity = '1';
       cards.forEach((card) => {
         card.style.transform = '';
         card.style.boxShadow = '';

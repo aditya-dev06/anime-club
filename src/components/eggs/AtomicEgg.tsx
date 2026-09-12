@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import type { CSSProperties } from 'react';
 import { fireEgg } from '../../lib/eggBus';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
-import { playSound } from '../../lib/audio';
+import { playSound, stopAllSounds } from '../../lib/audio';
 import AtomicCanvas, { type AtomicVfxPhase } from './atomic/AtomicCanvas';
 import WebsiteShatter from './atomic/WebsiteShatter';
 import { createDestructionController, type DestructionController } from './atomic/atomicDestruction';
