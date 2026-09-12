@@ -205,7 +205,7 @@ export default function Hero({ reduced, events, onBook }: HeroProps) {
           trigger: wrapRef.current,
           start: 'top top',
           end: '+=300%',
-          scrub: 0.6,
+          scrub: 1.5,
           pin: stageRef.current,
           anticipatePin: 1,
           invalidateOnRefresh: true,
