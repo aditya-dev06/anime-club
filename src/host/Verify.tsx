@@ -77,9 +77,17 @@ export default function Verify() {
   const startScanner = async () => {
     setScanError('');
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: 'environment' },
-      });
+      let stream: MediaStream;
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: 'environment' },
+        });
+      } catch (err) {
+        // Fallback for desktops or laptops without an environment camera
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+        });
+      }
       streamRef.current = stream;
       setPhase('scanning');
       const video = videoRef.current!;
