@@ -189,12 +189,12 @@ export default function AtomicEgg() {
 
   const vignetteStyle: CSSProperties = {
     opacity: vignetteActive ? 1 : 0,
-    transition: 'opacity 600ms ease-out',
+    transition: 'opacity 800ms cubic-bezier(0.16, 1, 0.3, 1)',
   };
 
   const blastStyle: CSSProperties = {
     opacity: violetBlastActive ? 1 : 0,
-    transition: violetBlastActive ? 'opacity 25ms ease-out' : 'opacity 380ms ease-out',
+    transition: violetBlastActive ? 'opacity 20ms ease-out' : 'opacity 340ms cubic-bezier(0.16, 1, 0.3, 1)',
   };
 
   return (
@@ -203,17 +203,17 @@ export default function AtomicEgg() {
       className="pointer-events-none fixed inset-0 overflow-hidden"
       style={{ zIndex: 60 }}
     >
-      {/* 1. Subtle peripheral edge aura */}
+      {/* 1. Creeping Obsidian Atmosphere Vignette (dims reality during chant) */}
       <div
         className="absolute inset-0"
         style={{
           background:
-            'radial-gradient(ellipse at center, transparent 55%, rgba(147, 51, 234, 0.15) 80%, rgba(88, 28, 135, 0.35) 100%)',
+            'radial-gradient(ellipse at center, rgba(10, 6, 18, 0) 35%, rgba(20, 10, 35, 0.55) 65%, rgba(6, 3, 12, 0.88) 100%)',
           ...vignetteStyle,
         }}
       />
 
-      {/* 2. High-performance VFX Canvas (Death Ray, Shockwaves, Cracks) */}
+      {/* 2. High-performance VFX Canvas (Death Ray, Shockwaves, God Rays, Cracks, Golden Seal) */}
       <AtomicCanvas phase={phase} reduced={reducedMotion} />
 
       {/* 3. The actual website broken into 3D glass shards flying away and returning! */}
@@ -223,23 +223,23 @@ export default function AtomicEgg() {
         onRestored={() => setShatterActive(false)}
       />
 
-      {/* 4. Searing VIOLET LIGHT Detonation Flash Dome */}
+      {/* 4. Searing Supernova Whiteout / Violet Blast Dome */}
       <div
         className="absolute inset-0"
         style={{
           background:
-            'radial-gradient(circle at 50% 50%, rgba(250,232,255,1) 0%, rgba(240,171,252,0.98) 18%, rgba(192,38,211,0.92) 42%, rgba(147,51,234,0.8) 68%, rgba(88,28,135,0.4) 100%)',
+            'radial-gradient(circle at 50% 50%, rgba(255,255,255,1) 0%, rgba(250,232,255,0.98) 22%, rgba(232,121,249,0.9) 45%, rgba(147,51,234,0.7) 70%, rgba(30,10,60,0.4) 100%)',
           mixBlendMode: 'screen',
           ...blastStyle,
         }}
       />
 
-      {/* 5. Vertical Violet Pillar of Light */}
+      {/* 5. Vertical Searing Violet Pillar of Light */}
       <div
         className="absolute inset-0"
         style={{
           background:
-            'linear-gradient(90deg, transparent 0%, rgba(168,85,247,0.35) 30%, rgba(255,255,255,0.95) 50%, rgba(168,85,247,0.35) 70%, transparent 100%)',
+            'linear-gradient(90deg, transparent 0%, rgba(168,85,247,0.3) 32%, rgba(255,255,255,0.98) 50%, rgba(168,85,247,0.3) 68%, transparent 100%)',
           mixBlendMode: 'screen',
           ...blastStyle,
         }}
