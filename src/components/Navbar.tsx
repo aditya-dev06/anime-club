@@ -86,7 +86,7 @@ export default function Navbar() {
           aria-label="Otaku Club home"
           onClick={() => document.dispatchEvent(new CustomEvent('ac:logo-click'))}
         >
-          <img src="/favicon.ico" alt="Otaku Club Logo" className="h-8 w-10 object-contain" />
+          <img src={`${import.meta.env.BASE_URL}favicon.ico`} alt="Otaku Club Logo" className="h-8 w-10 object-contain" />
           <span className="leading-none">
             <span className="block font-display text-xl tracking-[0.12em] text-cream">OTAKU CLUB</span>
             <span className="mt-1 block text-[9px] font-bold uppercase tracking-[0.42em] text-straw-300/80">
