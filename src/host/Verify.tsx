@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { flushSync } from 'react-dom';
 import jsQR from 'jsqr';
 import {
   loadCheckins,
@@ -89,7 +90,9 @@ export default function Verify() {
         });
       }
       streamRef.current = stream;
-      setPhase('scanning');
+      flushSync(() => {
+        setPhase('scanning');
+      });
       const video = videoRef.current!;
       video.srcObject = stream;
       await video.play();
