@@ -37,33 +37,40 @@ export function createDestructionController(reduced = false): DestructionControl
 
     tremorTimeline.clear();
 
-    // 0s to 4.5s: Subtle initial vibrations
-    for (let i = 0; i < 16; i++) {
+    // 0.0s to 4.5s: Continuous mysterious camera rumble across the chant
+    const earlySteps = 35;
+    for (let i = 0; i < earlySteps; i++) {
+      const progress = i / earlySteps;
+      const amp = 1.5 + progress * 3.5;
       tremorTimeline.to(
         root,
         {
-          x: (Math.random() - 0.5) * 4,
-          y: (Math.random() - 0.5) * 3,
-          duration: 0.08,
+          x: (Math.random() - 0.5) * amp,
+          y: (Math.random() - 0.5) * amp,
+          rotation: (Math.random() - 0.5) * (0.2 + progress * 0.4),
+          duration: 0.1,
           ease: 'none',
         },
-        i * 0.1,
+        i * 0.12,
       );
     }
 
-    // 4.5s to 6.0s: Escalating seismic tremors ("...AM...")
-    for (let i = 0; i < 18; i++) {
+    // 4.5s to 6.0s: Escalating violent seismic earthquake ("...AM...")
+    const intenseSteps = 22;
+    for (let i = 0; i < intenseSteps; i++) {
+      const progress = i / intenseSteps;
+      const ampX = 6 + progress * 16;
+      const ampY = 5 + progress * 12;
       tremorTimeline.to(
         root,
         {
-          x: (Math.random() - 0.5) * 14,
-          y: (Math.random() - 0.5) * 10,
-          rotation: (Math.random() - 0.5) * 1.2,
-          filter: 'brightness(0.9) saturate(1.2)',
+          x: (Math.random() - 0.5) * ampX,
+          y: (Math.random() - 0.5) * ampY,
+          rotation: (Math.random() - 0.5) * 1.8,
           duration: 0.065,
           ease: 'none',
         },
-        1.6 + i * 0.08,
+        4.5 + i * 0.068,
       );
     }
 
@@ -73,13 +80,12 @@ export function createDestructionController(reduced = false): DestructionControl
       {
         x: 0,
         y: 0,
-        scale: 0.96,
+        scale: 0.95,
         rotation: 0,
-        filter: 'brightness(0.7) contrast(1.3) saturate(1.4)',
         duration: 0.35,
         ease: 'power2.in',
       },
-      3.1,
+      6.02,
     );
 
     tremorTimeline.play(0);
@@ -93,10 +99,9 @@ export function createDestructionController(reduced = false): DestructionControl
     blastTimeline.clear();
 
     if (reduced) {
-      // Reduced motion: subtle dark dip without violent motion
       blastTimeline.to(root, {
-        filter: 'brightness(0.5)',
-        duration: 0.4,
+        scale: 0.98,
+        duration: 0.3,
         yoyo: true,
         repeat: 1,
       });
@@ -104,64 +109,123 @@ export function createDestructionController(reduced = false): DestructionControl
       return;
     }
 
-    const fragments = getFragments();
-
-    // 1. Instant nuclear inverted flash (60ms)
-    blastTimeline.set(root, {
-      filter: 'invert(1) contrast(3) hue-rotate(280deg)',
-    }, 0);
-
-    // 2. Severe blast displacement & 3D fracture
+    // 1. Instant 80ms nuclear color inversion flash that immediately clears
     blastTimeline.to(
       root,
       {
-        filter: 'brightness(0.7) contrast(1.35) saturate(0.85) hue-rotate(290deg)',
-        transformPerspective: 1200,
-        rotateX: 11,
-        rotateY: -7,
-        rotateZ: 3.5,
-        scale: 0.93,
-        y: 40,
-        duration: 0.4,
+        filter: 'invert(1) contrast(2.5) hue-rotate(270deg)',
+        duration: 0.08,
+      },
+      0,
+    );
+    blastTimeline.to(
+      root,
+      {
+        filter: 'none',
+        duration: 0.15,
+      },
+      0.08,
+    );
+
+    // 2. Severe 3D Viewport Fracture & Tilt
+    blastTimeline.to(
+      root,
+      {
+        transformPerspective: 1000,
+        rotateX: 14,
+        rotateY: -9,
+        rotateZ: 4,
+        scale: 0.92,
+        y: 45,
+        duration: 0.45,
         ease: 'power4.out',
       },
       0.06,
     );
 
-    // 3. Dislodge individual UI components into fractured rubble
-    fragments.forEach((frag, idx) => {
+    // 3. Dislodge individual UI components into clearly visible floating rubble!
+    const nav = root.querySelector<HTMLElement>('nav');
+    if (nav) {
+      blastTimeline.to(
+        nav,
+        {
+          y: 70,
+          x: -45,
+          rotateZ: -12,
+          opacity: 0.9,
+          duration: 0.5,
+          ease: 'power3.out',
+        },
+        0.05,
+      );
+    }
+
+    const title = root.querySelector<HTMLElement>('.title-hero') || root.querySelector<HTMLElement>('.title-warp');
+    if (title) {
+      blastTimeline.to(
+        title,
+        {
+          y: -60,
+          x: 50,
+          rotateZ: 16,
+          scale: 1.15,
+          duration: 0.5,
+          ease: 'power3.out',
+        },
+        0.06,
+      );
+    }
+
+    const footer = root.querySelector<HTMLElement>('footer');
+    if (footer) {
+      blastTimeline.to(
+        footer,
+        {
+          y: 50,
+          x: 25,
+          rotateZ: -6,
+          duration: 0.6,
+          ease: 'power3.out',
+        },
+        0.08,
+      );
+    }
+
+    // Scatter event cards like cards blown apart by shockwave
+    const cards = Array.from(root.querySelectorAll<HTMLElement>('.glass'));
+    cards.forEach((card, idx) => {
       const dirX = idx % 2 === 0 ? 1 : -1;
-      const offsetX = dirX * (20 + (idx * 17) % 55);
-      const offsetY = 15 + ((idx * 23) % 45);
-      const rot = (idx % 2 === 0 ? 1 : -1) * (5 + (idx * 3) % 12);
+      const offsetX = dirX * (45 + (idx * 25) % 80);
+      const offsetY = (idx % 2 === 0 ? -1 : 1) * (30 + ((idx * 19) % 50));
+      const rot = (idx % 2 === 0 ? 1 : -1) * (10 + (idx * 5) % 18);
 
       blastTimeline.to(
-        frag,
+        card,
         {
           x: offsetX,
           y: offsetY,
           rotateZ: rot,
-          rotateX: (idx % 3) * 4,
-          opacity: 0.82,
-          filter: 'blur(0.5px)',
-          duration: 0.5 + (idx % 3) * 0.1,
+          rotateX: (idx % 3) * 8,
+          scale: 0.9,
+          opacity: 0.92,
+          duration: 0.55 + (idx % 3) * 0.1,
           ease: 'power3.out',
         },
-        0.05 + idx * 0.02,
+        0.08 + idx * 0.03,
       );
     });
 
-    // 4. Lingering post-blast smoke & scorched tremor
-    for (let i = 0; i < 10; i++) {
+    // 4. Subtle lingering wreckage tremors (website visibly floating in pieces)
+    for (let i = 0; i < 12; i++) {
       blastTimeline.to(
         root,
         {
-          x: (Math.random() - 0.5) * 6,
-          y: 40 + (Math.random() - 0.5) * 4,
-          duration: 0.12,
+          x: (Math.random() - 0.5) * 8,
+          y: 45 + (Math.random() - 0.5) * 6,
+          duration: 0.14,
           ease: 'sine.inOut',
         },
-        0.5 + i * 0.14,
+        0.55 + i * 0.15,
       );
     }
 
@@ -181,7 +245,7 @@ export function createDestructionController(reduced = false): DestructionControl
 
     const fragments = getFragments();
 
-    // Magical snap-back restoration with spring physics
+    // Magical spring reassembly of the whole site
     restoreTimeline.to(
       root,
       {
@@ -191,9 +255,9 @@ export function createDestructionController(reduced = false): DestructionControl
         rotateY: 0,
         rotateZ: 0,
         scale: 1,
-        filter: 'brightness(1) contrast(1) saturate(1) hue-rotate(0deg)',
+        filter: 'none',
         duration: 0.95,
-        ease: 'back.out(1.4)',
+        ease: 'back.out(1.5)',
       },
       0,
     );
@@ -207,6 +271,7 @@ export function createDestructionController(reduced = false): DestructionControl
           rotateX: 0,
           rotateY: 0,
           rotateZ: 0,
+          scale: 1,
           opacity: 1,
           filter: 'none',
           duration: 0.9,
@@ -217,7 +282,6 @@ export function createDestructionController(reduced = false): DestructionControl
     });
 
     restoreTimeline.call(() => {
-      // Clear all inline CSS props to guarantee 100% clean state
       gsap.set([root, ...fragments], { clearProps: 'all' });
       onComplete?.();
     });

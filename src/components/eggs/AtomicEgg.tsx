@@ -12,19 +12,21 @@ import { createDestructionController, type DestructionController } from './atomi
  * Trigger: type "atomic" letter-by-letter anywhere on the page.
  *
  * Audio & Cinematic Timeline (10.02s track):
- *   0.00s – 4.50s [rune]     : Ominous bass hum. Violet containment array & runes form.
- *                              Ambient light drains from the website. Camera micro-tremor.
- *   4.50s – 6.37s [crack]    : "I... AM..." — Seismic tremors shake the screen violently.
+ *   0.00s – 4.50s [rune]     : Ominous bass hum. Rotating neon violet magic circle & runes.
+ *                              Website visibly vibrates with micro-tremors (no blackout!).
+ *   4.50s – 6.37s [crack]    : "...AM..." — Seismic tremors shake the website violently.
  *                              Neon purple tectonic cracks spiderweb across the viewport.
  *                              Pre-blast vacuum implosion right before the strike.
- *   6.37s – 7.80s [detonate] : "...ATOMIC!" — Blinding supernova flash.
- *                              ENTIRE WEBSITE DESTROYED: 3D perspective shatter, displaced
- *                              floating UI rubble, inverted color shockwave, and 300+
- *                              glowing plasma & ash particles.
- *   7.80s – 9.20s [ruins]    : Scorched aftermath, drifting purple ash, lingering tremors.
- *   9.20s – 10.2s [restore]  : Magical Rewind: reverse gravitational vortex pulls the debris
- *                              and shards back into alignment; reality cracks weld shut.
- *   10.20s        [idle]     : Complete restoration; "I AM ATOMIC" victory toast slides in.
+ *   6.37s – 7.80s [detonate] : "...ATOMIC!" — 140ms instant supernova flash.
+ *                              THE ENTIRE WEBSITE SHATTERS: Navbar snaps, title/hat blasts
+ *                              upward, event cards scatter like blown debris in 3D, and
+ *                              320+ glowing plasma & gold ash particles explode across the page.
+ *   7.80s – 9.20s [ruins]    : The site remains visibly in shattered ruins, floating, with
+ *                              lingering tremors and drifting ash.
+ *   9.20s – 10.2s [restore]  : Magical Rewind: reverse gravitational vortex pulls all debris
+ *                              back in; shattered cards & navbar snap back into place with
+ *                              elastic spring physics; cracks weld shut with golden light.
+ *   10.20s        [idle]     : Complete restoration; "I AM ATOMIC" toast slides in.
  */
 
 const TARGET = 'atomic';
@@ -70,7 +72,7 @@ export default function AtomicEgg() {
     clearTimers();
 
     if (reducedRef.current) {
-      // Reduced motion: gentle dark dip + sound + toast, no violent shaking
+      // Reduced motion: subtle aura + sound + toast, no violent shaking
       setPhase('rune');
       playSound('/sounds/atomic.webm', 0.8);
       later(() => {
@@ -80,16 +82,15 @@ export default function AtomicEgg() {
       return;
     }
 
-    // Initialize destruction physics controller
     if (!controllerRef.current) {
       controllerRef.current = createDestructionController(false);
     }
     const controller = controllerRef.current;
 
-    // Start audio
+    // Start audio playback
     playSound('/sounds/atomic.webm', 0.85);
 
-    // 1. Ominous Build-up Phase: Runes & Tremor
+    // 1. Build-up Phase: Neon Runes & Progressive Website Tremor
     setPhase('rune');
     setVignetteActive(true);
     controller.startTremor();
@@ -104,11 +105,12 @@ export default function AtomicEgg() {
       setPhase('detonate');
       setBloomActive(true);
       controller.triggerDetonation();
+      // Fast 140ms bloom decay so the shattered website is immediately visible!
+      later(() => setBloomActive(false), 140);
     }, 6370);
 
-    // 4. Bloom Decay into Scorched Ruins (7.80s)
+    // 4. Transition to Ruins (7.80s)
     later(() => {
-      setBloomActive(false);
       setPhase('ruins');
     }, 7800);
 
@@ -119,7 +121,7 @@ export default function AtomicEgg() {
       controller.triggerRestoration();
     }, 9200);
 
-    // 6. Final Clean state & Victory Toast (10.20s)
+    // 6. Complete restoration & Victory Toast (10.20s)
     later(() => {
       setPhase('idle');
       fireEgg(TOAST);
@@ -183,14 +185,16 @@ export default function AtomicEgg() {
 
   /* ---- Styles for Overlay Layers --------------------------------------- */
 
+  // Peripheral-only aura: leaves 60% of the center completely crystal clear!
   const vignetteStyle: CSSProperties = {
     opacity: vignetteActive ? 1 : 0,
-    transition: 'opacity 800ms cubic-bezier(0.16, 1, 0.3, 1)',
+    transition: 'opacity 600ms ease-out',
   };
 
+  // Instant explosive bloom with rapid dissipation
   const bloomStyle: CSSProperties = {
     opacity: bloomActive ? 1 : 0,
-    transition: bloomActive ? 'opacity 60ms ease-out' : 'opacity 850ms ease-in',
+    transition: bloomActive ? 'opacity 30ms ease-out' : 'opacity 320ms ease-out',
   };
 
   return (
@@ -199,12 +203,12 @@ export default function AtomicEgg() {
       className="pointer-events-none fixed inset-0 overflow-hidden"
       style={{ zIndex: 60 }}
     >
-      {/* 1. Converging darkness & ethereal purple vignette */}
+      {/* 1. Subtle peripheral edge aura (NEVER blacks out the website) */}
       <div
         className="absolute inset-0"
         style={{
           background:
-            'radial-gradient(circle at 50% 50%, rgba(4,3,8,0.1) 0%, rgba(30,10,60,0.55) 45%, rgba(4,3,8,0.92) 85%)',
+            'radial-gradient(ellipse at center, transparent 55%, rgba(147, 51, 234, 0.15) 80%, rgba(88, 28, 135, 0.35) 100%)',
           ...vignetteStyle,
         }}
       />
@@ -212,12 +216,12 @@ export default function AtomicEgg() {
       {/* 2. High-performance VFX Canvas (Runes, Cracks, Shockwaves, Debris Particles) */}
       <AtomicCanvas phase={phase} reduced={reducedMotion} />
 
-      {/* 3. Blinding Supernova White-Violet Detonation Flash */}
+      {/* 3. Instant 140ms Supernova White-Violet Flash */}
       <div
         className="absolute inset-0"
         style={{
           background:
-            'radial-gradient(circle at 50% 50%, rgba(255,255,255,1) 0%, rgba(240,210,255,0.98) 25%, rgba(168,85,247,0.7) 65%, rgba(88,28,135,0.4) 100%)',
+            'radial-gradient(circle at 50% 50%, rgba(255,255,255,1) 0%, rgba(240,210,255,0.95) 30%, rgba(168,85,247,0.7) 70%, rgba(88,28,135,0.3) 100%)',
           ...bloomStyle,
         }}
       />
