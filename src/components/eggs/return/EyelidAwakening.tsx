@@ -104,7 +104,7 @@ export default function EyelidAwakening({ active, onAwakened }: EyelidAwakeningP
     };
   }, [active, onAwakened]);
 
-  if (!active && openRatio >= 1) return null;
+  if (!active) return null;
 
   // Calculate natural anatomical curved eyelid paths
   // At openRatio = 0: upper meets lower at cy (50%)
