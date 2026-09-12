@@ -107,14 +107,14 @@ export default function ReturnByDeath() {
     const runEffect = () => {
       /* Reduced motion: no overlay, no glitch — toast + instant jump. */
       if (reducedRef.current) {
-        playSound('/sounds/return-by-death.mp3', 0.8);
+        playSound('/sounds/return-by-death.webm', 0.8);
         fireEgg(EGG);
         window.scrollTo({ top: 0, behavior: 'auto' });
         return;
       }
 
       /* Fade the mist overlay in. */
-      playSound('/sounds/return-by-death.mp3', 0.8);
+      playSound('/sounds/return-by-death.webm', 0.8);
       setOverlayOn(true);
       setLit(false);
       timersRef.current.push(

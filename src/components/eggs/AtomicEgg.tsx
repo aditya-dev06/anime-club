@@ -75,13 +75,13 @@ export default function AtomicEgg() {
     if (reducedRef.current) {
       // Reduced motion: instant dark dip (~400ms) + toast, no flash.
       setPhase('reduced');
-      playSound('/sounds/atomic.mp3', 0.8);
+      playSound('/sounds/atomic.webm', 0.8);
       fireEgg(TOAST);
       later(() => setPhase('idle'), 700);
       return;
     }
     setPhase('shadow');
-    playSound('/sounds/atomic.mp3', 0.8);
+    playSound('/sounds/atomic.webm', 0.8);
     later(() => setPhase('bloom'), 1150); // 0.6s converge + ~0.55s hold
     later(() => {
       setPhase('fade');
