@@ -214,6 +214,7 @@ export function createDestructionController(reduced = false): DestructionControl
       gsap.set([root, ...cards], { clearProps: 'all' });
       root.style.transform = '';
       root.style.filter = '';
+      root.style.opacity = '1';
       cards.forEach((card) => {
         card.style.transform = '';
         card.style.boxShadow = '';
@@ -234,6 +235,7 @@ export function createDestructionController(reduced = false): DestructionControl
       gsap.set([root, ...cards], { clearProps: 'all' });
       root.style.transform = '';
       root.style.filter = '';
+      root.style.opacity = '1';
       cards.forEach((card) => {
         card.style.transform = '';
         card.style.boxShadow = '';

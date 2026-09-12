@@ -219,7 +219,7 @@ export default function AtomicEgg() {
       {/* 3. The actual website broken into 3D glass shards flying away and returning! */}
       <WebsiteShatter
         active={shatterActive}
-        phase={phase === 'idle' || phase === 'rune' || phase === 'crack' ? 'idle' : phase}
+        phase={phase === 'rune' || phase === 'crack' ? 'idle' : phase}
         onRestored={() => setShatterActive(false)}
       />
 
