@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <radialGradient id="glow" cx="50%" cy="38%" r="70%">
+      <stop offset="0%" stop-color="#e8b64c" stop-opacity="0.28"/>
+      <stop offset="55%" stop-color="#e8b64c" stop-opacity="0.07"/>
+      <stop offset="100%" stop-color="#e8b64c" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="title" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fff8e8"/>
+      <stop offset="45%" stop-color="#ffe6ac"/>
+      <stop offset="75%" stop-color="#e9b95c"/>
+      <stop offset="100%" stop-color="#b9832f"/>
+    </linearGradient>
+    <pattern id="dots" width="26" height="26" patternUnits="userSpaceOnUse">
+      <circle cx="4" cy="4" r="2" fill="#e2a94a" opacity="0.16"/>
+    </pattern>
+  </defs>
+
+  <rect width="1200" height="630" fill="#07070c"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+  <rect width="1200" height="630" fill="url(#dots)" opacity="0.5"/>
+
+  <!-- speed lines -->
+  <g stroke="#f2ecdd" stroke-width="2" opacity="0.14">
+    <line x1="60" y1="70" x2="300" y2="180"/>
+    <line x1="40" y1="150" x2="260" y2="240"/>
+    <line x1="1140" y1="90" x2="920" y2="190"/>
+    <line x1="1160" y1="180" x2="940" y2="250"/>
+  </g>
+
+  <!-- straw hat silhouette -->
+  <g transform="translate(600 200)">
+    <ellipse cx="0" cy="60" rx="170" ry="34" fill="#a87c2f"/>
+    <ellipse cx="0" cy="52" rx="170" ry="34" fill="#e2a94a"/>
+    <path d="M-88 52C-88-8-52-52 0-52s88 60 88 104Z" fill="#f0c66a" stroke="#0b0b13" stroke-width="5"/>
+    <path d="M-86 8C-46-6 46-6 86 8l3 30C49 27-49 27-89 38Z" fill="#c8413c" stroke="#0b0b13" stroke-width="3"/>
+    <ellipse cx="-38" cy="-22" rx="16" ry="20" fill="#f9dc9a" opacity="0.65"/>
+  </g>
+
+  <text x="600" y="452" text-anchor="middle" font-family="'Bebas Neue', Impact, sans-serif" font-size="128" letter-spacing="10" fill="url(#title)">OTAKU CLUB</text>
+  <text x="600" y="508" text-anchor="middle" font-family="Manrope, Arial, sans-serif" font-size="26" font-weight="800" letter-spacing="14" fill="#f2ecdd" opacity="0.85">VIT BHOPAL · EST. 2021</text>
+  <text x="600" y="560" text-anchor="middle" font-family="Manrope, Arial, sans-serif" font-size="20" font-weight="600" letter-spacing="2" fill="#e2a94a" opacity="0.9">Screenings · Cosplay · Quiz Battles · E-Tickets</text>
+</svg>
