@@ -282,6 +282,10 @@ export default function WebsiteShatter({ active, phase, onRestored }: WebsiteSha
       });
 
       shards.forEach((shard, idx) => {
+        // Dramatic staggered return: outer shards start earlier, inner shards follow
+        const distFromCenter = Math.hypot(SHARDS[idx].centroid[0] - 50, SHARDS[idx].centroid[1] - 50);
+        const staggerDelay = (distFromCenter / 50) * 0.35;
+
         animTimeline!.to(
           shard,
           {
@@ -292,11 +296,11 @@ export default function WebsiteShatter({ active, phase, onRestored }: WebsiteSha
             rotateY: 0,
             rotateZ: 0,
             scale: 1,
-            duration: 0.92,
-            ease: 'power3.inOut',
+            duration: 1.9, // Graceful, slow, cinematic anime rewind
+            ease: 'power2.inOut',
             force3D: true,
           },
-          (idx % 4) * 0.02,
+          staggerDelay,
         );
       });
     }

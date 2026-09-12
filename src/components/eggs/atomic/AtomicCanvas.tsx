@@ -53,6 +53,7 @@ export default function AtomicCanvas({ phase, reduced }: AtomicCanvasProps) {
   const beamOpacityRef = useRef(0);
   const animFrameRef = useRef(0);
   const lastTimeRef = useRef(performance.now());
+  const crackStartTimeRef = useRef(0);
 
   // Generate authentic tempered glass fracture network for the crack phase
   const generateRealisticFracture = (w: number, h: number): GlassFractureNetwork => {
@@ -193,6 +194,7 @@ export default function AtomicCanvas({ phase, reduced }: AtomicCanvasProps) {
 
   useEffect(() => {
     if (phase === 'crack') {
+      crackStartTimeRef.current = performance.now();
       fractureRef.current = generateRealisticFracture(window.innerWidth, window.innerHeight);
     } else if (phase === 'detonate') {
       explodeGlassShards(window.innerWidth, window.innerHeight);
@@ -325,6 +327,12 @@ export default function AtomicCanvas({ phase, reduced }: AtomicCanvasProps) {
       // ─────────────────────────────────────────────────────────────
       if (fractureRef.current && phase === 'crack') {
         const net = fractureRef.current;
+        const crackElapsed = Math.max(0, (now - crackStartTimeRef.current) / 1000);
+        // Progressive spiderweb growth over 2.6s (creeps outward organically from center)
+        const crackProgress = Math.min(1, Math.max(0.05, crackElapsed / 2.6));
+        const easedProgress = Math.pow(crackProgress, 0.85);
+        const maxDist = easedProgress * Math.hypot(w, h) * 0.85;
+
         ctx.save();
 
         // 1. Dark refractive drop shadow
@@ -335,51 +343,73 @@ export default function AtomicCanvas({ phase, reduced }: AtomicCanvasProps) {
           ctx.beginPath();
           ctx.moveTo(rad.points[0].x + 1.5, rad.points[0].y + 1.5);
           for (let i = 1; i < rad.points.length; i++) {
-            ctx.lineTo(rad.points[i].x + 1.5, rad.points[i].y + 1.5);
+            const p = rad.points[i];
+            const d = Math.hypot(p.x - cx, p.y - cy);
+            if (d > maxDist) break;
+            ctx.lineTo(p.x + 1.5, p.y + 1.5);
           }
           ctx.stroke();
           for (const spl of rad.splinters) {
-            ctx.beginPath();
-            ctx.moveTo(spl.x1 + 1.5, spl.y1 + 1.5);
-            ctx.lineTo(spl.x2 + 1.5, spl.y2 + 1.5);
-            ctx.stroke();
+            const d = Math.hypot(spl.x1 - cx, spl.y1 - cy);
+            if (d <= maxDist) {
+              ctx.beginPath();
+              ctx.moveTo(spl.x1 + 1.5, spl.y1 + 1.5);
+              ctx.lineTo(spl.x2 + 1.5, spl.y2 + 1.5);
+              ctx.stroke();
+            }
           }
         }
         for (const ring of net.rings) {
-          ctx.beginPath();
-          ctx.moveTo(ring.points[0].x + 1.5, ring.points[0].y + 1.5);
-          for (let i = 1; i < ring.points.length; i++) {
-            ctx.lineTo(ring.points[i].x + 1.5, ring.points[i].y + 1.5);
+          if (ring.points.length > 0) {
+            const ringDist = Math.hypot(ring.points[0].x - cx, ring.points[0].y - cy);
+            if (ringDist <= maxDist) {
+              ctx.beginPath();
+              ctx.moveTo(ring.points[0].x + 1.5, ring.points[0].y + 1.5);
+              for (let i = 1; i < ring.points.length; i++) {
+                ctx.lineTo(ring.points[i].x + 1.5, ring.points[i].y + 1.5);
+              }
+              ctx.stroke();
+            }
           }
-          ctx.stroke();
         }
 
         // 2. Glowing violet energy seam
         ctx.shadowColor = '#d946ef';
-        ctx.shadowBlur = 18;
+        ctx.shadowBlur = 14;
         ctx.strokeStyle = 'rgba(216, 180, 254, 0.9)';
         ctx.lineWidth = 2.0;
         for (const rad of net.radials) {
           ctx.beginPath();
           ctx.moveTo(rad.points[0].x, rad.points[0].y);
           for (let i = 1; i < rad.points.length; i++) {
-            ctx.lineTo(rad.points[i].x, rad.points[i].y);
+            const p = rad.points[i];
+            const d = Math.hypot(p.x - cx, p.y - cy);
+            if (d > maxDist) break;
+            ctx.lineTo(p.x, p.y);
           }
           ctx.stroke();
           for (const spl of rad.splinters) {
-            ctx.beginPath();
-            ctx.moveTo(spl.x1, spl.y1);
-            ctx.lineTo(spl.x2, spl.y2);
-            ctx.stroke();
+            const d = Math.hypot(spl.x1 - cx, spl.y1 - cy);
+            if (d <= maxDist) {
+              ctx.beginPath();
+              ctx.moveTo(spl.x1, spl.y1);
+              ctx.lineTo(spl.x2, spl.y2);
+              ctx.stroke();
+            }
           }
         }
         for (const ring of net.rings) {
-          ctx.beginPath();
-          ctx.moveTo(ring.points[0].x, ring.points[0].y);
-          for (let i = 1; i < ring.points.length; i++) {
-            ctx.lineTo(ring.points[i].x, ring.points[i].y);
+          if (ring.points.length > 0) {
+            const ringDist = Math.hypot(ring.points[0].x - cx, ring.points[0].y - cy);
+            if (ringDist <= maxDist) {
+              ctx.beginPath();
+              ctx.moveTo(ring.points[0].x, ring.points[0].y);
+              for (let i = 1; i < ring.points.length; i++) {
+                ctx.lineTo(ring.points[i].x, ring.points[i].y);
+              }
+              ctx.stroke();
+            }
           }
-          ctx.stroke();
         }
 
         // 3. Crisp 1px white specular reflection
@@ -390,19 +420,23 @@ export default function AtomicCanvas({ phase, reduced }: AtomicCanvasProps) {
           ctx.beginPath();
           ctx.moveTo(rad.points[0].x - 0.5, rad.points[0].y - 0.5);
           for (let i = 1; i < rad.points.length; i++) {
-            ctx.lineTo(rad.points[i].x - 0.5, rad.points[i].y - 0.5);
+            const p = rad.points[i];
+            const d = Math.hypot(p.x - cx, p.y - cy);
+            if (d > maxDist) break;
+            ctx.lineTo(p.x - 0.5, p.y - 0.5);
           }
           ctx.stroke();
         }
 
-        // Central impact core
-        const impactGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, 38);
+        // Central impact core that intensifies with crack progress
+        const coreRadius = 24 + crackProgress * 22;
+        const impactGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, coreRadius);
         impactGrad.addColorStop(0, 'rgba(255, 255, 255, 0.95)');
-        impactGrad.addColorStop(0.4, 'rgba(240, 171, 252, 0.65)');
+        impactGrad.addColorStop(0.4, 'rgba(240, 171, 252, 0.7)');
         impactGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
         ctx.fillStyle = impactGrad;
         ctx.beginPath();
-        ctx.arc(cx, cy, 38, 0, Math.PI * 2);
+        ctx.arc(cx, cy, coreRadius, 0, Math.PI * 2);
         ctx.fill();
 
         ctx.restore();
