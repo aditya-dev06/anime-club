@@ -88,6 +88,7 @@ export default function AtomicCanvas({ phase, reduced }: AtomicCanvasProps) {
   const animFrameRef = useRef(0);
   const lastTimeRef = useRef(performance.now());
   const crackStartTimeRef = useRef(0);
+  const restoreStartTimeRef = useRef(0);
 
   // Pre-rendered 32x32 anime star glint texture on offscreen canvas
   const glintCanvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -327,6 +328,9 @@ export default function AtomicCanvas({ phase, reduced }: AtomicCanvasProps) {
       fractureRef.current = generateRealisticFracture(window.innerWidth, window.innerHeight);
     } else if (phase === 'detonate') {
       explodeGlassShards(window.innerWidth, window.innerHeight);
+    } else if (phase === 'restore') {
+      restoreStartTimeRef.current = performance.now();
+      restoreSealAlphaRef.current = 0;
     } else if (phase === 'idle') {
       fractureRef.current = null;
       shardsRef.current = [];
@@ -336,6 +340,7 @@ export default function AtomicCanvas({ phase, reduced }: AtomicCanvasProps) {
       beamOpacityRef.current = 0;
       flareOpacityRef.current = 0;
       restoreSealAlphaRef.current = 0;
+      restoreStartTimeRef.current = 0;
     }
   }, [phase, reduced]);
 
@@ -345,7 +350,7 @@ export default function AtomicCanvas({ phase, reduced }: AtomicCanvasProps) {
 
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d', { desynchronized: true, alpha: true });
     if (!ctx) return;
 
     let active = true;
@@ -493,19 +498,31 @@ export default function AtomicCanvas({ phase, reduced }: AtomicCanvasProps) {
           }
         }
         for (const ring of net.rings) {
-          if (ring.points.length > 0 && Math.hypot(ring.points[0].x - cx, ring.points[0].y - cy) <= maxDist) {
-            ctx.beginPath();
-            ctx.moveTo(ring.points[0].x + 1.5, ring.points[0].y + 1.5);
-            for (let i = 1; i < ring.points.length; i++) {
-              ctx.lineTo(ring.points[i].x + 1.5, ring.points[i].y + 1.5);
+          ctx.beginPath();
+          let inPath = false;
+          for (let i = 0; i < ring.points.length; i++) {
+            const p = ring.points[i];
+            if (Math.hypot(p.x - cx, p.y - cy) <= maxDist) {
+              if (!inPath) {
+                ctx.moveTo(p.x + 1.5, p.y + 1.5);
+                inPath = true;
+              } else {
+                ctx.lineTo(p.x + 1.5, p.y + 1.5);
+              }
+            } else {
+              inPath = false;
             }
-            ctx.stroke();
           }
+          ctx.stroke();
         }
 
+        // Pass 2 & 3: Lighter additive blend for incandescent mana fissures
+        ctx.save();
+        ctx.globalCompositeOperation = 'lighter';
+
         // Pass 2: Glowing Violet Mana Fissure (Outer soft halo)
-        ctx.strokeStyle = 'rgba(192, 38, 211, 0.45)';
-        ctx.lineWidth = 4.5;
+        ctx.strokeStyle = 'rgba(192, 38, 211, 0.55)';
+        ctx.lineWidth = 4.8;
         for (const rad of net.radials) {
           ctx.beginPath();
           ctx.moveTo(rad.points[0].x, rad.points[0].y);
@@ -519,7 +536,7 @@ export default function AtomicCanvas({ phase, reduced }: AtomicCanvasProps) {
 
         // Pass 3: Electric Violet Fissure Seam
         ctx.strokeStyle = 'rgba(232, 121, 249, 0.95)';
-        ctx.lineWidth = 2.0;
+        ctx.lineWidth = 2.2;
         for (const rad of net.radials) {
           ctx.beginPath();
           ctx.moveTo(rad.points[0].x, rad.points[0].y);
@@ -539,18 +556,26 @@ export default function AtomicCanvas({ phase, reduced }: AtomicCanvasProps) {
           }
         }
         for (const ring of net.rings) {
-          if (ring.points.length > 0 && Math.hypot(ring.points[0].x - cx, ring.points[0].y - cy) <= maxDist) {
-            ctx.beginPath();
-            ctx.moveTo(ring.points[0].x, ring.points[0].y);
-            for (let i = 1; i < ring.points.length; i++) {
-              ctx.lineTo(ring.points[i].x, ring.points[i].y);
+          ctx.beginPath();
+          let inPath = false;
+          for (let i = 0; i < ring.points.length; i++) {
+            const p = ring.points[i];
+            if (Math.hypot(p.x - cx, p.y - cy) <= maxDist) {
+              if (!inPath) {
+                ctx.moveTo(p.x, p.y);
+                inPath = true;
+              } else {
+                ctx.lineTo(p.x, p.y);
+              }
+            } else {
+              inPath = false;
             }
-            ctx.stroke();
           }
+          ctx.stroke();
         }
         // Ladder-rung cross-hatching
         ctx.lineWidth = 1.4;
-        ctx.strokeStyle = 'rgba(216, 180, 254, 0.75)';
+        ctx.strokeStyle = 'rgba(216, 180, 254, 0.82)';
         for (const lad of net.ladders) {
           if (lad.dist <= maxDist) {
             ctx.beginPath();
@@ -559,6 +584,7 @@ export default function AtomicCanvas({ phase, reduced }: AtomicCanvasProps) {
             ctx.stroke();
           }
         }
+        ctx.restore();
 
         // Pass 4: Crisp 1px Specular Core Hairline
         ctx.strokeStyle = 'rgba(255, 255, 255, 0.95)';
@@ -657,7 +683,7 @@ export default function AtomicCanvas({ phase, reduced }: AtomicCanvasProps) {
       if (beamOpacityRef.current > 0.01) {
         ctx.save();
         ctx.globalCompositeOperation = 'lighter';
-        const beamW = 200 * beamOpacityRef.current;
+        const beamW = Math.max(120, Math.min(600, w * 0.22)) * beamOpacityRef.current;
         const beamGrad = ctx.createLinearGradient(cx - beamW, 0, cx + beamW, 0);
         beamGrad.addColorStop(0, 'rgba(168, 85, 247, 0)');
         beamGrad.addColorStop(0.3, `rgba(192, 38, 211, ${0.75 * beamOpacityRef.current})`);
@@ -732,7 +758,12 @@ export default function AtomicCanvas({ phase, reduced }: AtomicCanvasProps) {
       // 8. THE DIVINE GOLDEN ALCHEMICAL SEAL (Phase: 'restore')
       // ─────────────────────────────────────────────────────────────
       if (phase === 'restore') {
-        restoreSealAlphaRef.current = Math.min(1, restoreSealAlphaRef.current + dt * 1.8);
+        const restoreElapsed = Math.max(0, (now - restoreStartTimeRef.current) / 1000);
+        if (restoreElapsed < 1.8) {
+          restoreSealAlphaRef.current = Math.min(1, restoreElapsed * 2.5);
+        } else {
+          restoreSealAlphaRef.current = Math.max(0, 1 - (restoreElapsed - 1.8) / 0.45);
+        }
         restoreSealAngleRef.current += dt * 0.95;
         const sealAng = restoreSealAngleRef.current;
         const sealAlpha = restoreSealAlphaRef.current;
@@ -811,31 +842,34 @@ export default function AtomicCanvas({ phase, reduced }: AtomicCanvasProps) {
             const dy = cy - shard.y;
             const dist = Math.hypot(dx, dy) || 1;
 
-            const pullForce = Math.min(3200, 950 + 55000 / (dist + 60)) * dt;
-            const swirlAmp = (1600 / (dist + 70)) * dt;
+            const softening = Math.min(1, dist / 35);
+            const pullForce = Math.min(3200, 950 + 55000 / (dist + 60)) * dt * softening;
+            const swirlAmp = (1600 / (dist + 70)) * dt * softening;
             const tx = -dy / dist;
             const ty = dx / dist;
 
             shard.vx += (dx / dist) * pullForce + tx * swirlAmp;
             shard.vy += (dy / dist) * pullForce + ty * swirlAmp;
-            shard.vx *= 0.92;
-            shard.vy *= 0.92;
+            const damp = Math.exp(-5.2 * dt);
+            shard.vx *= damp;
+            shard.vy *= damp;
 
             shard.alpha = Math.min(1, shard.alpha + dt * 0.8);
 
-            if (dist < 32) {
+            if (dist < 40) {
               shard.alpha -= dt * 4.2;
             }
           } else {
-            shard.vx *= 0.982;
-            shard.vy *= 0.982;
-            shard.vy += dt * 38;
+            const damp = Math.exp(-1.1 * dt);
+            shard.vx *= damp;
+            shard.vy *= damp;
+            shard.vy += 600 * dt;
             shard.alpha = Math.max(0.58, shard.alpha - shard.decay * (dt * 60));
           }
 
-          shard.x += shard.vx;
-          shard.y += shard.vy;
-          shard.rot += shard.vRot;
+          shard.x += shard.vx * dt;
+          shard.y += shard.vy * dt;
+          shard.rot += shard.vRot * dt;
           shard.flipPhase += dt * shard.flipSpeed;
 
           if (shard.alpha > 0.01) {
@@ -846,7 +880,7 @@ export default function AtomicCanvas({ phase, reduced }: AtomicCanvasProps) {
             ctx.rotate(shard.rot);
 
             const cosFlip = Math.cos(shard.flipPhase);
-            const scaleX = Math.abs(cosFlip) < 0.12 ? (cosFlip < 0 ? -0.12 : 0.12) : cosFlip;
+            const scaleX = cosFlip;
             ctx.scale(scaleX, 1);
             ctx.globalAlpha = Math.max(0, Math.min(1, shard.alpha));
 
@@ -887,10 +921,13 @@ export default function AtomicCanvas({ phase, reduced }: AtomicCanvasProps) {
             ctx.lineWidth = 1.0;
             ctx.stroke();
 
-            // Specular Anime Star Glint
+            // Specular Anime Star Glint (counter-scale width so star remains isotropic)
             if (Math.abs(cosFlip) < 0.22 && glintCanvasRef.current) {
+              ctx.save();
+              ctx.scale(1 / (Math.abs(scaleX) || 0.01), 1);
               ctx.globalCompositeOperation = 'lighter';
               ctx.drawImage(glintCanvasRef.current, -16, -16);
+              ctx.restore();
             }
 
             ctx.restore();
@@ -921,10 +958,6 @@ export default function AtomicCanvas({ phase, reduced }: AtomicCanvasProps) {
       ref={canvasRef}
       aria-hidden="true"
       className="pointer-events-none fixed inset-0 z-[56]"
-      style={{
-        width: '100vw',
-        height: '100vh',
-      }}
     />
   );
 }
