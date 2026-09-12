@@ -47,12 +47,14 @@ export default function App() {
   return (
     <div className="relative min-h-screen bg-ink-950 text-cream">
       <Particles reduced={reduced} />
-      <Navbar />
-      <main>
-        <Hero reduced={reduced} events={events} onBook={setBookingEvent} />
-        <Events reduced={reduced} events={events} onBook={setBookingEvent} />
-      </main>
-      <Footer />
+      <div id="site-root" className="relative">
+        <Navbar />
+        <main>
+          <Hero reduced={reduced} events={events} onBook={setBookingEvent} />
+          <Events reduced={reduced} events={events} onBook={setBookingEvent} />
+        </main>
+        <Footer />
+      </div>
       {bookingEvent && (
         <BookingModal
           event={bookingEvent}
