@@ -82,12 +82,13 @@ export default function AtomicEgg() {
     }
     setPhase('shadow');
     playSound('/sounds/atomic.webm', 0.8);
-    later(() => setPhase('bloom'), 1150); // 0.6s converge + ~0.55s hold
+    // Audio explosion hits exactly at 6.37s
+    later(() => setPhase('bloom'), 6370); // 6.37s converge + hold
     later(() => {
       setPhase('fade');
       fireEgg(TOAST);
-    }, 1480); // bloom snapped 120ms + brief hold, then decay
-    later(() => setPhase('idle'), 2500);
+    }, 6700); // bloom snaps 330ms + brief hold, then decay
+    later(() => setPhase('idle'), 7700);
   }, [clearTimers, later]);
 
   /* Keyboard sequence detector: "atomic", letter-by-letter, 1.5s idle reset. */
