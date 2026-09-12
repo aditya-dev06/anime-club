@@ -10,22 +10,22 @@ import { createReturnVfxController, type ReturnVfxController } from './return/re
  * "Return by Death" — Re:Zero Cinematic Easter Egg
  *
  * Sequence Synchronized to the 7.02s Audio Clip:
- *   0.00s – 1.20s [death]    : Instant negative invert flash. Desaturates reality into bleak
- *                              high-contrast monochrome. Crimson cardiac arrest flatline.
- *   1.20s – 4.50s [miasma]   : The Witch of Envy's Unseen Hands creep from the borders.
- *                              In the center, THE WITCH'S EYE SLOWLY OPENS, PIERCINGLY GAZES,
- *                              AND BLINKS! Heartbeat shock pulses shudder the screen.
- *                              Ghostly whisper: "愛してる (Aishiteru... I love you...)".
+ *   0.00s – 1.20s [death]    : Instant negative invert flash. Website stays 100% visible,
+ *                              shifting into an ominous supernatural violet realm. Crimson cardiac pulse.
+ *   1.20s – 4.50s [miasma]   : Satella's giant demonic Unseen Hands crawl deep across the website!
+ *                              In the center, THE WITCH'S AMETHYST EYE OPENS AND REALISTICALLY BLINKS!
+ *                              Audible whisper: "愛してる (Aishiteru...)" echoes in your ears.
+ *                              Heartbeat shock pulses shudder the screen.
  *   4.50s – 6.20s [rewind]   : Temporal Singularity: Cosmic Roman-numeral clock spins backwards;
- *                              the page rewinds rapidly back to top: 0 (the save point).
- *   6.20s – 7.20s [reawaken] : Subaru gasps awake! First-person eyelid opening & blinking sequence
- *                              as blinding morning sunlight floods into the eyes.
- *   7.20s        [idle]     : Complete restoration & "RETURN BY DEATH" toast.
+ *                              page rewinds rapidly back to top: 0 (the save point).
+ *   6.20s – 7.20s [reawaken] : Subaru gasps awake! Anatomical curved eyelid opening & blinking sequence
+ *                              as bright morning sunlight floods into the eyes and focus sharpens.
+ *   7.20s        [idle]     : Complete restoration & "RETURN BY DEATH" victory toast.
  */
 
 const TRIGGER_WORD = 'return';
 const IDLE_RESET_MS = 1500;
-const COOLDOWN_MS = 9000;
+const COOLDOWN_MS = 8500;
 
 const EGG = {
   id: 'return-by-death',
@@ -49,7 +49,6 @@ export default function ReturnByDeath() {
   const lastFireRef = useRef(0);
   const timersRef = useRef<number[]>([]);
 
-  // Initialize and clean controller
   useEffect(() => {
     controllerRef.current = createReturnVfxController(reduced);
     return () => {
@@ -57,7 +56,6 @@ export default function ReturnByDeath() {
     };
   }, [reduced]);
 
-  // Teardown all timers on unmount
   useEffect(() => {
     return () => {
       timersRef.current.forEach(clearTimeout);
@@ -85,33 +83,41 @@ export default function ReturnByDeath() {
 
     const controller = controllerRef.current || createReturnVfxController(false);
 
-    // 0.00s: Audio starts, death impact, negative flash & monochrome
-    playSound('/sounds/return-by-death.webm', 0.85);
+    // 0.00s: Main sound starts, death impact, negative flash & supernatural violet realm
+    playSound('/sounds/return-by-death.webm', 0.9);
     setPhase('death');
     controller.startDeathPhase();
 
-    // 1.20s: The eerie chant begins -> Miasma, Unseen Hands, and the Witch's Blinking Eye!
+    // 1.20s: The eerie vocal cry starts -> Miasma, giant Unseen Hands, and the Witch's Blinking Eye!
     later(() => {
       setPhase('miasma');
       setWhisperActive(true);
     }, 1200);
 
-    // Heartbeat pulses synced to the audio bass thumps
+    // 1.80s: First heartbeat *THUMP* + Audible voice whispers: "Aishiteru..."
     later(() => {
       setHeartbeatActive(true);
-      controller.triggerHeartbeat(1.0);
+      controller.triggerHeartbeat(1.1);
+      playSound('/sounds/aishiteru.mp3', 0.95);
       later(() => setHeartbeatActive(false), 260);
     }, 1800);
 
+    // 2.90s: Second heartbeat *THUMP*
     later(() => {
       setHeartbeatActive(true);
-      controller.triggerHeartbeat(1.25);
+      controller.triggerHeartbeat(1.3);
       later(() => setHeartbeatActive(false), 260);
     }, 2900);
 
+    // 3.20s: Second voice whisper echo: "Aishiteru..."
+    later(() => {
+      playSound('/sounds/aishiteru.mp3', 0.85);
+    }, 3200);
+
+    // 4.00s: Third heartbeat *THUMP*
     later(() => {
       setHeartbeatActive(true);
-      controller.triggerHeartbeat(1.4);
+      controller.triggerHeartbeat(1.45);
       later(() => setHeartbeatActive(false), 280);
     }, 4000);
 
@@ -122,7 +128,7 @@ export default function ReturnByDeath() {
       controller.startRewindScroll(1.65);
     }, 4500);
 
-    // 6.20s: Subaru gasps awake! First-person Eyelid opening and blinking into sunlight!
+    // 6.20s: Subaru gasps awake! First-person curved anatomical eyelid awakening & blinks!
     later(() => {
       setPhase('reawaken');
       controller.triggerAwakening();
@@ -186,8 +192,8 @@ export default function ReturnByDeath() {
   if (phase === 'idle') return null;
 
   const heartbeatVignetteStyle: CSSProperties = {
-    opacity: heartbeatActive ? 0.85 : 0,
-    transition: heartbeatActive ? 'opacity 30ms ease-out' : 'opacity 250ms ease-in',
+    opacity: heartbeatActive ? 0.75 : 0,
+    transition: heartbeatActive ? 'opacity 30ms ease-out' : 'opacity 240ms ease-in',
   };
 
   return (
@@ -196,51 +202,50 @@ export default function ReturnByDeath() {
       className="pointer-events-none fixed inset-0 overflow-hidden"
       style={{ zIndex: 56 }}
     >
-      {/* 1. Atmospheric Deep Witch-Mist Veil */}
+      {/* 1. Transparent Ethereal Witch-Mist (WEBSITE REMAINS FULLY VISIBLE UNDERNEATH!) */}
       <div
-        className="absolute inset-0 transition-opacity duration-700"
+        className="absolute inset-0 transition-opacity duration-700 pointer-events-none"
         style={{
-          background: [
-            'radial-gradient(ellipse at 50% 50%, rgba(88,28,135,0.38) 0%, rgba(20,5,35,0.82) 70%, rgba(5,1,10,0.95) 100%)',
-          ].join(', '),
-          opacity: phase === 'reawaken' ? 0.3 : 1,
+          background:
+            'radial-gradient(ellipse at 50% 50%, rgba(147, 51, 234, 0.14) 0%, rgba(88, 28, 135, 0.26) 65%, rgba(25, 8, 42, 0.5) 100%)',
+          opacity: phase === 'reawaken' ? 0 : 1,
         }}
       />
 
-      {/* 2. High-Performance Canvas (Unseen Hands, Witch's Blinking Eye, Clock, Particles) */}
+      {/* 2. High-Performance Canvas (Satella's Giant Unseen Hands, Witch's Blinking Eye, Reverse Clock) */}
       <WitchMiasmaCanvas phase={phase} reduced={reduced} />
 
       {/* 3. Cardiac Arrest & Heartbeat Pulse Vignette */}
       <div
-        className="absolute inset-0"
+        className="absolute inset-0 pointer-events-none"
         style={{
           ...heartbeatVignetteStyle,
           background:
-            'radial-gradient(circle at 50% 50%, transparent 40%, rgba(220, 38, 38, 0.45) 75%, rgba(88, 28, 135, 0.75) 100%)',
-          mixBlendMode: 'multiply',
+            'radial-gradient(circle at 50% 50%, transparent 45%, rgba(220, 38, 38, 0.35) 75%, rgba(147, 51, 234, 0.55) 100%)',
+          mixBlendMode: 'screen',
         }}
       />
 
       {/* 4. The Witch's Whisper ("愛してる... Aishiteru... I love you...") */}
       <div
-        className="absolute inset-x-0 bottom-24 flex flex-col items-center justify-center transition-all duration-700 pointer-events-none"
+        className="absolute inset-x-0 bottom-28 flex flex-col items-center justify-center transition-all duration-700 pointer-events-none"
         style={{
           opacity: whisperActive ? 1 : 0,
-          transform: whisperActive ? 'translateY(0)' : 'translateY(12px)',
+          transform: whisperActive ? 'translateY(0) scale(1)' : 'translateY(16px) scale(0.95)',
         }}
       >
         <span
-          className="font-serif tracking-[0.4em] text-3xl sm:text-4xl text-purple-200/90 drop-shadow-[0_0_18px_rgba(216,180,254,0.9)] animate-pulse"
-          style={{ letterSpacing: '0.35em' }}
+          className="font-serif tracking-[0.45em] text-3xl sm:text-5xl text-purple-200 drop-shadow-[0_0_24px_rgba(232,121,249,0.95)] animate-pulse"
+          style={{ letterSpacing: '0.4em' }}
         >
           愛してる
         </span>
-        <span className="mt-1 text-xs tracking-widest text-purple-300/60 uppercase">
+        <span className="mt-1.5 text-xs sm:text-sm tracking-widest text-purple-300/80 font-mono uppercase drop-shadow-[0_0_8px_rgba(168,85,247,0.8)]">
           ...aishiteru...
         </span>
       </div>
 
-      {/* 5. First-Person Eyelid Opening & Blinking Animation at the Save Point */}
+      {/* 5. First-Person Anatomical Curved Eyelid Awakening & Realistic Blinks */}
       <EyelidAwakening
         active={phase === 'reawaken'}
         onAwakened={() => {

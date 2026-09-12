@@ -27,10 +27,10 @@ export function createReturnVfxController(reduced = false): ReturnVfxController 
       ease: 'power4.in',
     });
 
-    // 2. High-contrast bleak monochrome death tint
+    // 2. Re:Zero supernatural shadow realm: crisp contrast, deep violet glow, 100% visible website!
     tl.to(root, {
-      filter: 'grayscale(100%) contrast(145%) brightness(0.62)',
-      duration: 0.28,
+      filter: 'contrast(120%) saturate(1.5) hue-rotate(245deg) brightness(0.96)',
+      duration: 0.25,
       ease: 'power2.out',
     });
   };
@@ -43,13 +43,13 @@ export function createReturnVfxController(reduced = false): ReturnVfxController 
     gsap.fromTo(
       root,
       {
-        scale: 1 + 0.028 * intensity,
-        filter: 'grayscale(100%) contrast(170%) brightness(0.48)',
+        scale: 1 + 0.032 * intensity,
+        filter: 'contrast(155%) saturate(2.0) hue-rotate(265deg) brightness(1.12)',
       },
       {
         scale: 1,
-        filter: 'grayscale(100%) contrast(145%) brightness(0.62)',
-        duration: 0.42,
+        filter: 'contrast(120%) saturate(1.5) hue-rotate(245deg) brightness(0.96)',
+        duration: 0.38,
         ease: 'power2.out',
       },
     );

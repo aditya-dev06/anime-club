@@ -14,14 +14,14 @@ interface MiasmaParticle {
   wobbleSpeed: number;
 }
 
-interface ShadowTendril {
+interface ShadowHandDef {
   startX: (w: number) => number;
   startY: (h: number) => number;
-  reachDist: number; // 0..1
-  angleOffset: number;
-  curl: number;
+  targetX: (w: number) => number;
+  targetY: (h: number) => number;
+  palmAngle: number;
+  reachMultiplier: number;
   speed: number;
-  numFingers: number;
 }
 
 interface WitchMiasmaCanvasProps {
@@ -35,25 +35,23 @@ export default function WitchMiasmaCanvas({ phase, reduced }: WitchMiasmaCanvasP
   const phaseStartTimeRef = useRef<number>(performance.now());
   const particlesRef = useRef<MiasmaParticle[]>([]);
 
-  // Track when phase changes for internal timeline animations
   useEffect(() => {
     phaseStartTimeRef.current = performance.now();
   }, [phase]);
 
-  // Initialize floating miasma particles
+  // Floating miasma particles
   useEffect(() => {
     if (reduced || phase === 'idle') {
       particlesRef.current = [];
       return;
     }
 
-    const count = 55;
+    const count = 45;
     const colors = [
-      'rgba(168, 85, 247, 0.75)', // vibrant purple
-      'rgba(147, 51, 234, 0.65)', // deep violet
-      'rgba(216, 180, 254, 0.85)', // light lilac
-      'rgba(88, 28, 135, 0.8)',   // dark obsidian purple
-      'rgba(244, 114, 182, 0.6)',  // crimson witch blush
+      'rgba(192, 38, 211, 0.75)',
+      'rgba(168, 85, 247, 0.65)',
+      'rgba(216, 180, 254, 0.8)',
+      'rgba(244, 114, 182, 0.6)',
     ];
 
     const particles: MiasmaParticle[] = [];
@@ -64,20 +62,19 @@ export default function WitchMiasmaCanvas({ phase, reduced }: WitchMiasmaCanvasP
       particles.push({
         x: Math.random() * w,
         y: Math.random() * h,
-        vx: (Math.random() - 0.5) * 45,
-        vy: -20 - Math.random() * 60, // drifting upward
-        size: 2.5 + Math.random() * 7.5,
-        alpha: 0.2 + Math.random() * 0.7,
+        vx: (Math.random() - 0.5) * 40,
+        vy: -25 - Math.random() * 55,
+        size: 3 + Math.random() * 7,
+        alpha: 0.25 + Math.random() * 0.6,
         color: colors[Math.floor(Math.random() * colors.length)],
         wobble: Math.random() * Math.PI * 2,
-        wobbleSpeed: 1.5 + Math.random() * 3.5,
+        wobbleSpeed: 1.8 + Math.random() * 3,
       });
     }
 
     particlesRef.current = particles;
   }, [phase, reduced]);
 
-  // Main Canvas Render Loop
   useEffect(() => {
     if (phase === 'idle' || reduced) return;
 
@@ -102,20 +99,68 @@ export default function WitchMiasmaCanvas({ phase, reduced }: WitchMiasmaCanvasP
     syncSize();
     window.addEventListener('resize', syncSize);
 
-    // 8 Unseen Hands (Shadow Tendrils) configurations creeping from screen perimeter
-    const tendrils: ShadowTendril[] = [
-      // Left side
-      { startX: () => 0, startY: (h) => h * 0.25, reachDist: 0.42, angleOffset: 0, curl: 0.8, speed: 1.2, numFingers: 4 },
-      { startX: () => 0, startY: (h) => h * 0.65, reachDist: 0.45, angleOffset: 0.2, curl: -0.9, speed: 1.4, numFingers: 5 },
-      // Right side
-      { startX: (w) => w, startY: (h) => h * 0.3, reachDist: 0.44, angleOffset: Math.PI, curl: -0.7, speed: 1.1, numFingers: 4 },
-      { startX: (w) => w, startY: (h) => h * 0.7, reachDist: 0.46, angleOffset: Math.PI, curl: 0.85, speed: 1.3, numFingers: 5 },
-      // Bottom
-      { startX: (w) => w * 0.3, startY: (h) => h, reachDist: 0.45, angleOffset: -Math.PI / 2, curl: 0.6, speed: 1.5, numFingers: 4 },
-      { startX: (w) => w * 0.7, startY: (h) => h, reachDist: 0.48, angleOffset: -Math.PI / 2, curl: -0.65, speed: 1.2, numFingers: 4 },
-      // Top corners
-      { startX: () => 0, startY: () => 0, reachDist: 0.38, angleOffset: Math.PI / 4, curl: 0.75, speed: 1.0, numFingers: 4 },
-      { startX: (w) => w, startY: () => 0, reachDist: 0.40, angleOffset: (3 * Math.PI) / 4, curl: -0.75, speed: 1.05, numFingers: 4 },
+    // 6 Massive Demonic Unseen Hands crawling deep onto the screen over website cards
+    const hands: ShadowHandDef[] = [
+      // Top-Left hand reaching down toward hero/cards
+      {
+        startX: () => -40,
+        startY: (h) => h * 0.15,
+        targetX: (w) => w * 0.38,
+        targetY: (h) => h * 0.38,
+        palmAngle: Math.PI / 4,
+        reachMultiplier: 1.0,
+        speed: 1.2,
+      },
+      // Mid-Left hand crawling across center
+      {
+        startX: () => -40,
+        startY: (h) => h * 0.58,
+        targetX: (w) => w * 0.42,
+        targetY: (h) => h * 0.52,
+        palmAngle: 0.1,
+        reachMultiplier: 1.05,
+        speed: 1.4,
+      },
+      // Bottom-Left hand reaching up
+      {
+        startX: (w) => w * 0.15,
+        startY: (h) => h + 40,
+        targetX: (w) => w * 0.35,
+        targetY: (h) => h * 0.65,
+        palmAngle: -Math.PI / 3,
+        reachMultiplier: 0.95,
+        speed: 1.3,
+      },
+      // Top-Right hand reaching down-left
+      {
+        startX: (w) => w + 40,
+        startY: (h) => h * 0.18,
+        targetX: (w) => w * 0.62,
+        targetY: (h) => h * 0.38,
+        palmAngle: (3 * Math.PI) / 4,
+        reachMultiplier: 1.0,
+        speed: 1.15,
+      },
+      // Mid-Right hand crawling across center
+      {
+        startX: (w) => w + 40,
+        startY: (h) => h * 0.55,
+        targetX: (w) => w * 0.58,
+        targetY: (h) => h * 0.52,
+        palmAngle: Math.PI - 0.1,
+        reachMultiplier: 1.05,
+        speed: 1.35,
+      },
+      // Bottom-Right hand reaching up
+      {
+        startX: (w) => w * 0.85,
+        startY: (h) => h + 40,
+        targetX: (w) => w * 0.65,
+        targetY: (h) => h * 0.65,
+        palmAngle: (-2 * Math.PI) / 3,
+        reachMultiplier: 0.95,
+        speed: 1.25,
+      },
     ];
 
     let lastTime = performance.now();
@@ -143,13 +188,13 @@ export default function WitchMiasmaCanvas({ phase, reduced }: WitchMiasmaCanvasP
       // ─────────────────────────────────────────────────────────────
       if (phase === 'death') {
         const lineY = cy;
-        const progress = Math.min(1, timeInPhase / 1.1);
+        const progress = Math.min(1, timeInPhase / 1.05);
 
         ctx.save();
-        ctx.strokeStyle = 'rgba(239, 68, 68, 0.85)';
+        ctx.strokeStyle = 'rgba(239, 68, 68, 0.9)';
         ctx.shadowColor = '#dc2626';
-        ctx.shadowBlur = 16;
-        ctx.lineWidth = 3;
+        ctx.shadowBlur = 18;
+        ctx.lineWidth = 3.5;
 
         ctx.beginPath();
         const startX = 0;
@@ -159,13 +204,12 @@ export default function WitchMiasmaCanvas({ phase, reduced }: WitchMiasmaCanvasP
           let dy = 0;
           const distToCenter = Math.abs(x - cx);
 
-          if (distToCenter < 120) {
-            // EKG heartbeat spike that collapses into flatline
-            const pulseT = (x - (cx - 120)) / 240;
+          if (distToCenter < 140) {
+            const pulseT = (x - (cx - 140)) / 280;
             if (timeInPhase < 0.6) {
-              dy = Math.sin(pulseT * Math.PI * 4) * 45 * Math.exp(-pulseT * 2);
+              dy = Math.sin(pulseT * Math.PI * 4) * 55 * Math.exp(-pulseT * 1.8);
             } else {
-              dy = (Math.random() - 0.5) * 4; // trembling death flatline
+              dy = (Math.random() - 0.5) * 5;
             }
           }
           if (x === startX) ctx.moveTo(x, lineY + dy);
@@ -173,11 +217,11 @@ export default function WitchMiasmaCanvas({ phase, reduced }: WitchMiasmaCanvasP
         }
         ctx.stroke();
 
-        // Blood-red cardiac pulse circle in the chest center
-        const pulseR = 30 + Math.sin(timeInPhase * 12) * 12;
+        // Pulsing crimson cardiac core
+        const pulseR = 38 + Math.sin(timeInPhase * 14) * 14;
         const heartGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, pulseR);
-        heartGrad.addColorStop(0, 'rgba(220, 38, 38, 0.8)');
-        heartGrad.addColorStop(0.6, 'rgba(147, 51, 234, 0.4)');
+        heartGrad.addColorStop(0, 'rgba(239, 68, 68, 0.85)');
+        heartGrad.addColorStop(0.6, 'rgba(147, 51, 234, 0.45)');
         heartGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
         ctx.fillStyle = heartGrad;
         ctx.beginPath();
@@ -188,95 +232,111 @@ export default function WitchMiasmaCanvas({ phase, reduced }: WitchMiasmaCanvasP
       }
 
       // ─────────────────────────────────────────────────────────────
-      // 2. SATELLA'S UNSEEN HANDS (Shadow Tendrils with Grasping Claws)
+      // 2. SATELLA'S GIANT UNSEEN HANDS (Demonic Shadow Arms & Claws)
       //    (Active during 'miasma' and 'rewind')
       // ─────────────────────────────────────────────────────────────
       if (phase === 'miasma' || phase === 'rewind') {
         const growth =
           phase === 'rewind'
-            ? Math.max(0, 1 - timeInPhase / 1.4) // Hands retract into the vortex during rewind
-            : Math.min(1, timeInPhase / 1.8); // Hands slowly creep in during miasma
+            ? Math.max(0, 1 - timeInPhase / 1.5) // retracts into vortex
+            : Math.min(1, timeInPhase / 1.6); // aggressively crawls onto screen
 
         ctx.save();
 
-        tendrils.forEach((t, idx) => {
-          const sx = t.startX(w);
-          const sy = t.startY(h);
-          const targetDist = Math.hypot(cx - sx, cy - sy) * t.reachDist * growth;
-          const baseAngle = Math.atan2(cy - sy, cx - sx);
+        hands.forEach((hand, hIdx) => {
+          const sx = hand.startX(w);
+          const sy = hand.startY(h);
+          const tx = hand.targetX(w);
+          const ty = hand.targetY(h);
 
-          // Living undulating wave motion
-          const wave = Math.sin(totalTime * t.speed * 2 + idx * 1.3) * 0.28;
-          const currentAngle = baseAngle + t.angleOffset * 0.15 + wave * t.curl;
+          // Arm path interpolation
+          const currentX = sx + (tx - sx) * growth;
+          const currentY = sy + (ty - sy) * growth;
 
-          const segments = 4;
-          const points: { x: number; y: number }[] = [{ x: sx, y: sy }];
+          // Undulating breathing wave
+          const wave = Math.sin(totalTime * hand.speed * 2.5 + hIdx * 1.4) * 26 * growth;
+          const midX = (sx + currentX) / 2 + Math.cos(hand.palmAngle + Math.PI / 2) * wave;
+          const midY = (sy + currentY) / 2 + Math.sin(hand.palmAngle + Math.PI / 2) * wave;
 
-          for (let s = 1; s <= segments; s++) {
-            const frac = s / segments;
-            const segDist = targetDist * frac;
-            const segWave = Math.sin(totalTime * 3 + frac * 4 + idx) * 22 * frac;
-            const px = sx + Math.cos(currentAngle) * segDist - Math.sin(currentAngle) * segWave;
-            const py = sy + Math.sin(currentAngle) * segDist + Math.cos(currentAngle) * segWave;
-            points.push({ x: px, y: py });
-          }
-
-          const tip = points[points.length - 1];
-
-          // 1. Draw glowing violet shadow aura
+          // 1. Draw glowing violet shadow arm aura
           ctx.beginPath();
-          ctx.moveTo(points[0].x, points[0].y);
-          for (let i = 1; i < points.length - 1; i++) {
-            const mx = (points[i].x + points[i + 1].x) / 2;
-            const my = (points[i].y + points[i + 1].y) / 2;
-            ctx.quadraticCurveTo(points[i].x, points[i].y, mx, my);
-          }
-          ctx.lineTo(tip.x, tip.y);
+          ctx.moveTo(sx, sy);
+          ctx.quadraticCurveTo(midX, midY, currentX, currentY);
 
-          ctx.strokeStyle = 'rgba(192, 38, 211, 0.65)';
-          ctx.lineWidth = 14 + (1 - growth) * 4;
+          ctx.strokeStyle = 'rgba(216, 180, 254, 0.85)';
+          ctx.lineWidth = 32 * growth;
           ctx.lineCap = 'round';
-          ctx.lineJoin = 'round';
-          ctx.shadowColor = '#a855f7';
-          ctx.shadowBlur = 24;
+          ctx.shadowColor = '#d946ef';
+          ctx.shadowBlur = 28;
           ctx.stroke();
 
-          // 2. Pitch-black solid shadow core
-          ctx.strokeStyle = 'rgba(8, 2, 14, 0.95)';
-          ctx.lineWidth = 9;
+          // 2. Deep purple-black shadow core
+          ctx.strokeStyle = 'rgba(25, 5, 45, 0.95)';
+          ctx.lineWidth = 22 * growth;
           ctx.shadowBlur = 0;
           ctx.stroke();
 
-          // 3. Grasping shadow claws / fingers at the tip
-          const tipAngle = Math.atan2(
-            tip.y - points[points.length - 2].y,
-            tip.x - points[points.length - 2].x,
-          );
+          // 3. Violet spine streak
+          ctx.strokeStyle = 'rgba(232, 121, 249, 0.7)';
+          ctx.lineWidth = 4 * growth;
+          ctx.stroke();
 
-          for (let f = 0; f < t.numFingers; f++) {
-            const fingerSpread = (f - (t.numFingers - 1) / 2) * 0.38;
-            const fingerCurl = Math.sin(totalTime * 4 + f * 1.5) * 0.25;
-            const fAngle = tipAngle + fingerSpread + fingerCurl;
-            const fLen = (18 + (f % 2) * 8) * growth;
+          // 4. Palm & 5 Demonic Claws / Fingers
+          const palmAngle = Math.atan2(currentY - midY, currentX - midX);
+          const palmRadius = 22 * growth;
 
-            const fx1 = tip.x + Math.cos(fAngle) * (fLen * 0.55);
-            const fy1 = tip.y + Math.sin(fAngle) * (fLen * 0.55);
-            const fx2 = fx1 + Math.cos(fAngle + 0.35) * (fLen * 0.55);
-            const fy2 = fy1 + Math.sin(fAngle + 0.35) * (fLen * 0.55);
+          // Palm shadow mass
+          ctx.fillStyle = 'rgba(25, 5, 45, 0.95)';
+          ctx.shadowColor = '#d946ef';
+          ctx.shadowBlur = 18;
+          ctx.beginPath();
+          ctx.arc(currentX, currentY, palmRadius, 0, Math.PI * 2);
+          ctx.fill();
 
+          // 5 Articulated curved shadow claws
+          const numFingers = 5;
+          for (let f = 0; f < numFingers; f++) {
+            const spread = (f - 2) * 0.32; // fan out from center finger
+            // Living claw flexing motion
+            const flexWave = Math.sin(totalTime * 4 + f * 1.2 + hIdx) * 0.22;
+            const fAngle = palmAngle + spread + flexWave;
+
+            // Finger joints: Knuckle 1 -> Knuckle 2 -> Claw tip
+            const joint1Len = (28 + (f === 2 ? 8 : 0)) * growth;
+            const joint2Len = (22 + (f === 2 ? 6 : 0)) * growth;
+
+            const j1x = currentX + Math.cos(fAngle) * joint1Len;
+            const j1y = currentY + Math.sin(fAngle) * joint1Len;
+
+            // Inward curl toward target
+            const curlAngle = fAngle + (f < 2 ? 0.35 : -0.35) * 0.45;
+            const tipX = j1x + Math.cos(curlAngle) * joint2Len;
+            const tipY = j1y + Math.sin(curlAngle) * joint2Len;
+
+            // Draw glowing finger aura
             ctx.beginPath();
-            ctx.moveTo(tip.x, tip.y);
-            ctx.quadraticCurveTo(fx1, fy1, fx2, fy2);
-            ctx.strokeStyle = 'rgba(192, 38, 211, 0.8)';
-            ctx.lineWidth = 4;
+            ctx.moveTo(currentX, currentY);
+            ctx.lineTo(j1x, j1y);
+            ctx.lineTo(tipX, tipY);
+            ctx.strokeStyle = 'rgba(216, 180, 254, 0.9)';
+            ctx.lineWidth = 7 * growth;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
             ctx.shadowColor = '#d946ef';
-            ctx.shadowBlur = 10;
+            ctx.shadowBlur = 16;
             ctx.stroke();
 
-            ctx.strokeStyle = 'rgba(10, 3, 18, 0.95)';
-            ctx.lineWidth = 2.5;
+            // Dark finger bone core
+            ctx.strokeStyle = 'rgba(25, 5, 45, 0.98)';
+            ctx.lineWidth = 4 * growth;
             ctx.shadowBlur = 0;
             ctx.stroke();
+
+            // Sharp pointed claw tip
+            ctx.fillStyle = '#f5d0fe';
+            ctx.beginPath();
+            ctx.arc(tipX, tipY, 2.5 * growth, 0, Math.PI * 2);
+            ctx.fill();
           }
         });
 
@@ -284,102 +344,98 @@ export default function WitchMiasmaCanvas({ phase, reduced }: WitchMiasmaCanvasP
       }
 
       // ─────────────────────────────────────────────────────────────
-      // 3. THE WITCH'S EYE (Opening, Gazing, and Blinking in the Void!)
+      // 3. THE WITCH'S EYE (Organic Opening, Anime Eyelash, & Realistic Blinking)
       //    (Active during 'miasma' phase)
       // ─────────────────────────────────────────────────────────────
       if (phase === 'miasma') {
-        // Calculate eyelid openness (0.0 = closed, 1.0 = wide open) with realistic blinking!
         let eyeOpenness = 0;
         let eyeAlpha = 0;
 
-        if (timeInPhase < 0.35) {
-          // Eye closed in darkness
+        if (timeInPhase < 0.25) {
           eyeOpenness = 0;
-          eyeAlpha = timeInPhase / 0.35;
-        } else if (timeInPhase < 1.3) {
-          // Slowly opens eyelids gazing out
-          const openT = (timeInPhase - 0.35) / 0.95;
-          eyeOpenness = Math.sin(openT * (Math.PI / 2)) * 0.85;
+          eyeAlpha = timeInPhase / 0.25;
+        } else if (timeInPhase < 1.1) {
+          // Smooth organic opening to wide gaze
+          const t = (timeInPhase - 0.25) / 0.85;
+          eyeOpenness = Math.sin(t * (Math.PI / 2)) * 0.88;
           eyeAlpha = 1;
-        } else if (timeInPhase < 1.7) {
-          // FIRST BLINK: smoothly shuts and re-opens!
-          const blinkT = (timeInPhase - 1.3) / 0.4;
-          if (blinkT < 0.45) {
-            // Eyelid closes shut
-            eyeOpenness = 0.85 * (1 - blinkT / 0.45);
+        } else if (timeInPhase < 1.45) {
+          // FIRST BLINK: Rapid biological blink shut (takes 70ms) and open (180ms)
+          const blinkT = (timeInPhase - 1.1) / 0.35;
+          if (blinkT < 0.28) {
+            eyeOpenness = 0.88 * (1 - blinkT / 0.28); // rapid snap shut
           } else {
-            // Re-opens wide
-            eyeOpenness = 0.95 * ((blinkT - 0.45) / 0.55);
+            eyeOpenness = 0.95 * ((blinkT - 0.28) / 0.72); // smooth open
           }
           eyeAlpha = 1;
         } else if (timeInPhase < 2.5) {
-          // Wide open piercing gaze with subtle breathing lid twitch
-          eyeOpenness = 0.92 + Math.sin(totalTime * 3) * 0.04;
+          // Wide piercing gaze with living eyelid micro-motion
+          eyeOpenness = 0.92 + Math.sin(totalTime * 3.5) * 0.03;
           eyeAlpha = 1;
-        } else if (timeInPhase < 2.9) {
-          // SECOND BLINK (quick subtle flutter)
-          const blinkT = (timeInPhase - 2.5) / 0.4;
-          if (blinkT < 0.4) {
-            eyeOpenness = 0.92 * (1 - (blinkT / 0.4) * 0.85); // quick partial close
+        } else if (timeInPhase < 2.85) {
+          // SECOND BLINK: Quick rhythmic flutter blink
+          const blinkT = (timeInPhase - 2.5) / 0.35;
+          if (blinkT < 0.25) {
+            eyeOpenness = 0.92 * (1 - blinkT / 0.25);
           } else {
-            eyeOpenness = 0.15 + 0.82 * ((blinkT - 0.4) / 0.6);
+            eyeOpenness = 0.96 * ((blinkT - 0.25) / 0.75);
           }
           eyeAlpha = 1;
         } else {
-          // Open, slowly dilating until time rewind sucks it into the singularity
-          eyeOpenness = 0.95;
-          eyeAlpha = Math.max(0, 1 - (timeInPhase - 2.9) / 0.45);
+          // Dilating gaze before singularity
+          eyeOpenness = 0.96;
+          eyeAlpha = Math.max(0, 1 - (timeInPhase - 2.85) / 0.45);
         }
 
         if (eyeAlpha > 0.02) {
           ctx.save();
           ctx.globalAlpha = eyeAlpha;
 
-          const eyeW = Math.min(w * 0.22, 130);
-          const eyeH = eyeW * 0.58;
-          const eyeY = cy - 20;
+          const eyeW = Math.min(w * 0.26, 160);
+          const eyeH = eyeW * 0.62;
+          const eyeY = cy - 25;
 
-          // 1. Ethereal Violet Eye Aura
-          const eyeGlow = ctx.createRadialGradient(cx, eyeY, 10, cx, eyeY, eyeW * 1.5);
-          eyeGlow.addColorStop(0, 'rgba(192, 38, 211, 0.45)');
-          eyeGlow.addColorStop(0.5, 'rgba(147, 51, 234, 0.2)');
-          eyeGlow.addColorStop(1, 'rgba(0, 0, 0, 0)');
-          ctx.fillStyle = eyeGlow;
+          // 1. Radiant Violet Eye Aura behind eye
+          const eyeAura = ctx.createRadialGradient(cx, eyeY, 15, cx, eyeY, eyeW * 1.6);
+          eyeAura.addColorStop(0, 'rgba(216, 180, 254, 0.45)');
+          eyeAura.addColorStop(0.4, 'rgba(168, 85, 247, 0.25)');
+          eyeAura.addColorStop(1, 'rgba(0, 0, 0, 0)');
+          ctx.fillStyle = eyeAura;
           ctx.beginPath();
-          ctx.arc(cx, eyeY, eyeW * 1.5, 0, Math.PI * 2);
+          ctx.arc(cx, eyeY, eyeW * 1.6, 0, Math.PI * 2);
           ctx.fill();
 
-          // 2. Clip inside the opening Eyelid Contour
+          // 2. Clip inside Organic Eyelid Almond Contour
           ctx.save();
           ctx.beginPath();
-          // Upper eyelid curve
           ctx.moveTo(cx - eyeW, eyeY);
+          // Upper eyelid anatomical arch
           ctx.quadraticCurveTo(cx, eyeY - eyeH * eyeOpenness, cx + eyeW, eyeY);
-          // Lower eyelid curve
-          ctx.quadraticCurveTo(cx, eyeY + eyeH * eyeOpenness * 0.85, cx - eyeW, eyeY);
+          // Lower eyelid gentle curve
+          ctx.quadraticCurveTo(cx, eyeY + eyeH * eyeOpenness * 0.75, cx - eyeW, eyeY);
           ctx.closePath();
           ctx.clip();
 
-          // Sclera (Dark cosmic midnight purple)
+          // Sclera (Deep cosmic midnight purple)
           ctx.fillStyle = '#0f051d';
-          ctx.fillRect(cx - eyeW * 1.2, eyeY - eyeH * 1.2, eyeW * 2.4, eyeH * 2.4);
+          ctx.fillRect(cx - eyeW * 1.3, eyeY - eyeH * 1.3, eyeW * 2.6, eyeH * 2.6);
 
-          // Subtle crimson stress veins in sclera corners
-          ctx.strokeStyle = 'rgba(239, 68, 68, 0.35)';
-          ctx.lineWidth = 1;
+          // Crimson micro-capillaries in corner
+          ctx.strokeStyle = 'rgba(239, 68, 68, 0.4)';
+          ctx.lineWidth = 1.2;
           ctx.beginPath();
-          ctx.moveTo(cx - eyeW * 0.9, eyeY);
-          ctx.lineTo(cx - eyeW * 0.55, eyeY - 4);
-          ctx.moveTo(cx + eyeW * 0.9, eyeY);
-          ctx.lineTo(cx + eyeW * 0.55, eyeY + 3);
+          ctx.moveTo(cx - eyeW * 0.92, eyeY);
+          ctx.lineTo(cx - eyeW * 0.6, eyeY - 4);
+          ctx.moveTo(cx + eyeW * 0.92, eyeY);
+          ctx.lineTo(cx + eyeW * 0.6, eyeY + 3);
           ctx.stroke();
 
-          // Iris (Amethyst & royal purple gemstone gradient)
-          const irisR = eyeH * 0.72;
+          // Iris (Glowing amethyst crystalline gemstone)
+          const irisR = eyeH * 0.78;
           const irisGrad = ctx.createRadialGradient(cx, eyeY, 0, cx, eyeY, irisR);
-          irisGrad.addColorStop(0, '#f0abfc'); // glowing center
-          irisGrad.addColorStop(0.3, '#c084fc'); // lavender
-          irisGrad.addColorStop(0.7, '#9333ea'); // deep violet
+          irisGrad.addColorStop(0, '#fdf4ff'); // glowing white-violet center
+          irisGrad.addColorStop(0.25, '#e879f9'); // vibrant fuchsia
+          irisGrad.addColorStop(0.65, '#9333ea'); // deep royal violet
           irisGrad.addColorStop(1, '#3b0764'); // dark rim
 
           ctx.fillStyle = irisGrad;
@@ -387,51 +443,60 @@ export default function WitchMiasmaCanvas({ phase, reduced }: WitchMiasmaCanvasP
           ctx.arc(cx, eyeY, irisR, 0, Math.PI * 2);
           ctx.fill();
 
-          // Iris magical glyph rays
-          ctx.strokeStyle = 'rgba(255, 255, 255, 0.45)';
-          ctx.lineWidth = 1;
-          for (let ray = 0; ray < 12; ray++) {
-            const ra = (ray / 12) * Math.PI * 2 + totalTime * 0.6;
+          // Radiating mystic iris glyph lines
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.55)';
+          ctx.lineWidth = 1.2;
+          for (let ray = 0; ray < 14; ray++) {
+            const ra = (ray / 14) * Math.PI * 2 + totalTime * 0.5;
             ctx.beginPath();
-            ctx.moveTo(cx + Math.cos(ra) * (irisR * 0.35), eyeY + Math.sin(ra) * (irisR * 0.35));
-            ctx.lineTo(cx + Math.cos(ra) * (irisR * 0.9), eyeY + Math.sin(ra) * (irisR * 0.9));
+            ctx.moveTo(cx + Math.cos(ra) * (irisR * 0.3), eyeY + Math.sin(ra) * (irisR * 0.3));
+            ctx.lineTo(cx + Math.cos(ra) * (irisR * 0.88), eyeY + Math.sin(ra) * (irisR * 0.88));
             ctx.stroke();
           }
 
-          // Pupil (Void black with glowing center)
-          const pupilR = irisR * (0.32 + Math.sin(totalTime * 2.5) * 0.04);
+          // Pupil (Void black with glowing star center)
+          const pupilR = irisR * (0.34 + Math.sin(totalTime * 3) * 0.04);
           ctx.fillStyle = '#000000';
           ctx.beginPath();
           ctx.arc(cx, eyeY, pupilR, 0, Math.PI * 2);
           ctx.fill();
 
-          // Specular Glass Highlights (reflection catching the light)
-          ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+          // Dual Glistening Specular Reflections
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.96)';
           ctx.beginPath();
-          ctx.ellipse(cx - irisR * 0.32, eyeY - irisR * 0.32, irisR * 0.22, irisR * 0.14, -Math.PI / 4, 0, Math.PI * 2);
+          ctx.ellipse(cx - irisR * 0.34, eyeY - irisR * 0.32, irisR * 0.22, irisR * 0.15, -Math.PI / 4, 0, Math.PI * 2);
           ctx.fill();
 
           ctx.beginPath();
-          ctx.arc(cx + irisR * 0.28, eyeY + irisR * 0.25, irisR * 0.08, 0, Math.PI * 2);
+          ctx.arc(cx + irisR * 0.32, eyeY + irisR * 0.24, irisR * 0.09, 0, Math.PI * 2);
           ctx.fill();
 
           ctx.restore(); // end clip
 
-          // 3. Eyelid Eerie Shadow Contours & Glowing Mascara Rim
-          ctx.strokeStyle = 'rgba(216, 180, 254, 0.9)';
-          ctx.lineWidth = 2.5;
-          ctx.shadowColor = '#d946ef';
-          ctx.shadowBlur = 12;
+          // 3. Thick Anime Upper Eyeliner & Mascara Lashes
+          ctx.strokeStyle = '#1e0533';
+          ctx.lineWidth = 5;
           ctx.beginPath();
-          ctx.moveTo(cx - eyeW, eyeY);
-          ctx.quadraticCurveTo(cx, eyeY - eyeH * eyeOpenness, cx + eyeW, eyeY);
+          ctx.moveTo(cx - eyeW * 1.04, eyeY);
+          ctx.quadraticCurveTo(cx, eyeY - eyeH * eyeOpenness - 2, cx + eyeW * 1.04, eyeY);
           ctx.stroke();
 
+          // Glowing lavender lash rim highlight
+          ctx.strokeStyle = 'rgba(232, 121, 249, 0.95)';
+          ctx.lineWidth = 2.5;
+          ctx.shadowColor = '#d946ef';
+          ctx.shadowBlur = 14;
           ctx.beginPath();
-          ctx.moveTo(cx - eyeW, eyeY);
-          ctx.quadraticCurveTo(cx, eyeY + eyeH * eyeOpenness * 0.85, cx + eyeW, eyeY);
+          ctx.moveTo(cx - eyeW * 1.02, eyeY);
+          ctx.quadraticCurveTo(cx, eyeY - eyeH * eyeOpenness, cx + eyeW * 1.02, eyeY);
+          ctx.stroke();
+
+          // Lower eyelid soft definition
           ctx.strokeStyle = 'rgba(168, 85, 247, 0.7)';
-          ctx.lineWidth = 1.8;
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(cx - eyeW * 0.95, eyeY);
+          ctx.quadraticCurveTo(cx, eyeY + eyeH * eyeOpenness * 0.75, cx + eyeW * 0.95, eyeY);
           ctx.stroke();
 
           ctx.restore();
@@ -439,106 +504,101 @@ export default function WitchMiasmaCanvas({ phase, reduced }: WitchMiasmaCanvasP
       }
 
       // ─────────────────────────────────────────────────────────────
-      // 4. REVERSE TEMPORAL CLOCK & SINGULARITY (Phase: 'rewind')
+      // 4. REVERSE TEMPORAL CLOCK (Phase: 'rewind')
       // ─────────────────────────────────────────────────────────────
       if (phase === 'rewind') {
-        const clockR = Math.min(w, h) * 0.32;
-        const clockRot = -timeInPhase * 7.5; // rapid counter-clockwise spin
+        const clockR = Math.min(w, h) * 0.34;
+        const clockRot = -timeInPhase * 8.5; // fast counter-clockwise spin
 
         ctx.save();
         ctx.translate(cx, cy);
         ctx.rotate(clockRot);
 
-        // Cosmic clock rim
-        ctx.strokeStyle = 'rgba(216, 180, 254, 0.75)';
-        ctx.lineWidth = 2.5;
+        ctx.strokeStyle = 'rgba(216, 180, 254, 0.85)';
+        ctx.lineWidth = 3;
         ctx.shadowColor = '#a855f7';
-        ctx.shadowBlur = 20;
+        ctx.shadowBlur = 24;
         ctx.beginPath();
         ctx.arc(0, 0, clockR, 0, Math.PI * 2);
         ctx.stroke();
 
         ctx.beginPath();
         ctx.arc(0, 0, clockR * 0.82, 0, Math.PI * 2);
-        ctx.lineWidth = 1.5;
+        ctx.lineWidth = 1.8;
         ctx.stroke();
 
-        // 12 Roman numeral hour tick marks
         const romanNums = ['XII', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI'];
-        ctx.font = `600 ${Math.max(12, Math.floor(clockR * 0.09))}px serif`;
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+        ctx.font = `700 ${Math.max(14, Math.floor(clockR * 0.1))}px serif`;
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
 
         for (let i = 0; i < 12; i++) {
           const a = (i / 12) * Math.PI * 2 - Math.PI / 2;
-          const tx = Math.cos(a) * (clockR * 0.9);
-          const ty = Math.sin(a) * (clockR * 0.9);
-          ctx.fillText(romanNums[i], tx, ty);
+          const rx = Math.cos(a) * (clockR * 0.91);
+          const ry = Math.sin(a) * (clockR * 0.91);
+          ctx.fillText(romanNums[i], rx, ry);
         }
 
-        // Whirring reverse clock hands
-        ctx.rotate(-clockRot * 2.8);
+        // Fast counter-clockwise clock hands
+        ctx.rotate(-clockRot * 3);
         ctx.beginPath();
         ctx.moveTo(0, 0);
         ctx.lineTo(0, -clockR * 0.65);
-        ctx.lineWidth = 3;
+        ctx.lineWidth = 4;
         ctx.strokeStyle = '#ffffff';
         ctx.stroke();
 
         ctx.rotate(clockRot * 5);
         ctx.beginPath();
         ctx.moveTo(0, 0);
-        ctx.lineTo(0, -clockR * 0.78);
-        ctx.lineWidth = 2;
+        ctx.lineTo(0, -clockR * 0.8);
+        ctx.lineWidth = 2.5;
         ctx.strokeStyle = '#f0abfc';
         ctx.stroke();
 
         ctx.restore();
 
-        // Gravitational vortex lines spiraling inward into the center
+        // Singularity spirals
         ctx.save();
         ctx.translate(cx, cy);
-        const spirals = 6;
-        for (let sp = 0; sp < spirals; sp++) {
+        for (let sp = 0; sp < 6; sp++) {
           ctx.beginPath();
-          const baseSpA = (sp / spirals) * Math.PI * 2 + timeInPhase * 12;
-          for (let r = 20; r < clockR * 1.6; r += 15) {
-            const a = baseSpA + r * 0.04;
-            const x = Math.cos(a) * r;
-            const y = Math.sin(a) * r;
-            if (r === 20) ctx.moveTo(x, y);
-            else ctx.lineTo(x, y);
+          const baseSpA = (sp / 6) * Math.PI * 2 + timeInPhase * 14;
+          for (let r = 25; r < clockR * 1.8; r += 16) {
+            const a = baseSpA + r * 0.045;
+            const px = Math.cos(a) * r;
+            const py = Math.sin(a) * r;
+            if (r === 25) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
           }
-          ctx.strokeStyle = `rgba(192, 38, 211, ${0.4 * (1 - sp / spirals)})`;
-          ctx.lineWidth = 2;
+          ctx.strokeStyle = `rgba(216, 180, 254, ${0.45 * (1 - sp / 6)})`;
+          ctx.lineWidth = 2.2;
           ctx.stroke();
         }
         ctx.restore();
       }
 
       // ─────────────────────────────────────────────────────────────
-      // 5. MIASMA SMOKE PARTICLES
+      // 5. FLOATING MIASMA PARTICLES
       // ─────────────────────────────────────────────────────────────
       if (particlesRef.current.length > 0) {
         ctx.save();
         for (const p of particlesRef.current) {
           if (phase === 'rewind') {
-            // Particles get pulled inward into the center black hole
             const dx = cx - p.x;
             const dy = cy - p.y;
             const dist = Math.hypot(dx, dy) || 1;
-            p.vx += (dx / dist) * 1200 * dt;
-            p.vy += (dy / dist) * 1200 * dt;
-            p.vx *= 0.92;
-            p.vy *= 0.92;
+            p.vx += (dx / dist) * 1400 * dt;
+            p.vy += (dy / dist) * 1400 * dt;
+            p.vx *= 0.91;
+            p.vy *= 0.91;
           } else {
             p.wobble += p.wobbleSpeed * dt;
-            p.x += (p.vx + Math.sin(p.wobble) * 20) * dt;
+            p.x += (p.vx + Math.sin(p.wobble) * 22) * dt;
             p.y += p.vy * dt;
           }
 
-          // Wrap or reset
           if (p.y < -30) p.y = h + 20;
           if (p.x < -30) p.x = w + 20;
           if (p.x > w + 30) p.x = -20;
