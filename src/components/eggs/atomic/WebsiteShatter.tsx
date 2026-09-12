@@ -35,9 +35,9 @@ const SHARDS: ShardDef[] = [
   },
   {
     id: 2,
-    polygon: 'polygon(35% 30%, 50% 25%, 50% 50%)',
-    svgPoints: '35,30 50,25 50,50',
-    centroid: [45, 35],
+    polygon: 'polygon(35% 30%, 50% 25%, 50% 50%, 30% 50%)',
+    svgPoints: '35,30 50,25 50,50 30,50',
+    centroid: [41, 39],
     blast: { x: -260, y: -340, z: 620, rotX: 55, rotY: -45, rotZ: -30 },
   },
   {
@@ -65,9 +65,9 @@ const SHARDS: ShardDef[] = [
   },
   {
     id: 6,
-    polygon: 'polygon(50% 25%, 65% 30%, 50% 50%)',
-    svgPoints: '50,25 65,30 50,50',
-    centroid: [55, 35],
+    polygon: 'polygon(50% 25%, 65% 30%, 70% 50%, 50% 50%)',
+    svgPoints: '50,25 65,30 70,50 50,50',
+    centroid: [59, 39],
     blast: { x: 260, y: -340, z: 640, rotX: 55, rotY: 45, rotZ: 30 },
   },
   {
@@ -271,37 +271,107 @@ export default function WebsiteShatter({ active, phase, onRestored }: WebsiteSha
         });
       });
     } else if (phase === 'restore') {
-      // MAGICAL SINGULARITY REWIND: Pieces of the actual website fly back and snap into place!
+      // ─────────────────────────────────────────────────────────────
+      // EPIC REVERSE VORTEX REWIND & KINTSUGI SEAM FUSION
+      // ─────────────────────────────────────────────────────────────
       animTimeline = gsap.timeline({
         onComplete: () => {
-          // Restore original root and unmount shard overlay
           const root = document.getElementById('site-root');
           if (root) root.style.opacity = '1';
           onRestored();
         },
       });
 
-      shards.forEach((shard, idx) => {
-        // Dramatic staggered return: outer shards start earlier, inner shards follow
-        const distFromCenter = Math.hypot(SHARDS[idx].centroid[0] - 50, SHARDS[idx].centroid[1] - 50);
-        const staggerDelay = (distFromCenter / 50) * 0.35;
+      const maxDist = Math.hypot(50, 50);
 
-        animTimeline!.to(
+      shards.forEach((shard, idx) => {
+        const def = SHARDS[idx];
+        const distFromCenter = Math.hypot(def.centroid[0] - 50, def.centroid[1] - 50);
+        // Non-linear golden-ratio stagger
+        const staggerDelay = Math.pow(distFromCenter / maxDist, 1.35) * 0.35;
+
+        // Calculate Tangential Vortex Waypoint
+        const Rb = Math.hypot(def.blast.x, def.blast.y) || 1;
+        const tx = -def.blast.y / Rb; // Clockwise tangent
+        const ty = def.blast.x / Rb;
+        const swirlAmp = Rb * 0.38;
+
+        const midX = def.blast.x * 0.52 + tx * swirlAmp;
+        const midY = def.blast.y * 0.52 + ty * swirlAmp;
+        const midZ = def.blast.z * 0.40;
+        const midRotZ = def.blast.rotZ + 28 * (def.blast.rotZ >= 0 ? 1 : -1);
+
+        // Target SVG border for Kintsugi fusion
+        const svgPolys = shard.querySelectorAll('polygon');
+
+        const shardTl = gsap.timeline();
+
+        // Stage 1: Vortex Inception & Helical Swirl (0% -> 48%)
+        shardTl.to(shard, {
+          x: midX,
+          y: midY,
+          z: midZ,
+          rotateX: def.blast.rotX * 0.35,
+          rotateY: def.blast.rotY * 0.35,
+          rotateZ: midRotZ,
+          scale: 0.96,
+          duration: 0.95,
+          ease: 'power2.in',
+          force3D: true,
+        });
+
+        // Stage 2: Planar Flattening & Magnetic Deceleration (48% -> 88%)
+        shardTl.to(shard, {
+          x: 0,
+          y: 0,
+          z: 0,
+          rotateX: 0,
+          rotateY: 0,
+          rotateZ: 0,
+          scale: 1.0025, // Micro-dilation to eliminate 1px polygon gaps
+          duration: 1.15,
+          ease: 'cubic-bezier(0.16, 1, 0.3, 1)', // Expo-out magnetic landing
+          force3D: true,
+        });
+
+        // Stage 3: Kintsugi Seam Weld & Elastic Snap (88% -> 100%)
+        shardTl.to(
           shard,
           {
-            x: 0,
-            y: 0,
-            z: 0,
-            rotateX: 0,
-            rotateY: 0,
-            rotateZ: 0,
-            scale: 1,
-            duration: 1.9, // Graceful, slow, cinematic anime rewind
-            ease: 'power2.inOut',
-            force3D: true,
+            scale: 1.0,
+            duration: 0.22,
+            ease: 'power2.out',
           },
-          staggerDelay,
+          '-=0.15',
         );
+
+        // Synchronized SVG Seam Weld Flare
+        if (svgPolys.length > 0) {
+          shardTl.to(
+            svgPolys,
+            {
+              stroke: 'rgba(255, 255, 255, 1)',
+              strokeWidth: 2.2,
+              duration: 0.18,
+              ease: 'power2.in',
+            },
+            '-=0.35',
+          );
+          shardTl.to(svgPolys, {
+            stroke: 'rgba(251, 191, 36, 0.95)', // Molten gold fusion
+            strokeWidth: 1.0,
+            duration: 0.22,
+            ease: 'power2.out',
+          });
+        }
+
+        // Hand-off Crossfade: unhide site-root as the weld flashes
+        shardTl.add(() => {
+          const root = document.getElementById('site-root');
+          if (root) root.style.opacity = '1';
+        }, '-=0.10');
+
+        animTimeline!.add(shardTl, staggerDelay);
       });
     }
 
@@ -321,6 +391,8 @@ export default function WebsiteShatter({ active, phase, onRestored }: WebsiteSha
       style={{
         perspective: 1100,
         transformStyle: 'preserve-3d',
+        contain: 'strict',
+        isolation: 'isolate',
       }}
     >
       {/* Strip expensive backdrop-filters and shadows from cloned DOM for buttery 60fps */}
@@ -345,6 +417,7 @@ export default function WebsiteShatter({ active, phase, onRestored }: WebsiteSha
           style={{
             clipPath: shard.polygon,
             transformStyle: 'preserve-3d',
+            transformOrigin: `${shard.centroid[0]}% ${shard.centroid[1]}% 0px`,
             willChange: 'transform',
             backfaceVisibility: 'hidden',
           }}
@@ -383,7 +456,8 @@ export default function WebsiteShatter({ active, phase, onRestored }: WebsiteSha
               points={shard.svgPoints}
               fill="none"
               stroke="rgba(216, 180, 254, 0.85)"
-              strokeWidth="0.6"
+              strokeWidth="1.2"
+              vectorEffect="non-scaling-stroke"
               strokeLinejoin="round"
             />
             {/* Crisp specular white light edge reflection */}
@@ -391,7 +465,8 @@ export default function WebsiteShatter({ active, phase, onRestored }: WebsiteSha
               points={shard.svgPoints}
               fill="none"
               stroke="rgba(255, 255, 255, 0.95)"
-              strokeWidth="0.3"
+              strokeWidth="0.75"
+              vectorEffect="non-scaling-stroke"
             />
           </svg>
         </div>
