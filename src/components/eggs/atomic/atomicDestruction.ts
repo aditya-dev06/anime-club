@@ -12,35 +12,29 @@ export function createDestructionController(reduced = false): DestructionControl
   const blastTimeline = gsap.timeline({ paused: true });
   const restoreTimeline = gsap.timeline({ paused: true });
 
+  // Explicit tracking of every single transformed DOM element
+  const affectedElements = new Set<HTMLElement>();
+
   const getSiteRoot = (): HTMLElement | null => {
     return document.getElementById('site-root') || document.body;
   };
 
-  const getFragments = (): HTMLElement[] => {
-    const root = getSiteRoot();
-    if (!root) return [];
-    const elements: (HTMLElement | null)[] = [
-      root.querySelector('nav'),
-      root.querySelector('.title-hero'),
-      root.querySelector('.title-warp'),
-      root.querySelector('main'),
-      root.querySelector('footer'),
-      ...Array.from(root.querySelectorAll<HTMLElement>('.glass')),
-      ...Array.from(root.querySelectorAll<HTMLElement>('button')),
-      ...Array.from(root.querySelectorAll<HTMLElement>('article')),
-    ];
-    return Array.from(new Set(elements.filter((el): el is HTMLElement => el !== null)));
+  const registerElement = (el: HTMLElement | null | undefined): HTMLElement | null => {
+    if (!el) return null;
+    affectedElements.add(el);
+    return el;
   };
 
   const startTremor = () => {
     if (reduced) return;
     const root = getSiteRoot();
     if (!root) return;
+    registerElement(root);
 
     tremorTimeline.clear();
 
     // 0.0s to 4.5s: Escalating camera vibration across the chant
-    const earlySteps = 38;
+    const earlySteps = 36;
     for (let i = 0; i < earlySteps; i++) {
       const progress = i / earlySteps;
       const amp = 2 + progress * 5;
@@ -49,11 +43,11 @@ export function createDestructionController(reduced = false): DestructionControl
         {
           x: (Math.random() - 0.5) * amp,
           y: (Math.random() - 0.5) * amp,
-          rotation: (Math.random() - 0.5) * (0.3 + progress * 0.6),
+          rotation: (Math.random() - 0.5) * (0.3 + progress * 0.5),
           duration: 0.1,
           ease: 'none',
         },
-        i * 0.11,
+        i * 0.12,
       );
     }
 
@@ -61,8 +55,8 @@ export function createDestructionController(reduced = false): DestructionControl
     const intenseSteps = 24;
     for (let i = 0; i < intenseSteps; i++) {
       const progress = i / intenseSteps;
-      const ampX = 8 + progress * 22;
-      const ampY = 7 + progress * 16;
+      const ampX = 8 + progress * 24;
+      const ampY = 7 + progress * 18;
       tremorTimeline.to(
         root,
         {
@@ -76,7 +70,7 @@ export function createDestructionController(reduced = false): DestructionControl
       );
     }
 
-    // 6.0s to 6.37s: Pre-detonation vacuum implosion (screen compresses inward)
+    // 6.0s to 6.37s: Pre-detonation vacuum implosion
     tremorTimeline.to(
       root,
       {
@@ -84,7 +78,7 @@ export function createDestructionController(reduced = false): DestructionControl
         y: 0,
         scale: 0.94,
         rotation: 0,
-        filter: 'brightness(0.75) contrast(1.3) hue-rotate(260deg)',
+        filter: 'brightness(0.8) contrast(1.3) hue-rotate(260deg)',
         duration: 0.35,
         ease: 'power2.in',
       },
@@ -98,6 +92,7 @@ export function createDestructionController(reduced = false): DestructionControl
     tremorTimeline.kill();
     const root = getSiteRoot();
     if (!root) return;
+    registerElement(root);
 
     blastTimeline.clear();
 
@@ -112,70 +107,89 @@ export function createDestructionController(reduced = false): DestructionControl
       return;
     }
 
-    // 1. Instant 90ms nuclear color inversion flash (blinding purple-violet radiation)
+    // 1. Instant 80ms violet radiation flash
     blastTimeline.to(
       root,
       {
-        filter: 'invert(1) contrast(3) hue-rotate(285deg) drop-shadow(0 0 50px rgba(168,85,247,1))',
-        duration: 0.09,
+        filter: 'invert(1) contrast(3) hue-rotate(285deg)',
+        duration: 0.08,
       },
       0,
     );
     blastTimeline.to(
       root,
       {
-        filter: 'contrast(1.4) brightness(0.8) hue-rotate(270deg)',
-        duration: 0.25,
+        filter: 'contrast(1.3) brightness(0.85) hue-rotate(270deg)',
+        duration: 0.2,
       },
-      0.09,
+      0.08,
     );
 
-    // 2. Severe Bomb Crater 3D Deformation of the entire website
+    // 2. Severe Bomb Crater 3D Distortion of the entire page
     blastTimeline.to(
       root,
       {
-        transformPerspective: 750,
-        rotateX: 24,
-        rotateY: -16,
-        rotateZ: 6.5,
-        scale: 0.82,
-        y: 85,
-        duration: 0.55,
+        transformPerspective: 800,
+        rotateX: 22,
+        rotateY: -15,
+        rotateZ: 6,
+        scale: 0.84,
+        y: 80,
+        duration: 0.5,
         ease: 'power4.out',
       },
       0.05,
     );
 
-    // 3. Catastrophic Bomb Blast Scattering of Individual UI Components!
-    // Navbar: blasted high up into the corner and tilted like ripped metal
-    const nav = root.querySelector<HTMLElement>('nav');
+    // 3. Catastrophic Bomb Blast Scattering of All Key Elements
+    // Navbar
+    const nav = registerElement(root.querySelector<HTMLElement>('nav'));
     if (nav) {
       blastTimeline.to(
         nav,
         {
-          y: -110,
-          x: -85,
-          rotateZ: -28,
-          rotateX: 40,
+          y: -100,
+          x: -80,
+          rotateZ: -26,
+          rotateX: 35,
           scale: 0.88,
-          opacity: 0.75,
-          duration: 0.6,
+          opacity: 0.8,
+          duration: 0.55,
           ease: 'power4.out',
         },
         0.04,
       );
     }
 
-    // Hero title / hat: blown across the screen
-    const heroTitle = root.querySelector<HTMLElement>('.title-hero') || root.querySelector<HTMLElement>('.title-warp');
+    // Hero title
+    const heroTitle = registerElement(
+      root.querySelector<HTMLElement>('.title-hero') || root.querySelector<HTMLElement>('.title-warp'),
+    );
     if (heroTitle) {
       blastTimeline.to(
         heroTitle,
         {
-          y: -130,
-          x: 75,
-          rotateZ: 28,
-          skewX: 20,
+          y: -120,
+          x: 70,
+          rotateZ: 25,
+          skewX: 18,
+          scale: 1.2,
+          duration: 0.5,
+          ease: 'power4.out',
+        },
+        0.05,
+      );
+    }
+
+    // Hero Hat Canvas
+    const hatCanvas = registerElement(root.querySelector<HTMLElement>('canvas'));
+    if (hatCanvas) {
+      blastTimeline.to(
+        hatCanvas,
+        {
+          y: -140,
+          x: -90,
+          rotateZ: -38,
           scale: 1.25,
           duration: 0.55,
           ease: 'power4.out',
@@ -184,53 +198,37 @@ export function createDestructionController(reduced = false): DestructionControl
       );
     }
 
-    // Straw Hat canvas / renderer container
-    const hatCanvas = root.querySelector<HTMLElement>('canvas');
-    if (hatCanvas) {
-      blastTimeline.to(
-        hatCanvas,
-        {
-          y: -160,
-          x: -100,
-          rotateZ: -45,
-          scale: 1.3,
-          duration: 0.6,
-          ease: 'power4.out',
-        },
-        0.05,
-      );
-    }
-
-    // Footer: blasted down and skewed
-    const footer = root.querySelector<HTMLElement>('footer');
+    // Footer
+    const footer = registerElement(root.querySelector<HTMLElement>('footer'));
     if (footer) {
       blastTimeline.to(
         footer,
         {
-          y: 140,
-          x: -70,
-          rotateZ: -16,
-          skewX: -14,
-          opacity: 0.7,
-          duration: 0.65,
+          y: 130,
+          x: -60,
+          rotateZ: -14,
+          skewX: -12,
+          opacity: 0.75,
+          duration: 0.6,
           ease: 'power4.out',
         },
         0.06,
       );
     }
 
-    // All Glass & Event Cards: blown violently outward in 3D in all directions!
+    // All Glass & Event Cards
     const cards = Array.from(root.querySelectorAll<HTMLElement>('.glass'));
     const blastVectors = [
-      { x: -260, y: 150, rz: -42, rx: 50, s: 0.75 },
-      { x: 280, y: 170, rz: 38, ry: -45, s: 0.8 },
-      { x: -200, y: -140, rz: -32, rx: -40, s: 0.72 },
-      { x: 230, y: -120, rz: 35, ry: 40, s: 0.76 },
-      { x: -90, y: 240, rz: 28, rx: 35, s: 0.7 },
-      { x: 110, y: 220, rz: -26, ry: -30, s: 0.74 },
+      { x: -240, y: 140, rz: -38, rx: 45, s: 0.78 },
+      { x: 260, y: 160, rz: 35, ry: -40, s: 0.82 },
+      { x: -180, y: -130, rz: -28, rx: -35, s: 0.75 },
+      { x: 210, y: -110, rz: 32, ry: 35, s: 0.78 },
+      { x: -80, y: 220, rz: 24, rx: 30, s: 0.72 },
+      { x: 90, y: 200, rz: -22, ry: -28, s: 0.76 },
     ];
 
     cards.forEach((card, idx) => {
+      registerElement(card);
       const vec = blastVectors[idx % blastVectors.length];
       blastTimeline.to(
         card,
@@ -241,43 +239,26 @@ export function createDestructionController(reduced = false): DestructionControl
           rotateX: vec.rx || 0,
           rotateY: vec.ry || 0,
           scale: vec.s,
-          opacity: 0.85,
-          boxShadow: '0 0 30px rgba(168,85,247,0.7), inset 0 0 20px rgba(216,180,254,0.5)',
-          duration: 0.6 + (idx % 3) * 0.08,
+          opacity: 0.88,
+          boxShadow: '0 0 25px rgba(168,85,247,0.6)',
+          duration: 0.55 + (idx % 3) * 0.08,
           ease: 'power3.out',
         },
         0.06 + idx * 0.02,
       );
     });
 
-    // Buttons: scattered around
-    const buttons = Array.from(root.querySelectorAll<HTMLElement>('button, .btn-gold'));
-    buttons.forEach((btn, idx) => {
-      const dirX = idx % 2 === 0 ? 1 : -1;
-      blastTimeline.to(
-        btn,
-        {
-          x: dirX * (50 + (idx * 30) % 120),
-          y: (idx % 2 === 0 ? -1 : 1) * (40 + (idx * 25) % 90),
-          rotateZ: dirX * (15 + (idx * 12) % 45),
-          duration: 0.55,
-          ease: 'power3.out',
-        },
-        0.08,
-      );
-    });
-
-    // 4. Lingering post-blast earthquake rumble (destroyed pieces vibrating on the ground)
-    for (let i = 0; i < 14; i++) {
+    // Post-blast earthquake tremors
+    for (let i = 0; i < 12; i++) {
       blastTimeline.to(
         root,
         {
-          x: (Math.random() - 0.5) * 12,
-          y: 85 + (Math.random() - 0.5) * 8,
+          x: (Math.random() - 0.5) * 10,
+          y: 80 + (Math.random() - 0.5) * 6,
           duration: 0.12,
           ease: 'sine.inOut',
         },
-        0.6 + i * 0.13,
+        0.55 + i * 0.12,
       );
     }
 
@@ -294,10 +275,11 @@ export function createDestructionController(reduced = false): DestructionControl
       onComplete?.();
       return;
     }
+    registerElement(root);
 
-    const fragments = getFragments();
+    const allElements = Array.from(affectedElements);
 
-    // Magical Singularity Rewind: all shattered pieces snap back in 3D
+    // Animate every affected element smoothly back to neutral
     restoreTimeline.to(
       root,
       {
@@ -308,15 +290,16 @@ export function createDestructionController(reduced = false): DestructionControl
         rotateZ: 0,
         scale: 1,
         filter: 'none',
-        duration: 0.95,
-        ease: 'back.out(1.8)',
+        duration: 0.85,
+        ease: 'power3.inOut',
       },
       0,
     );
 
-    fragments.forEach((frag, idx) => {
+    allElements.forEach((el, idx) => {
+      if (el === root) return;
       restoreTimeline.to(
-        frag,
+        el,
         {
           x: 0,
           y: 0,
@@ -328,15 +311,24 @@ export function createDestructionController(reduced = false): DestructionControl
           opacity: 1,
           filter: 'none',
           boxShadow: 'none',
-          duration: 0.9,
-          ease: 'power3.out',
+          duration: 0.8,
+          ease: 'back.out(1.6)',
         },
-        0.02 + (idx % 4) * 0.02,
+        (idx % 4) * 0.02,
       );
     });
 
+    // GUARANTEED CLEANUP: Wipe all injected inline styles completely
     restoreTimeline.call(() => {
-      gsap.set([root, ...fragments], { clearProps: 'all' });
+      gsap.set(allElements, { clearProps: 'all' });
+      allElements.forEach((el) => {
+        el.style.transform = '';
+        el.style.filter = '';
+        el.style.opacity = '';
+        el.style.boxShadow = '';
+        el.style.perspective = '';
+      });
+      affectedElements.clear();
       onComplete?.();
     });
 
@@ -347,11 +339,19 @@ export function createDestructionController(reduced = false): DestructionControl
     tremorTimeline.kill();
     blastTimeline.kill();
     restoreTimeline.kill();
+    const allElements = Array.from(affectedElements);
     const root = getSiteRoot();
-    if (root) {
-      const fragments = getFragments();
-      gsap.set([root, ...fragments], { clearProps: 'all' });
-    }
+    if (root) allElements.push(root);
+
+    gsap.set(allElements, { clearProps: 'all' });
+    allElements.forEach((el) => {
+      el.style.transform = '';
+      el.style.filter = '';
+      el.style.opacity = '';
+      el.style.boxShadow = '';
+      el.style.perspective = '';
+    });
+    affectedElements.clear();
   };
 
   return {

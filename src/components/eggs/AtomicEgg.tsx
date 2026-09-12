@@ -113,12 +113,12 @@ export default function AtomicEgg() {
       setPhase('ruins');
     }, 7800);
 
-    // 5. Magical Rewind & Reconstruction Phase (9.20s)
+    // 5. Magical Rewind & Reconstruction Phase (8.70s)
     later(() => {
       setPhase('restore');
       setVignetteActive(false);
       controller.triggerRestoration();
-    }, 9200);
+    }, 8700);
 
     // 6. Complete restoration & Victory Toast (10.20s)
     later(() => {
