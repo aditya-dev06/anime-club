@@ -133,7 +133,8 @@ export default function AtomicCanvas({ phase, reduced }: AtomicCanvasProps) {
     const cx = w / 2;
     const cy = h / 2;
     const numRadials = 22;
-    const ringRadii = [28, 65, 125, 210, 330, 480, 680, 920];
+    const maxR = Math.hypot(w, h) * 0.45;
+    const ringRadii = [0.04, 0.09, 0.16, 0.26, 0.38, 0.54, 0.74, 1.0].map((p) => p * maxR);
     const radials: RadialCrack[] = [];
     const rings: RingCrack[] = [];
     const ladders: LadderCrack[] = [];
@@ -223,7 +224,7 @@ export default function AtomicCanvas({ phase, reduced }: AtomicCanvasProps) {
 
     for (let i = 0; i < count; i++) {
       const angle = Math.random() * Math.PI * 2;
-      const speed = 12 + Math.random() * 38;
+      const speed = (12 + Math.random() * 38) * 60; // px/sec
       const daggerLen = 14 + Math.random() * 36;
       const daggerWidth = 5 + Math.random() * 14;
       const colorPair = facetColorPairs[Math.floor(Math.random() * facetColorPairs.length)];
@@ -247,9 +248,9 @@ export default function AtomicCanvas({ phase, reduced }: AtomicCanvasProps) {
         alpha: 1.0,
         decay: 0.003 + Math.random() * 0.005,
         rot: Math.random() * Math.PI * 2,
-        vRot: (Math.random() - 0.5) * 0.38,
+        vRot: (Math.random() - 0.5) * 6.0,
         size: daggerLen,
-        flipSpeed: 2.5 + Math.random() * 5.5,
+        flipSpeed: 3.0 + Math.random() * 8.0,
         flipPhase: Math.random() * Math.PI * 2,
       });
     }

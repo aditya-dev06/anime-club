@@ -1,7 +1,9 @@
-export const playSound = (src: string, volume = 1) => {
-  const basePath = import.meta.env.BASE_URL || '/';
-  const url = src.startsWith('/') ? basePath + src.slice(1) : basePath + src;
-  const audio = new Audio(url);
-  audio.volume = volume;
-  audio.play().catch(err => console.warn('Audio play failed', err));
+import { audioManager } from './audioManager';
+
+export const playSound = (src: string, volume = 1, delay = 0) => {
+  audioManager.play(src, { volume, delay });
+};
+
+export const stopAllSounds = () => {
+  audioManager.stopAll();
 };

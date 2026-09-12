@@ -24,28 +24,28 @@ const SHARDS: ShardDef[] = [
     polygon: 'polygon(0% 0%, 25% 0%, 35% 30%, 0% 33%)',
     svgPoints: '0,0 25,0 35,30 0,33',
     centroid: [15, 15],
-    blast: { x: -640, y: -460, z: 320, rotX: 50, rotY: -60, rotZ: -35 },
+    blast: { x: -640, y: -460, z: -250, rotX: 45, rotY: -55, rotZ: -35 },
   },
   {
     id: 1,
     polygon: 'polygon(25% 0%, 50% 0%, 50% 25%, 35% 30%)',
     svgPoints: '25,0 50,0 50,25 35,30',
     centroid: [38, 12],
-    blast: { x: -240, y: -580, z: 420, rotX: 65, rotY: -30, rotZ: -20 },
+    blast: { x: -240, y: -580, z: 280, rotX: 60, rotY: -25, rotZ: -20 },
   },
   {
     id: 2,
     polygon: 'polygon(35% 30%, 50% 25%, 50% 50%, 30% 50%)',
     svgPoints: '35,30 50,25 50,50 30,50',
     centroid: [41, 39],
-    blast: { x: -260, y: -340, z: 620, rotX: 55, rotY: -45, rotZ: -30 },
+    blast: { x: -260, y: -340, z: 460, rotX: 50, rotY: -40, rotZ: -28 },
   },
   {
     id: 3,
     polygon: 'polygon(0% 33%, 35% 30%, 30% 50%, 0% 50%)',
     svgPoints: '0,33 35,30 30,50 0,50',
     centroid: [18, 40],
-    blast: { x: -660, y: -140, z: 360, rotX: 25, rotY: -70, rotZ: -25 },
+    blast: { x: -660, y: -140, z: -320, rotX: 20, rotY: -65, rotZ: -22 },
   },
 
   // Top-Right Sector
@@ -54,28 +54,28 @@ const SHARDS: ShardDef[] = [
     polygon: 'polygon(50% 0%, 75% 0%, 65% 30%, 50% 25%)',
     svgPoints: '50,0 75,0 65,30 50,25',
     centroid: [62, 12],
-    blast: { x: 240, y: -580, z: 410, rotX: 65, rotY: 30, rotZ: 20 },
+    blast: { x: 240, y: -580, z: 290, rotX: 60, rotY: 25, rotZ: 20 },
   },
   {
     id: 5,
     polygon: 'polygon(75% 0%, 100% 0%, 100% 33%, 65% 30%)',
     svgPoints: '75,0 100,0 100,33 65,30',
     centroid: [85, 15],
-    blast: { x: 650, y: -460, z: 340, rotX: 50, rotY: 60, rotZ: 35 },
+    blast: { x: 650, y: -460, z: -220, rotX: 45, rotY: 55, rotZ: 35 },
   },
   {
     id: 6,
     polygon: 'polygon(50% 25%, 65% 30%, 70% 50%, 50% 50%)',
     svgPoints: '50,25 65,30 70,50 50,50',
     centroid: [59, 39],
-    blast: { x: 260, y: -340, z: 640, rotX: 55, rotY: 45, rotZ: 30 },
+    blast: { x: 260, y: -340, z: 480, rotX: 50, rotY: 40, rotZ: 28 },
   },
   {
     id: 7,
     polygon: 'polygon(65% 30%, 100% 33%, 100% 50%, 70% 50%)',
     svgPoints: '65,30 100,33 100,50 70,50',
     centroid: [82, 40],
-    blast: { x: 670, y: -140, z: 380, rotX: 25, rotY: 70, rotZ: 25 },
+    blast: { x: 670, y: -140, z: -340, rotX: 20, rotY: 65, rotZ: 22 },
   },
 
   // Bottom-Left Sector
@@ -84,35 +84,35 @@ const SHARDS: ShardDef[] = [
     polygon: 'polygon(0% 50%, 30% 50%, 35% 70%, 0% 66%)',
     svgPoints: '0,50 30,50 35,70 0,66',
     centroid: [18, 60],
-    blast: { x: -650, y: 240, z: 360, rotX: -25, rotY: -65, rotZ: 25 },
+    blast: { x: -650, y: 240, z: -260, rotX: -20, rotY: -60, rotZ: 22 },
   },
   {
     id: 9,
     polygon: 'polygon(30% 50%, 50% 50%, 35% 70%)',
     svgPoints: '30,50 50,50 35,70',
     centroid: [38, 55],
-    blast: { x: -260, y: 320, z: 620, rotX: -55, rotY: -45, rotZ: 30 },
+    blast: { x: -260, y: 320, z: 450, rotX: -50, rotY: -40, rotZ: 28 },
   },
   {
     id: 10,
     polygon: 'polygon(0% 66%, 35% 70%, 25% 100%, 0% 100%)',
     svgPoints: '0,66 35,70 25,100 0,100',
     centroid: [15, 85],
-    blast: { x: -620, y: 530, z: 340, rotX: -50, rotY: -55, rotZ: 40 },
+    blast: { x: -620, y: 530, z: -380, rotX: -45, rotY: -50, rotZ: 35 },
   },
   {
     id: 11,
     polygon: 'polygon(35% 70%, 50% 50%, 50% 75%)',
     svgPoints: '35,70 50,50 50,75',
     centroid: [45, 65],
-    blast: { x: -140, y: 420, z: 650, rotX: -60, rotY: -25, rotZ: 20 },
+    blast: { x: -140, y: 420, z: 460, rotX: -55, rotY: -20, rotZ: 18 },
   },
   {
     id: 12,
     polygon: 'polygon(35% 70%, 50% 75%, 50% 100%, 25% 100%)',
     svgPoints: '35,70 50,75 50,100 25,100',
     centroid: [40, 88],
-    blast: { x: -250, y: 610, z: 420, rotX: -70, rotY: -30, rotZ: 25 },
+    blast: { x: -250, y: 610, z: -150, rotX: -60, rotY: -25, rotZ: 22 },
   },
 
   // Bottom-Right Sector
@@ -121,35 +121,35 @@ const SHARDS: ShardDef[] = [
     polygon: 'polygon(70% 50%, 100% 50%, 100% 66%, 65% 70%)',
     svgPoints: '70,50 100,50 100,66 65,70',
     centroid: [82, 60],
-    blast: { x: 670, y: 240, z: 370, rotX: -25, rotY: 65, rotZ: -25 },
+    blast: { x: 670, y: 240, z: -270, rotX: -20, rotY: 60, rotZ: -22 },
   },
   {
     id: 14,
     polygon: 'polygon(50% 50%, 70% 50%, 65% 70%)',
     svgPoints: '50,50 70,50 65,70',
     centroid: [62, 55],
-    blast: { x: 260, y: 320, z: 640, rotX: -55, rotY: 45, rotZ: -30 },
+    blast: { x: 260, y: 320, z: 470, rotX: -50, rotY: 40, rotZ: -28 },
   },
   {
     id: 15,
     polygon: 'polygon(50% 50%, 65% 70%, 50% 75%)',
     svgPoints: '50,50 65,70 50,75',
     centroid: [55, 65],
-    blast: { x: 140, y: 420, z: 660, rotX: -60, rotY: 25, rotZ: -20 },
+    blast: { x: 140, y: 420, z: 480, rotX: -55, rotY: 20, rotZ: -18 },
   },
   {
     id: 16,
     polygon: 'polygon(65% 70%, 100% 66%, 100% 100%, 75% 100%)',
     svgPoints: '65,70 100,66 100,100 75,100',
     centroid: [85, 85],
-    blast: { x: 630, y: 530, z: 350, rotX: -50, rotY: 55, rotZ: -40 },
+    blast: { x: 630, y: 530, z: -350, rotX: -45, rotY: 50, rotZ: -35 },
   },
   {
     id: 17,
     polygon: 'polygon(50% 75%, 65% 70%, 75% 100%, 50% 100%)',
     svgPoints: '50,75 65,70 75,100 50,100',
     centroid: [60, 88],
-    blast: { x: 250, y: 610, z: 420, rotX: -70, rotY: 30, rotZ: -25 },
+    blast: { x: 250, y: 610, z: -180, rotX: -60, rotY: 25, rotZ: -22 },
   },
 ];
 
@@ -162,6 +162,9 @@ interface WebsiteShatterProps {
 export default function WebsiteShatter({ active, phase, onRestored }: WebsiteShatterProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const shardNodesRef = useRef<(HTMLDivElement | null)[]>([]);
+  const onRestoredRef = useRef(onRestored);
+  onRestoredRef.current = onRestored;
+
   const [snapshotHtml, setSnapshotHtml] = useState<string | null>(null);
   const [capturedScrollY, setCapturedScrollY] = useState(0);
   const [capturedWidth, setCapturedWidth] = useState(0);
@@ -193,7 +196,10 @@ export default function WebsiteShatter({ active, phase, onRestored }: WebsiteSha
     // Deep clone root DOM
     const clone = root.cloneNode(true) as HTMLElement;
 
-    // Convert all canvases in the clone to <img> elements with exact raster data (e.g. Straw Hat)
+    // Strip duplicate IDs to prevent DOM collision
+    clone.querySelectorAll('[id]').forEach((el) => el.removeAttribute('id'));
+
+    // Convert canvases in the clone to <img> elements with exact raster data (e.g. Straw Hat)
     const srcCanvases = root.querySelectorAll('canvas');
     const destCanvases = clone.querySelectorAll('canvas');
     srcCanvases.forEach((src, idx) => {
@@ -227,6 +233,8 @@ export default function WebsiteShatter({ active, phase, onRestored }: WebsiteSha
     if (shards.length === 0) return;
 
     let animTimeline: gsap.core.Timeline | null = null;
+    const scaleX = Math.max(0.35, Math.min(1.8, window.innerWidth / 1920));
+    const scaleY = Math.max(0.35, Math.min(1.8, window.innerHeight / 1080));
 
     if (phase === 'detonate') {
       // BLAST APART IN 3D! Shards of the actual website fly away across the screen!
@@ -244,8 +252,8 @@ export default function WebsiteShatter({ active, phase, onRestored }: WebsiteSha
             scale: 1,
           },
           {
-            x: def.blast.x,
-            y: def.blast.y,
+            x: def.blast.x * scaleX,
+            y: def.blast.y * scaleY,
             z: def.blast.z,
             rotateX: def.blast.rotX,
             rotateY: def.blast.rotY,
@@ -262,8 +270,8 @@ export default function WebsiteShatter({ active, phase, onRestored }: WebsiteSha
       shards.forEach((shard, idx) => {
         const def = SHARDS[idx];
         gsap.to(shard, {
-          x: def.blast.x + (Math.random() - 0.5) * 20,
-          y: def.blast.y + (Math.random() - 0.5) * 20,
+          x: def.blast.x * scaleX + (Math.random() - 0.5) * 20,
+          y: def.blast.y * scaleY + (Math.random() - 0.5) * 20,
           rotateZ: def.blast.rotZ + (Math.random() - 0.5) * 4,
           duration: 1.2,
           ease: 'sine.inOut',
@@ -272,13 +280,13 @@ export default function WebsiteShatter({ active, phase, onRestored }: WebsiteSha
       });
     } else if (phase === 'restore') {
       // ─────────────────────────────────────────────────────────────
-      // EPIC REVERSE VORTEX REWIND & KINTSUGI SEAM FUSION
+      // SMOOTH C1 REVERSE VORTEX REWIND & KINTSUGI SEAM FUSION
       // ─────────────────────────────────────────────────────────────
       animTimeline = gsap.timeline({
         onComplete: () => {
           const root = document.getElementById('site-root');
           if (root) root.style.opacity = '1';
-          onRestored();
+          onRestoredRef.current();
         },
       });
 
@@ -288,39 +296,47 @@ export default function WebsiteShatter({ active, phase, onRestored }: WebsiteSha
         const def = SHARDS[idx];
         const distFromCenter = Math.hypot(def.centroid[0] - 50, def.centroid[1] - 50);
         // Non-linear golden-ratio stagger
-        const staggerDelay = Math.pow(distFromCenter / maxDist, 1.35) * 0.35;
+        const staggerDelay = Math.pow(distFromCenter / maxDist, 1.25) * 0.28;
 
-        // Calculate Tangential Vortex Waypoint
-        const Rb = Math.hypot(def.blast.x, def.blast.y) || 1;
-        const tx = -def.blast.y / Rb; // Clockwise tangent
-        const ty = def.blast.x / Rb;
-        const swirlAmp = Rb * 0.38;
+        const curX = (gsap.getProperty(shard, 'x') as number) || def.blast.x * scaleX;
+        const curY = (gsap.getProperty(shard, 'y') as number) || def.blast.y * scaleY;
+        const curZ = (gsap.getProperty(shard, 'z') as number) || def.blast.z;
+        const curRotX = (gsap.getProperty(shard, 'rotateX') as number) || def.blast.rotX;
+        const curRotY = (gsap.getProperty(shard, 'rotateY') as number) || def.blast.rotY;
+        const curRotZ = (gsap.getProperty(shard, 'rotateZ') as number) || def.blast.rotZ;
 
-        const midX = def.blast.x * 0.52 + tx * swirlAmp;
-        const midY = def.blast.y * 0.52 + ty * swirlAmp;
-        const midZ = def.blast.z * 0.40;
-        const midRotZ = def.blast.rotZ + 28 * (def.blast.rotZ >= 0 ? 1 : -1);
+        // Calculate Smooth Tangential Vortex Waypoint (Rb * 0.15 prevents velocity spike)
+        const Rb = Math.hypot(curX, curY) || 1;
+        const tx = -curY / Rb;
+        const ty = curX / Rb;
+        const swirlAmp = Rb * 0.15;
 
-        // Target SVG border for Kintsugi fusion
-        const svgPolys = shard.querySelectorAll('polygon');
+        const midX = curX * 0.48 + tx * swirlAmp;
+        const midY = curY * 0.48 + ty * swirlAmp;
+        const midZ = curZ * 0.35;
+        const midRotZ = curRotZ * 0.35 + 16; // Uniform clockwise cosmic swirl
+
+        const svgGlow = shard.querySelector('.shard-seam-glow');
+        const svgSpecular = shard.querySelector('.shard-seam-specular');
+        const glassSheen = shard.querySelector('.shard-glass-sheen');
 
         const shardTl = gsap.timeline();
 
-        // Stage 1: Vortex Inception & Helical Swirl (0% -> 48%)
+        // Stage 1: Vortex Inception & Helical Swirl (0.0s -> 0.90s)
         shardTl.to(shard, {
           x: midX,
           y: midY,
           z: midZ,
-          rotateX: def.blast.rotX * 0.35,
-          rotateY: def.blast.rotY * 0.35,
+          rotateX: curRotX * 0.35,
+          rotateY: curRotY * 0.35,
           rotateZ: midRotZ,
           scale: 0.96,
-          duration: 0.95,
-          ease: 'power2.in',
+          duration: 0.90,
+          ease: 'sine.inOut',
           force3D: true,
         });
 
-        // Stage 2: Planar Flattening & Magnetic Deceleration (48% -> 88%)
+        // Stage 2: Smooth Magnetic Deceleration into exact landing (0.90s -> 2.10s)
         shardTl.to(shard, {
           x: 0,
           y: 0,
@@ -328,48 +344,69 @@ export default function WebsiteShatter({ active, phase, onRestored }: WebsiteSha
           rotateX: 0,
           rotateY: 0,
           rotateZ: 0,
-          scale: 1.0025, // Micro-dilation to eliminate 1px polygon gaps
-          duration: 1.15,
-          ease: 'cubic-bezier(0.16, 1, 0.3, 1)', // Expo-out magnetic landing
+          scale: 1.0,
+          duration: 1.20,
+          ease: 'power3.out',
           force3D: true,
         });
 
-        // Stage 3: Kintsugi Seam Weld & Elastic Snap (88% -> 100%)
-        shardTl.to(
-          shard,
-          {
-            scale: 1.0,
-            duration: 0.22,
-            ease: 'power2.out',
-          },
-          '-=0.15',
-        );
-
-        // Synchronized SVG Seam Weld Flare
-        if (svgPolys.length > 0) {
+        // Synchronized SVG Seam Weld Flare starting EXACTLY on contact (2.08s)
+        if (svgGlow && svgSpecular) {
+          // White weld flash
           shardTl.to(
-            svgPolys,
+            [svgGlow, svgSpecular],
             {
-              stroke: 'rgba(255, 255, 255, 1)',
+              stroke: '#ffffff',
               strokeWidth: 2.2,
-              duration: 0.18,
-              ease: 'power2.in',
+              duration: 0.10,
+              ease: 'power4.in',
             },
-            '-=0.35',
+            2.08,
           );
-          shardTl.to(svgPolys, {
-            stroke: 'rgba(251, 191, 36, 0.95)', // Molten gold fusion
-            strokeWidth: 1.0,
-            duration: 0.22,
-            ease: 'power2.out',
-          });
+          // Molten gold fusion
+          shardTl.to(
+            svgGlow,
+            {
+              stroke: 'rgba(251, 191, 36, 0.95)',
+              strokeWidth: 1.4,
+              duration: 0.20,
+              ease: 'power2.out',
+            },
+            2.18,
+          );
+          shardTl.to(
+            svgSpecular,
+            {
+              stroke: 'rgba(254, 240, 138, 0.9)',
+              strokeWidth: 0.8,
+              duration: 0.20,
+              ease: 'power2.out',
+            },
+            2.18,
+          );
+          // Graceful dissolve of seams and sheen into restored site
+          shardTl.to(
+            [svgGlow, svgSpecular],
+            {
+              opacity: 0,
+              duration: 0.35,
+              ease: 'power1.out',
+            },
+            2.38,
+          );
         }
 
-        // Hand-off Crossfade: unhide site-root as the weld flashes
-        shardTl.add(() => {
-          const root = document.getElementById('site-root');
-          if (root) root.style.opacity = '1';
-        }, '-=0.10');
+        if (glassSheen) {
+          shardTl.to(
+            glassSheen,
+            {
+              opacity: 0,
+              duration: 0.35,
+              ease: 'power1.out',
+            },
+            2.38,
+          );
+        }
 
         animTimeline!.add(shardTl, staggerDelay);
       });
@@ -379,7 +416,7 @@ export default function WebsiteShatter({ active, phase, onRestored }: WebsiteSha
       animTimeline?.kill();
       gsap.killTweensOf(shards);
     };
-  }, [phase, active, snapshotHtml, onRestored]);
+  }, [phase, active, snapshotHtml]);
 
   if (!active || !snapshotHtml) return null;
 
@@ -387,11 +424,10 @@ export default function WebsiteShatter({ active, phase, onRestored }: WebsiteSha
     <div
       ref={containerRef}
       aria-hidden="true"
-      className="pointer-events-none fixed inset-0 z-[58] overflow-hidden"
+      className="pointer-events-none fixed inset-0 z-[58]"
       style={{
         perspective: 1100,
         transformStyle: 'preserve-3d',
-        contain: 'strict',
         isolation: 'isolate',
       }}
     >
@@ -432,13 +468,14 @@ export default function WebsiteShatter({ active, phase, onRestored }: WebsiteSha
               width: `${capturedWidth || window.innerWidth}px`,
               transform: `translateY(-${capturedScrollY}px)`,
               pointerEvents: 'none',
+              contain: 'strict',
             }}
             dangerouslySetInnerHTML={{ __html: snapshotHtml }}
           />
 
           {/* Realistic tinted glass refraction sheen */}
           <div
-            className="absolute inset-0 pointer-events-none"
+            className="shard-glass-sheen absolute inset-0 pointer-events-none"
             style={{
               background:
                 'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(192, 132, 252, 0.12) 50%, rgba(147, 51, 234, 0.18) 100%)',
@@ -453,6 +490,7 @@ export default function WebsiteShatter({ active, phase, onRestored }: WebsiteSha
           >
             {/* Neon violet glass seam glow */}
             <polygon
+              className="shard-seam-glow"
               points={shard.svgPoints}
               fill="none"
               stroke="rgba(216, 180, 254, 0.85)"
@@ -462,6 +500,7 @@ export default function WebsiteShatter({ active, phase, onRestored }: WebsiteSha
             />
             {/* Crisp specular white light edge reflection */}
             <polygon
+              className="shard-seam-specular"
               points={shard.svgPoints}
               fill="none"
               stroke="rgba(255, 255, 255, 0.95)"

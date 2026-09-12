@@ -27,12 +27,21 @@ export function createReturnVfxController(reduced = false): ReturnVfxController 
       ease: 'power4.in',
     });
 
-    // 2. Re:Zero supernatural shadow realm: crisp contrast, deep violet glow, 100% visible website!
+    // 2. Re:Zero supernatural shadow realm: crisp contrast, rich saturation, 100% visible website!
     tl.to(root, {
-      filter: 'contrast(120%) saturate(1.5) hue-rotate(245deg) brightness(0.96)',
+      filter: 'contrast(125%) saturate(1.4) brightness(1.04)',
       duration: 0.25,
       ease: 'power2.out',
     });
+
+    // 3. 3-DOF violent impact tremor on death
+    const shakeTl = gsap.timeline();
+    shakeTl
+      .to(root, { x: -6, y: 4, rotation: -0.7, duration: 0.04, ease: 'power4.out' })
+      .to(root, { x: 7, y: -5, rotation: 0.6, duration: 0.05 })
+      .to(root, { x: -4, y: 3, rotation: -0.4, duration: 0.06 })
+      .to(root, { x: 3, y: -2, rotation: 0.2, duration: 0.07 })
+      .to(root, { x: 0, y: 0, rotation: 0, duration: 0.1, ease: 'power2.out' });
   };
 
   const triggerHeartbeat = (intensity = 1.0) => {
@@ -43,13 +52,17 @@ export function createReturnVfxController(reduced = false): ReturnVfxController 
     gsap.fromTo(
       root,
       {
-        scale: 1 + 0.032 * intensity,
-        filter: 'contrast(155%) saturate(2.0) hue-rotate(265deg) brightness(1.12)',
+        scale: 1 + 0.025 * intensity,
+        y: -3 * intensity,
+        rotation: (Math.random() - 0.5) * 0.5 * intensity,
+        filter: 'contrast(150%) saturate(1.8) brightness(1.15)',
       },
       {
         scale: 1,
-        filter: 'contrast(120%) saturate(1.5) hue-rotate(245deg) brightness(0.96)',
-        duration: 0.38,
+        y: 0,
+        rotation: 0,
+        filter: 'contrast(125%) saturate(1.4) brightness(1.04)',
+        duration: 0.36,
         ease: 'power2.out',
       },
     );

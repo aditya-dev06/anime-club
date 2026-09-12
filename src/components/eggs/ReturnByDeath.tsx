@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { fireEgg } from '../../lib/eggBus';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
-import { playSound } from '../../lib/audio';
+import { audioManager } from '../../lib/audioManager';
 import WitchMiasmaCanvas, { type ReturnPhase } from './return/WitchMiasmaCanvas';
 import EyelidAwakening from './return/EyelidAwakening';
 import { createReturnVfxController, type ReturnVfxController } from './return/returnVfxController';
@@ -10,11 +10,11 @@ import { createReturnVfxController, type ReturnVfxController } from './return/re
  * "Return by Death" — Re:Zero Cinematic Easter Egg
  *
  * Sequence Synchronized to the 7.02s Audio Clip:
- *   0.00s – 1.20s [death]    : Instant negative invert flash. Website stays 100% visible,
- *                              shifting into an ominous supernatural violet realm. Crimson cardiac pulse.
+ *   0.00s – 1.20s [death]    : Instant negative invert flash & 3-DOF screen tremor.
+ *                              Website stays 100% visible with crisp contrast and supernatural violet sheen.
  *   1.20s – 4.50s [miasma]   : Satella's giant demonic Unseen Hands crawl deep across the website!
  *                              In the center, THE WITCH'S AMETHYST EYE OPENS AND REALISTICALLY BLINKS!
- *                              Audible whisper: "愛してる (Aishiteru...)" echoes in your ears.
+ *                              Audible whisper: "愛してる (Aishiteru...)" binaurally echoes in your ears.
  *                              Heartbeat shock pulses shudder the screen.
  *   4.50s – 6.20s [rewind]   : Temporal Singularity: Cosmic Roman-numeral clock spins backwards;
  *                              page rewinds rapidly back to top: 0 (the save point).
@@ -40,6 +40,9 @@ export default function ReturnByDeath() {
   reducedRef.current = reduced;
 
   const [phase, setPhase] = useState<ReturnPhase>('idle');
+  const phaseRef = useRef<ReturnPhase>('idle');
+  phaseRef.current = phase;
+
   const [heartbeatActive, setHeartbeatActive] = useState(false);
   const [whisperActive, setWhisperActive] = useState(false);
 
@@ -60,13 +63,14 @@ export default function ReturnByDeath() {
     return () => {
       timersRef.current.forEach(clearTimeout);
       window.clearTimeout(idleTimerRef.current);
+      audioManager.stopAll();
       controllerRef.current?.cleanup();
     };
   }, []);
 
   const triggerEgg = () => {
     if (reducedRef.current) {
-      playSound('/sounds/return-by-death.webm', 0.85);
+      audioManager.play('/sounds/return-by-death.webm', { volume: 0.85 });
       window.scrollTo({ top: 0, behavior: 'auto' });
       fireEgg(EGG);
       return;
@@ -83,8 +87,19 @@ export default function ReturnByDeath() {
 
     const controller = controllerRef.current || createReturnVfxController(false);
 
-    // 0.00s: Main sound starts, death impact, negative flash & supernatural violet realm
-    playSound('/sounds/return-by-death.webm', 0.9);
+    // Immediate Web Audio unlock & sample-accurate advance scheduling:
+    audioManager.unlock();
+
+    // 0.00s: Main death impact & eerie witch call audio
+    audioManager.play('/sounds/return-by-death.webm', { volume: 0.95, delay: 0 });
+
+    // 1.80s: First intimate voice whisper in left ear: "Aishiteru..."
+    audioManager.play('/sounds/aishiteru.mp3', { volume: 1.0, delay: 1.8, pan: -0.25 });
+
+    // 3.20s: Second echoing whisper in right ear: "Aishiteru..."
+    audioManager.play('/sounds/aishiteru.mp3', { volume: 0.85, delay: 3.2, pan: 0.35 });
+
+    // 0.00s: Death impact visuals & 3-DOF tremor
     setPhase('death');
     controller.startDeathPhase();
 
@@ -94,11 +109,10 @@ export default function ReturnByDeath() {
       setWhisperActive(true);
     }, 1200);
 
-    // 1.80s: First heartbeat *THUMP* + Audible voice whispers: "Aishiteru..."
+    // 1.80s: First heartbeat *THUMP*
     later(() => {
       setHeartbeatActive(true);
       controller.triggerHeartbeat(1.1);
-      playSound('/sounds/aishiteru.mp3', 0.95);
       later(() => setHeartbeatActive(false), 260);
     }, 1800);
 
@@ -108,11 +122,6 @@ export default function ReturnByDeath() {
       controller.triggerHeartbeat(1.3);
       later(() => setHeartbeatActive(false), 260);
     }, 2900);
-
-    // 3.20s: Second voice whisper echo: "Aishiteru..."
-    later(() => {
-      playSound('/sounds/aishiteru.mp3', 0.85);
-    }, 3200);
 
     // 4.00s: Third heartbeat *THUMP*
     later(() => {
@@ -151,6 +160,20 @@ export default function ReturnByDeath() {
     };
 
     const onKey = (e: KeyboardEvent) => {
+      // Escape key emergency panic button: cancel all timers, audio & restore instantly
+      if (e.key === 'Escape') {
+        if (phaseRef.current !== 'idle') {
+          timersRef.current.forEach(clearTimeout);
+          timersRef.current = [];
+          audioManager.stopAll();
+          controllerRef.current?.cleanup();
+          setPhase('idle');
+          setHeartbeatActive(false);
+          setWhisperActive(false);
+          return;
+        }
+      }
+
       if (e.metaKey || e.ctrlKey || e.altKey) return;
 
       const target = e.target as HTMLElement | null;
@@ -207,13 +230,14 @@ export default function ReturnByDeath() {
         className="absolute inset-0 transition-opacity duration-700 pointer-events-none"
         style={{
           background:
-            'radial-gradient(ellipse at 50% 50%, rgba(147, 51, 234, 0.14) 0%, rgba(88, 28, 135, 0.26) 65%, rgba(25, 8, 42, 0.5) 100%)',
+            'radial-gradient(ellipse at 50% 50%, rgba(168, 85, 247, 0.16) 0%, rgba(126, 34, 206, 0.22) 65%, rgba(59, 7, 100, 0.38) 100%)',
+          mixBlendMode: 'screen',
           opacity: phase === 'reawaken' ? 0 : 1,
         }}
       />
 
       {/* 2. High-Performance Canvas (Satella's Giant Unseen Hands, Witch's Blinking Eye, Reverse Clock) */}
-      <WitchMiasmaCanvas phase={phase} reduced={reduced} />
+      <WitchMiasmaCanvas phase={phase} reduced={reduced} heartbeatActive={heartbeatActive} />
 
       {/* 3. Cardiac Arrest & Heartbeat Pulse Vignette */}
       <div

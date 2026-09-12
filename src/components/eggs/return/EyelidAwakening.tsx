@@ -7,94 +7,116 @@ interface EyelidAwakeningProps {
 }
 
 export default function EyelidAwakening({ active, onAwakened }: EyelidAwakeningProps) {
-  // openRatio: 0.0 = completely closed, 1.0 = fully open off-screen
+  // openRatio: 0.0 = completely closed, 1.15 = fully swept off-screen
   const [openRatio, setOpenRatio] = useState(0);
   const [sunlightAlpha, setSunlightAlpha] = useState(0);
-  const [blurAmount, setBlurAmount] = useState(16);
+  const [hemoglobinAlpha, setHemoglobinAlpha] = useState(0);
+  const [blurAmount, setBlurAmount] = useState(20);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (!active) {
       setOpenRatio(0);
       setSunlightAlpha(0);
-      setBlurAmount(16);
+      setHemoglobinAlpha(0);
+      setBlurAmount(20);
       return;
     }
 
-    const state = { open: 0, light: 0, blur: 16 };
+    const state = { open: 0, light: 0, hemo: 0.8, blur: 20 };
     const tl = gsap.timeline({
       onComplete: () => {
         onAwakened?.();
       },
     });
 
-    // 0.00s: Darkness (eyes tightly shut)
-    tl.set(state, { open: 0, light: 0, blur: 16 });
+    // 0.00s: Darkness (eyelids closed with dawn red transillumination)
+    tl.set(state, { open: 0, light: 0, hemo: 0.85, blur: 20 });
 
-    // 1. Initial heavy slit open (0.00s – 0.24s): Eyelids part into an almond slit, blinding glare enters
+    // 1. Initial Almond Slit Crack (0.00s – 0.28s)
+    // Eyelids part into a narrow slit; blinding morning sunlight pierces the dilated pupil
     tl.to(state, {
-      open: 0.26,
-      light: 0.9,
-      blur: 14,
-      duration: 0.24,
-      ease: 'power2.out',
+      open: 0.32,
+      light: 0.95,
+      hemo: 0.35,
+      blur: 16,
+      duration: 0.28,
+      ease: 'power3.out',
       onUpdate: () => {
         setOpenRatio(state.open);
         setSunlightAlpha(state.light);
+        setHemoglobinAlpha(state.hemo);
         setBlurAmount(state.blur);
       },
     });
 
-    // 2. FIRST BLINK (0.24s – 0.33s): Reflexive snap-shut from the intense morning glare! (80ms)
+    // 2. FIRST REFLEX BLINK (0.28s – 0.38s): Explosive 80ms photophobic snap-shut!
     tl.to(state, {
-      open: 0.03,
-      light: 0.35,
-      blur: 12,
+      open: 0.02,
+      light: 0.25,
+      hemo: 0.65,
+      blur: 14,
       duration: 0.09,
       ease: 'power3.in',
       onUpdate: () => {
         setOpenRatio(state.open);
         setSunlightAlpha(state.light);
+        setHemoglobinAlpha(state.hemo);
         setBlurAmount(state.blur);
       },
     });
 
-    // 3. Second opening (0.33s – 0.60s): Eyelids flutter open wider as pupils adjust
+    // 3. Secondary Opening & Pupillary Miosis (0.38s – 0.85s)
+    // Upstroke is viscously damped (~200ms); iris constricts, depth-of-field deepens
     tl.to(state, {
-      open: 0.65,
-      light: 0.65,
+      open: 0.72,
+      light: 0.70,
+      hemo: 0.05,
       blur: 6,
-      duration: 0.27,
+      duration: 0.45,
       ease: 'power2.out',
       onUpdate: () => {
         setOpenRatio(state.open);
         setSunlightAlpha(state.light);
+        setHemoglobinAlpha(state.hemo);
         setBlurAmount(state.blur);
       },
     });
 
-    // 4. SECOND BLINK (0.60s – 0.70s): Quick natural flutter blink (85ms)
+    // 4. SECOND BLINK (0.85s – 0.97s): Natural micro-flutter blink to clear tear film (110ms)
     tl.to(state, {
-      open: 0.35,
+      open: 0.30,
       light: 0.45,
-      duration: 0.085,
-      ease: 'sine.inOut',
+      duration: 0.055,
+      ease: 'sine.in',
+      onUpdate: () => {
+        setOpenRatio(state.open);
+        setSunlightAlpha(state.light);
+      },
+    }).to(state, {
+      open: 0.80,
+      light: 0.55,
+      duration: 0.055,
+      ease: 'sine.out',
       onUpdate: () => {
         setOpenRatio(state.open);
         setSunlightAlpha(state.light);
       },
     });
 
-    // 5. Full awakening (0.70s – 1.05s): Eyelids sweep completely off-screen, focus sharpens to 0px!
+    // 5. Final Focus Lock & Aperture Sweep (0.97s – 1.35s)
+    // Eyelids sweep completely off-screen, focus sharpens to 0px, colors snap to crisp daylight
     tl.to(state, {
-      open: 1.15,
+      open: 1.20,
       light: 0,
+      hemo: 0,
       blur: 0,
-      duration: 0.35,
-      ease: 'power3.inOut',
+      duration: 0.38,
+      ease: 'power3.out',
       onUpdate: () => {
         setOpenRatio(state.open);
         setSunlightAlpha(state.light);
+        setHemoglobinAlpha(state.hemo);
         setBlurAmount(state.blur);
       },
     });
@@ -106,19 +128,23 @@ export default function EyelidAwakening({ active, onAwakened }: EyelidAwakeningP
 
   if (!active) return null;
 
-  // Calculate natural anatomical curved eyelid paths
-  // At openRatio = 0: upper meets lower at cy (50%)
-  // At openRatio = 1: upper lid arches above 0%, lower lid curves below 100%
-  const upperY = 50 - openRatio * 58;
-  const upperArch = 50 - openRatio * 76; // center arches higher
-  const lowerY = 50 + openRatio * 58;
-  const lowerArch = 50 + openRatio * 72;
+  // Asymmetric Anatomical Palpebral Fissure Curves
+  // Upper eyelid apex is shifted laterally to ~60% width; nasal inner corner dips downward
+  const k = Math.max(0, Math.min(1.2, openRatio));
+  const nasalCornerY = 50 + 2 * (1 - k);
+  const temporalCornerY = 50 - 3 * (1 - k);
 
-  // Upper eyelid SVG path (covers top half down to the upper lash curve)
-  const upperPath = `M 0,0 L 100,0 L 100,${Math.max(0, upperY)} Q 50,${upperArch} 0,${Math.max(0, upperY)} Z`;
+  const upperApexY = 50 - k * 84;
+  const upperMid2Y = 50 - k * 80;
 
-  // Lower eyelid SVG path (covers bottom half up to the lower lash curve)
-  const lowerPath = `M 0,100 L 100,100 L 100,${Math.min(100, lowerY)} Q 50,${lowerArch} 0,${Math.min(100, lowerY)} Z`;
+  const lowerApexY = 50 + k * 74;
+  const lowerMid2Y = 50 + k * 68;
+
+  // Upper eyelid SVG path (solid obsidian eyelid mass from top down to upper lash margin)
+  const upperPath = `M 0,0 L 100,0 L 100,${temporalCornerY} C 75,${upperMid2Y} 58,${upperApexY} 0,${nasalCornerY} Z`;
+
+  // Lower eyelid SVG path (solid eyelid mass from bottom up to lower lash margin)
+  const lowerPath = `M 0,100 L 100,100 L 100,${temporalCornerY} C 72,${lowerMid2Y} 45,${lowerApexY} 0,${nasalCornerY} Z`;
 
   return (
     <div
@@ -126,7 +152,7 @@ export default function EyelidAwakening({ active, onAwakened }: EyelidAwakeningP
       aria-hidden="true"
       className="pointer-events-none fixed inset-0 z-[58] overflow-hidden"
     >
-      {/* Dynamic lens blur as eyes adjust focus */}
+      {/* 1. Dynamic Lens Aperture Focus Blur */}
       {blurAmount > 0.5 && (
         <div
           className="absolute inset-0 pointer-events-none"
@@ -137,60 +163,66 @@ export default function EyelidAwakening({ active, onAwakened }: EyelidAwakeningP
         />
       )}
 
-      {/* SVG Anatomical Curved Eyelids */}
+      {/* 2. Dawn Subsurface Hemoglobin Transillumination (Red light through closed lids) */}
+      {hemoglobinAlpha > 0.01 && (
+        <div
+          className="absolute inset-0 pointer-events-none transition-opacity duration-150"
+          style={{
+            opacity: hemoglobinAlpha,
+            background:
+              'radial-gradient(ellipse at 50% 50%, rgba(220, 38, 38, 0.75) 0%, rgba(185, 28, 28, 0.85) 45%, rgba(69, 10, 10, 0.95) 100%)',
+            mixBlendMode: 'multiply',
+          }}
+        />
+      )}
+
+      {/* 3. SVG Anatomical Curved Asymmetric Eyelids */}
       <svg
         className="absolute inset-0 w-full h-full pointer-events-none"
         viewBox="0 0 100 100"
         preserveAspectRatio="none"
       >
         <defs>
-          <radialGradient id="eyelidShadow" cx="50%" cy="50%" r="50%">
-            <stop offset="60%" stopColor="#05020a" stopOpacity="1" />
-            <stop offset="100%" stopColor="#0a0314" stopOpacity="0.95" />
+          <radialGradient id="eyelidSkinShadow" cx="50%" cy="50%" r="55%">
+            <stop offset="60%" stopColor="#040108" stopOpacity="1" />
+            <stop offset="90%" stopColor="#0b0312" stopOpacity="0.98" />
+            <stop offset="100%" stopColor="#1a0624" stopOpacity="0.95" />
           </radialGradient>
-          <filter id="eyelidFeather" x="-10%" y="-10%" width="120%" height="120%">
-            <feGaussianBlur stdDeviation="1.2" />
+          <filter id="eyelidFeatherSoft" x="-10%" y="-10%" width="120%" height="120%">
+            <feGaussianBlur stdDeviation="1.0" />
           </filter>
         </defs>
 
-        {/* Upper Anatomical Curved Eyelid */}
+        {/* Upper Anatomical Eyelid */}
+        <path d={upperPath} fill="url(#eyelidSkinShadow)" filter="url(#eyelidFeatherSoft)" />
+        {/* Upper Eyelash Margin Stroke */}
         <path
-          d={upperPath}
-          fill="url(#eyelidShadow)"
-          filter="url(#eyelidFeather)"
-        />
-        {/* Upper Eyelash Rim definition */}
-        <path
-          d={`M 0,${Math.max(0, upperY)} Q 50,${upperArch} 100,${Math.max(0, upperY)}`}
+          d={`M 0,${nasalCornerY} C 58,${upperApexY} 75,${upperMid2Y} 100,${temporalCornerY}`}
           fill="none"
           stroke="#000000"
-          strokeWidth="1.2"
+          strokeWidth="1.4"
         />
 
-        {/* Lower Anatomical Curved Eyelid */}
+        {/* Lower Anatomical Eyelid */}
+        <path d={lowerPath} fill="url(#eyelidSkinShadow)" filter="url(#eyelidFeatherSoft)" />
+        {/* Lower Eyelash Margin Stroke */}
         <path
-          d={lowerPath}
-          fill="url(#eyelidShadow)"
-          filter="url(#eyelidFeather)"
-        />
-        {/* Lower Eyelash Rim definition */}
-        <path
-          d={`M 0,${Math.min(100, lowerY)} Q 50,${lowerArch} 100,${Math.min(100, lowerY)}`}
+          d={`M 0,${nasalCornerY} C 45,${lowerApexY} 72,${lowerMid2Y} 100,${temporalCornerY}`}
           fill="none"
           stroke="#000000"
-          strokeWidth="0.8"
+          strokeWidth="0.9"
         />
       </svg>
 
-      {/* Blinding golden morning sunlight bloom flooding into the awakening eyes */}
+      {/* 4. Blinding Morning Sunlight Bloom & Chromatic Flare into Waking Eyes */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
           opacity: sunlightAlpha,
           background:
-            'radial-gradient(ellipse at 50% 50%, rgba(254, 240, 138, 0.55) 0%, rgba(255, 255, 255, 0.75) 35%, rgba(192, 132, 252, 0.4) 75%, transparent 100%)',
+            'radial-gradient(ellipse at 50% 50%, rgba(254, 240, 138, 0.65) 0%, rgba(255, 255, 255, 0.85) 30%, rgba(216, 180, 254, 0.45) 70%, transparent 100%)',
           mixBlendMode: 'screen',
-          transition: 'opacity 30ms linear',
+          transition: 'opacity 35ms linear',
         }}
       />
     </div>
