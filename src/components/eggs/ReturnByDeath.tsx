@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { fireEgg } from '../../lib/eggBus';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
+import { playSound } from '../../lib/audio';
 
 /**
  * "Return by Death" — a Re:Zero-inspired fan tribute easter egg (original
@@ -106,12 +107,14 @@ export default function ReturnByDeath() {
     const runEffect = () => {
       /* Reduced motion: no overlay, no glitch — toast + instant jump. */
       if (reducedRef.current) {
+        playSound('/sounds/return-by-death.mp3', 0.8);
         fireEgg(EGG);
         window.scrollTo({ top: 0, behavior: 'auto' });
         return;
       }
 
       /* Fade the mist overlay in. */
+      playSound('/sounds/return-by-death.mp3', 0.8);
       setOverlayOn(true);
       setLit(false);
       timersRef.current.push(

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import type { CSSProperties } from 'react';
 import { fireEgg } from '../../lib/eggBus';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
+import { playSound } from '../../lib/audio';
 
 /**
  * AtomicEgg — "I AM ATOMIC" easter egg (original fan-tribute copy, no assets).
@@ -74,11 +75,13 @@ export default function AtomicEgg() {
     if (reducedRef.current) {
       // Reduced motion: instant dark dip (~400ms) + toast, no flash.
       setPhase('reduced');
+      playSound('/sounds/atomic.mp3', 0.8);
       fireEgg(TOAST);
       later(() => setPhase('idle'), 700);
       return;
     }
     setPhase('shadow');
+    playSound('/sounds/atomic.mp3', 0.8);
     later(() => setPhase('bloom'), 1150); // 0.6s converge + ~0.55s hold
     later(() => {
       setPhase('fade');
