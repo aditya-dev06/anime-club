@@ -216,6 +216,62 @@ class SoundManager {
     }
   }
 
+  /**
+   * Re:Zero Awakening Audio: Diaphragmatic inspiratory sub-bass shock
+   * paired with high-frequency sinusoidal tinnitus whistle (5.1 kHz) decaying exponentially.
+   */
+  public playAwakeningGasp(delay = 0) {
+    const ctx = this.getContext();
+    if ((ctx.state as string) !== 'running') return;
+
+    try {
+      const now = ctx.currentTime + Math.max(0, delay);
+
+      // 1. Tinnitus Generator (5.1 kHz sinusoidal whistle)
+      const tinnitusOsc = ctx.createOscillator();
+      const tinnitusGain = ctx.createGain();
+      tinnitusOsc.type = 'sine';
+      tinnitusOsc.frequency.setValueAtTime(5120, now);
+      tinnitusOsc.frequency.exponentialRampToValueAtTime(4600, now + 1.8);
+
+      tinnitusGain.gain.setValueAtTime(0.001, now);
+      tinnitusGain.gain.linearRampToValueAtTime(0.28, now + 0.05); // sharp piercing onset
+      tinnitusGain.gain.exponentialRampToValueAtTime(0.0001, now + 2.0); // gradual decay
+
+      tinnitusOsc.connect(tinnitusGain);
+      tinnitusGain.connect(this.masterGain || ctx.destination);
+      tinnitusOsc.start(now);
+      tinnitusOsc.stop(now + 2.1);
+
+      // 2. Diaphragmatic inspiratory gasp sub-bass drop (115 Hz -> 32 Hz)
+      const subOsc = ctx.createOscillator();
+      const subGain = ctx.createGain();
+      subOsc.type = 'sine';
+      subOsc.frequency.setValueAtTime(115, now);
+      subOsc.frequency.exponentialRampToValueAtTime(32, now + 0.40);
+
+      subGain.gain.setValueAtTime(0.55, now);
+      subGain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
+
+      subOsc.connect(subGain);
+      subGain.connect(this.masterGain || ctx.destination);
+      subOsc.start(now);
+      subOsc.stop(now + 0.50);
+
+      const handle = {
+        stop: () => {
+          try {
+            tinnitusOsc.stop();
+            subOsc.stop();
+          } catch {}
+        },
+      };
+      this.activeSources.add(handle);
+    } catch (err) {
+      console.warn('Awakening sound synthesis failed:', err);
+    }
+  }
+
   private flushQueue() {
     const now = Date.now();
     const queue = [...this.pendingQueue];

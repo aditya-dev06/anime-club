@@ -13,13 +13,12 @@ import { createReturnVfxController, type ReturnVfxController } from './return/re
  *   0.00s – 1.20s [death]    : Instant negative invert flash & 3-DOF screen tremor.
  *                              Website stays 100% visible with crisp contrast and supernatural violet sheen.
  *   1.20s – 4.50s [miasma]   : Satella's giant demonic Unseen Hands crawl deep across the website!
- *                              In the center, THE WITCH'S AMETHYST EYE OPENS AND REALISTICALLY BLINKS!
  *                              Audible whisper: "愛してる (Aishiteru...)" binaurally echoes in your ears.
  *                              Heartbeat shock pulses shudder the screen.
  *   4.50s – 6.20s [rewind]   : Temporal Singularity: Cosmic Roman-numeral clock spins backwards;
  *                              page rewinds rapidly back to top: 0 (the save point).
- *   6.20s – 7.20s [reawaken] : Subaru gasps awake! Anatomical curved eyelid opening & blinking sequence
- *                              as bright morning sunlight floods into the eyes and focus sharpens.
+ *   6.20s – 7.20s [reawaken] : Subaru gasps awake! Realistic first-person anatomical eyelid awakening
+ *                              with somatic chest heave, binocular diplopia, cilia blur, and morning glare.
  *   7.20s        [idle]     : Complete restoration & "RETURN BY DEATH" victory toast.
  */
 
@@ -140,6 +139,7 @@ export default function ReturnByDeath() {
     // 6.20s: Subaru gasps awake! First-person curved anatomical eyelid awakening & blinks!
     later(() => {
       setPhase('reawaken');
+      audioManager.playAwakeningGasp();
       controller.triggerAwakening();
     }, 6200);
 
@@ -236,7 +236,7 @@ export default function ReturnByDeath() {
         }}
       />
 
-      {/* 2. High-Performance Canvas (Satella's Giant Unseen Hands, Witch's Blinking Eye, Reverse Clock) */}
+      {/* 2. High-Performance Canvas (Satella's Giant Unseen Hands, Reverse Clock) */}
       <WitchMiasmaCanvas phase={phase} reduced={reduced} heartbeatActive={heartbeatActive} />
 
       {/* 3. Cardiac Arrest & Heartbeat Pulse Vignette */}
