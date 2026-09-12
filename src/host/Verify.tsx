@@ -270,25 +270,75 @@ export default function Verify() {
           </div>
         </header>
 
+        {/* Scanning View (Always in DOM so videoRef is immediately available) */}
+        <div className={phase === 'scanning' ? 'space-y-4' : 'hidden'}>
+          <div className="relative overflow-hidden rounded-2xl border border-white/10">
+            <video
+              ref={videoRef}
+              muted
+              playsInline
+              className="aspect-video w-full bg-black object-cover"
+            />
+            <div
+              className="pointer-events-none absolute inset-x-6 top-1/2 h-0.5 animate-pulse bg-straw-300 shadow-[0_0_12px_2px_rgba(226,169,74,0.8)]"
+              aria-hidden="true"
+            />
+          </div>
+          <p className="text-center text-xs text-cream/60">Point camera at attendee's ticket QR…</p>
+          <button
+            className="w-full rounded-xl border border-white/12 px-4 py-3 text-sm font-bold text-cream/70 transition hover:bg-white/5"
+            onClick={reset}
+          >
+            Cancel scan
+          </button>
+        </div>
+
+        {/* Persistent Hidden Canvas for Image Processing */}
+        <canvas ref={canvasRef} className="hidden" aria-hidden="true" />
+
         {phase === 'idle' && (
           <div className="space-y-6">
             <button className="btn-gold w-full py-4 text-base" onClick={startScanner}>
-              Start scanner
+              Start camera scanner
             </button>
+
             {scanError && (
-              <p role="alert" className="text-xs font-semibold text-ember-400">
+              <p role="alert" className="rounded-xl border border-ember-500/30 bg-ember-500/10 p-3 text-xs font-semibold text-ember-400">
                 {scanError}
               </p>
             )}
+
+            {/* Upload QR Image */}
             <div className="relative rounded-2xl glass p-5">
               <p className="mb-2 text-[10px] font-extrabold uppercase tracking-[0.3em] text-straw-300/80">
-                Or verify a code manually
+                Or scan from image / screenshot
+              </p>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleFileUpload}
+              />
+              <button
+                type="button"
+                className="btn-gold w-full py-2.5 text-xs font-semibold"
+                onClick={() => fileInputRef.current?.click()}
+              >
+                Upload ticket QR image
+              </button>
+            </div>
+
+            {/* Manual Code Entry */}
+            <div className="relative rounded-2xl glass p-5">
+              <p className="mb-2 text-[10px] font-extrabold uppercase tracking-[0.3em] text-straw-300/80">
+                Or verify code manually
               </p>
               <textarea
                 value={manual}
                 onChange={(e) => setManual(e.target.value)}
                 rows={3}
-                placeholder="Paste the AC1.….… code from a ticket"
+                placeholder="Paste the AC1.….… code from ticket"
                 className="w-full resize-none rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2.5 font-mono text-xs text-cream placeholder:text-cream/30 focus:border-straw-500/60 focus:outline-none"
               />
               <button
@@ -299,23 +349,6 @@ export default function Verify() {
                 Verify code
               </button>
             </div>
-          </div>
-        )}
-
-        {phase === 'scanning' && (
-          <div className="space-y-4">
-            <div className="relative overflow-hidden rounded-2xl border border-white/10">
-              <video ref={videoRef} muted playsInline className="aspect-video w-full bg-black object-cover" />
-              <div
-                className="pointer-events-none absolute inset-x-6 top-1/2 h-0.5 animate-pulse bg-straw-300 shadow-[0_0_12px_2px_rgba(226,169,74,0.8)]"
-                aria-hidden="true"
-              />
-            </div>
-            <p className="text-center text-xs text-cream/60">Point the camera at the ticket's QR panel…</p>
-            <button className="w-full rounded-xl border border-white/12 px-4 py-3 text-sm font-bold text-cream/70 transition hover:bg-white/5" onClick={reset}>
-              Cancel
-            </button>
-            <canvas ref={canvasRef} className="hidden" aria-hidden="true" />
           </div>
         )}
 
