@@ -2,6 +2,8 @@
 
 A cinematic, scroll-driven event booking site for the Anime Club of VIT Bhopal.
 
+**[Live Demo](https://aditya-dev06.github.io/anime-club/)**
+
 The hero features a **software-rendered 3D straw hat** (Canvas 2D, surface-of-revolution
 renderer). As you scroll, the hat physically rotates ~180°, tucks the **ANIME CLUB** title
 under its brim, swallows and minimizes it Mac-style into a golden glint, and the first
