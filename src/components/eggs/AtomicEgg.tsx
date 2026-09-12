@@ -173,9 +173,55 @@ export default function AtomicEgg() {
     };
   }, [trigger]);
 
+  const handleRestored = useCallback(() => {
+    setShatterActive(false);
+  }, []);
+
+  // Lock body scroll during active egg sequence
+  useEffect(() => {
+    if (phase === 'idle') return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [phase]);
+
+  // Set inert and aria-hidden on #site-root while shattered
+  useEffect(() => {
+    const root = document.getElementById('site-root');
+    if (!root) return;
+    if (shatterActive) {
+      root.setAttribute('aria-hidden', 'true');
+      root.setAttribute('inert', '');
+    } else {
+      root.removeAttribute('aria-hidden');
+      root.removeAttribute('inert');
+    }
+  }, [shatterActive]);
+
+  // Handle page visibility change (stop sounds & reset on tab backgrounding)
+  useEffect(() => {
+    const onVisibilityChange = () => {
+      if (document.hidden && phase !== 'idle') {
+        stopAllSounds();
+        setPhase('idle');
+        setShatterActive(false);
+        setVioletBlastActive(false);
+        setVignetteActive(false);
+        controllerRef.current?.cleanup();
+      }
+    };
+    document.addEventListener('visibilitychange', onVisibilityChange);
+    return () => {
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+    };
+  }, [phase]);
+
   /* Unmount cleanup */
   useEffect(
     () => () => {
+      stopAllSounds();
       window.clearTimeout(idleTimerRef.current);
       timersRef.current.forEach((t) => window.clearTimeout(t));
       controllerRef.current?.cleanup();
@@ -220,7 +266,7 @@ export default function AtomicEgg() {
       <WebsiteShatter
         active={shatterActive}
         phase={phase === 'rune' || phase === 'crack' ? 'idle' : phase}
-        onRestored={() => setShatterActive(false)}
+        onRestored={handleRestored}
       />
 
       {/* 4. Searing Supernova Whiteout / Violet Blast Dome */}
