@@ -209,7 +209,14 @@ export default function ReturnByDeath() {
     };
 
     window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
+    (window as unknown as { triggerReturnByDeath?: () => void }).triggerReturnByDeath = triggerEgg;
+    (window as unknown as { triggerReturn?: () => void }).triggerReturn = triggerEgg;
+
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      delete (window as unknown as { triggerReturnByDeath?: () => void }).triggerReturnByDeath;
+      delete (window as unknown as { triggerReturn?: () => void }).triggerReturn;
+    };
   }, []);
 
   if (phase === 'idle') return null;
