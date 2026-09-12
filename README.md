@@ -2,7 +2,7 @@
 
 A cinematic, scroll-driven event booking site for the Anime Club of VIT Bhopal.
 
-**[Live Demo](https://aditya-dev06.github.io/anime-club/)**
+**[Live Demo](https://aditya-dev06.github.io/anime-club/)** | **[Admin Console](https://aditya-dev06.github.io/anime-club/admin.html)** (Passcode: `vitb-admin-2026`) | **[Gate Scanner](https://aditya-dev06.github.io/anime-club/verify.html)**
 
 The hero features a **software-rendered 3D straw hat** (Canvas 2D, surface-of-revolution
 renderer). As you scroll, the hat physically rotates ~180°, tucks the **ANIME CLUB** title
@@ -25,7 +25,7 @@ The booking modal runs a three-step flow: **details → UPI checkout → e-ticke
 
 ### Host gate (check-in scanner)
 
-Open **`/verify`** (e.g. `https://your-site.vercel.app/verify`) on the host's phone:
+Open **[`/verify.html`](https://aditya-dev06.github.io/anime-club/verify.html)** on the host's phone:
 
 - "Start scanner" opens the rear camera and scans the ticket QR continuously (jsQR).
 - Valid tickets show attendee, reference and seats with a big **CHECK IN** button; duplicates are
@@ -50,7 +50,7 @@ respect `prefers-reduced-motion`.
 
 ### Admin console
 
-Open **`/admin`** (dev: `/admin.html`). Demo passcode: **`vitb-admin-2026`** (client-side gate only).
+Open **[`/admin.html`](https://aditya-dev06.github.io/anime-club/admin.html)**. Demo passcode: **`vitb-admin-2026`** (client-side gate only).
 
 - **Events** — upload, edit and delete events: title, tagline, date/time, venue, description,
   price, seats, icon and a live manga-poster preview. Saves dispatch a change event, so the main

@@ -65,8 +65,8 @@ function IconCalendar(props: SVGProps<SVGSVGElement>) {
 /* My Tickets has no anchor of its own (Events.tsx is shared), so tickets are
    reached via the Events section. */
 const CLUB_LINKS = [
-  { href: '/admin.html', label: 'Admin Console', Icon: IconShield },
-  { href: '/verify', label: 'Gate Scanner', Icon: IconTicket },
+  { href: `${import.meta.env.BASE_URL}admin.html`, label: 'Admin Console', Icon: IconShield },
+  { href: `${import.meta.env.BASE_URL}verify.html`, label: 'Gate Scanner', Icon: IconTicket },
   { href: '#events', label: 'Events', Icon: IconCalendar },
 ] as const;
 

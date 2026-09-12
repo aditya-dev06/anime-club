@@ -472,7 +472,7 @@ export default function TicketsManager() {
             on the door device to scan each attendee&apos;s e-ticket QR. The scanner validates the
             signed ticket code offline, flags re-entries, and logs every check-in below.
           </p>
-          <a href="/verify" className="btn-gold mt-5">
+          <a href={`${import.meta.env.BASE_URL}verify.html`} className="btn-gold mt-5">
             Open gate scanner
           </a>
         </div>

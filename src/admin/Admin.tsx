@@ -223,10 +223,10 @@ export default function Admin({
 
               <div className="mt-6 border-t border-white/5 pt-4 text-center">
                 <a
-                  href="/"
+                  href={import.meta.env.BASE_URL}
                   className="text-xs font-semibold text-cream/40 transition hover:text-cream/70"
                 >
-                  ← Back to site
+                  &larr; Back to site
                 </a>
               </div>
             </div>
@@ -248,10 +248,10 @@ export default function Admin({
               </div>
               <div className="flex shrink-0 items-center gap-2 sm:gap-3">
                 <a
-                  href="/"
+                  href={import.meta.env.BASE_URL}
                   className="text-[11px] font-semibold text-cream/50 transition hover:text-straw-300 sm:text-xs"
                 >
-                  ← Back to site
+                  &larr; <span className="hidden sm:inline">Back to site</span>
                 </a>
                 <button
                   type="button"
@@ -325,12 +325,12 @@ export default function Admin({
 
       <footer className="border-t border-white/5 py-5">
         <div className="mx-auto flex w-full max-w-5xl flex-col items-center justify-between gap-2 px-4 text-[11px] text-cream/40 sm:flex-row sm:px-6">
-          <p>Demo console — data lives in this browser’s localStorage.</p>
+          <p>Demo console - data lives in this browser's localStorage.</p>
           <a
-            href="/verify"
+            href={`${import.meta.env.BASE_URL}verify.html`}
             className="font-semibold text-straw-400/80 underline-offset-4 transition hover:text-straw-300 hover:underline"
           >
-            Gate scanner: /verify
+            Gate scanner &rarr;
           </a>
         </div>
       </footer>
