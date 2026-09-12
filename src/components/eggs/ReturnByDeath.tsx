@@ -59,13 +59,38 @@ export default function ReturnByDeath() {
   }, [reduced]);
 
   useEffect(() => {
+    // Preload authentic Satella whisper & Call of the Witch audio
+    audioManager.preload('/sounds/return-by-death.webm');
+    audioManager.preload('/sounds/aishiteru.mp3');
+
+    const onVisibilityChange = () => {
+      if (document.hidden && phaseRef.current !== 'idle') {
+        audioManager.stopAll();
+        timersRef.current.forEach(clearTimeout);
+        setPhase('idle');
+        controllerRef.current?.cleanup();
+      }
+    };
+    document.addEventListener('visibilitychange', onVisibilityChange);
+
     return () => {
+      document.removeEventListener('visibilitychange', onVisibilityChange);
       timersRef.current.forEach(clearTimeout);
       window.clearTimeout(idleTimerRef.current);
       audioManager.stopAll();
       controllerRef.current?.cleanup();
     };
   }, []);
+
+  // Lock body scroll during active sequence
+  useEffect(() => {
+    if (phase === 'idle') return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [phase]);
 
   const triggerEgg = () => {
     if (reducedRef.current) {
