@@ -71,7 +71,7 @@ export interface HatFrame {
 
 /* Profile control points: [radius, height, surface of the segment that starts here] */
 const PROFILE: Array<[number, number, HatSurface]> = [
-  [0.02, 0.782, 'dome'],
+  [0, 0.782, 'dome'],
   [0.1, 0.779, 'dome'],
   [0.19, 0.768, 'dome'],
   [0.275, 0.748, 'dome'],
@@ -106,7 +106,7 @@ const PROFILE: Array<[number, number, HatSurface]> = [
   [0.292, 0.622, 'inner'],
   [0.216, 0.664, 'inner'],
   [0.122, 0.69, 'inner'],
-  [0.02, 0.697, 'inner'],
+  [0, 0.697, 'inner'],
 ];
 
 const BASE: Record<HatSurface, [number, number, number]> = {
@@ -151,13 +151,26 @@ function ensurePageTexture(pulse: number, time: number): HTMLCanvasElement {
   /* ---- crown strip: AC monogram panel ---- */
   c.fillStyle = ink;
   c.fillRect(0, 0, TEX_W, 226);
+  c.save();
+  c.translate(512 - 96, 108 - 60); // Centered a bit higher
+  c.scale(3, 3);
+  c.fillStyle = '#a87c2f';
+  c.beginPath(); c.ellipse(32, 30, 30, 7.5, 0, 0, Math.PI * 2); c.fill();
+  c.fillStyle = '#e2a94a';
+  c.beginPath(); c.ellipse(32, 28, 30, 7.5, 0, 0, Math.PI * 2); c.fill();
+  c.fillStyle = '#f0c66a';
+  c.fill(new Path2D('M15 28C15 13.5 22 6.5 32 6.5s17 7 17 21.5Z'));
+  c.fillStyle = '#c8413c';
+  c.fill(new Path2D('M15.4 20.5c10-2.6 23.2-2.6 33.2 0l.4 7.2c-10-2.9-24-2.9-34 0Z'));
+  c.fillStyle = 'rgba(249, 220, 154, 0.6)';
+  c.beginPath(); c.ellipse(25.5, 13.5, 3.4, 4.2, 0, 0, Math.PI * 2); c.fill();
+  c.restore();
+  
   c.fillStyle = paper;
-  c.font = "400 190px 'Bebas Neue', Impact, sans-serif";
   c.textAlign = 'center';
   c.textBaseline = 'middle';
-  c.fillText('AC', 512, 118);
   c.font = "400 44px 'Bebas Neue', Impact, sans-serif";
-  c.fillText('ANIME CLUB', 512, 205);
+  c.fillText('Otaku Club', 512, 205);
   /* straw corner ticks */
   c.fillStyle = 'rgb(226,169,74)';
   c.fillRect(30, 30, 60, 5);
@@ -210,7 +223,7 @@ function ensurePageTexture(pulse: number, time: number): HTMLCanvasElement {
   c.fillRect(0, 370, TEX_W / 2, 126);
   c.fillStyle = ink;
   c.font = "400 62px 'Bebas Neue', Impact, sans-serif";
-  c.fillText('ANIME CLUB', 250, 428);
+  c.fillText('Otaku Club', 250, 428);
   c.font = "700 20px 'Manrope', Arial, sans-serif";
   c.fillText('VIT BHOPAL · EST. 2021', 250, 462);
   /* panel D: barcode */
@@ -367,7 +380,7 @@ export function createHatRenderer(far: HTMLCanvasElement, near: HTMLCanvasElemen
       };
     };
 
-    const buildJobs = (angle: number, pulseAmt: number): { far: Job[]; near: Job[]; printFar: PrintJob[]; printNear: PrintJob[] } => {
+    const buildJobs = (angle: number, _pulseAmt: number): { far: Job[]; near: Job[]; printFar: PrintJob[]; printNear: PrintJob[] } => {
       const farJobs: Job[] = [];
       const nearJobs: Job[] = [];
       const printFar: PrintJob[] = [];
