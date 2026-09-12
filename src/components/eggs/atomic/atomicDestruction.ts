@@ -129,37 +129,6 @@ export function createDestructionController(reduced = false): DestructionControl
       0.05,
     );
 
-    // Subtle shockwave shimmer on cards (glowing violet seams, stays firmly in place)
-    const cards = Array.from(root.querySelectorAll<HTMLElement>('.glass'));
-    cards.forEach((card, idx) => {
-      blastTimeline.to(
-        card,
-        {
-          x: (idx % 2 === 0 ? 1 : -1) * (4 + (idx % 3) * 3),
-          y: (idx % 2 === 0 ? -1 : 1) * (3 + (idx % 2) * 2),
-          rotateZ: (idx % 2 === 0 ? 1 : -1) * 1.5,
-          boxShadow: '0 0 20px rgba(168, 85, 247, 0.45)',
-          duration: 0.4,
-          ease: 'power2.out',
-        },
-        0.06,
-      );
-    });
-
-    // Lingering shockwave tremors in place
-    for (let i = 0; i < 12; i++) {
-      blastTimeline.to(
-        root,
-        {
-          x: (Math.random() - 0.5) * 6,
-          y: 18 + (Math.random() - 0.5) * 4,
-          duration: 0.12,
-          ease: 'sine.inOut',
-        },
-        0.45 + i * 0.12,
-      );
-    }
-
     blastTimeline.play(0);
   };
 

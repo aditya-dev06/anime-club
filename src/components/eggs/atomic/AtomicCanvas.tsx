@@ -117,7 +117,7 @@ export default function AtomicCanvas({ phase, reduced }: AtomicCanvasProps) {
   const explodeGlassShards = (w: number, h: number) => {
     const cx = w / 2;
     const cy = h / 2;
-    const count = reduced ? 40 : 420;
+    const count = reduced ? 30 : 140;
     const shards: FlyingGlassShard[] = [];
 
     const glassTints = [
@@ -537,11 +537,9 @@ export default function AtomicCanvas({ phase, reduced }: AtomicCanvasProps) {
             ctx.fillStyle = shard.color;
             ctx.fill();
 
-            // Crisp specular white bevel along shard edge (catches light as it flips!)
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.95)';
-            ctx.lineWidth = 1.2;
-            ctx.shadowColor = '#c084fc';
-            ctx.shadowBlur = 8;
+            // Crisp specular bevel along shard edge (catches light as it flips!)
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.9)';
+            ctx.lineWidth = 1.0;
             ctx.stroke();
 
             ctx.restore();

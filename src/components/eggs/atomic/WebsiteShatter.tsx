@@ -242,7 +242,6 @@ export default function WebsiteShatter({ active, phase, onRestored }: WebsiteSha
             rotateY: 0,
             rotateZ: 0,
             scale: 1,
-            filter: 'drop-shadow(0 0 0px transparent)',
           },
           {
             x: def.blast.x,
@@ -252,9 +251,9 @@ export default function WebsiteShatter({ active, phase, onRestored }: WebsiteSha
             rotateY: def.blast.rotY,
             rotateZ: def.blast.rotZ,
             scale: 0.92,
-            filter: 'drop-shadow(0 0 20px rgba(192, 38, 211, 0.85))',
             duration: 0.85,
             ease: 'power3.out',
+            force3D: true,
           },
         );
       });
@@ -263,11 +262,12 @@ export default function WebsiteShatter({ active, phase, onRestored }: WebsiteSha
       shards.forEach((shard, idx) => {
         const def = SHARDS[idx];
         gsap.to(shard, {
-          x: def.blast.x + (Math.random() - 0.5) * 25,
-          y: def.blast.y + (Math.random() - 0.5) * 25,
-          rotateZ: def.blast.rotZ + (Math.random() - 0.5) * 6,
+          x: def.blast.x + (Math.random() - 0.5) * 20,
+          y: def.blast.y + (Math.random() - 0.5) * 20,
+          rotateZ: def.blast.rotZ + (Math.random() - 0.5) * 4,
           duration: 1.2,
           ease: 'sine.inOut',
+          force3D: true,
         });
       });
     } else if (phase === 'restore') {
@@ -292,23 +292,13 @@ export default function WebsiteShatter({ active, phase, onRestored }: WebsiteSha
             rotateY: 0,
             rotateZ: 0,
             scale: 1,
-            filter: 'drop-shadow(0 0 28px rgba(251, 191, 36, 0.95))',
-            duration: 0.95,
-            ease: 'back.out(1.4)',
+            duration: 0.92,
+            ease: 'power3.inOut',
+            force3D: true,
           },
           (idx % 4) * 0.02,
         );
       });
-
-      // Golden-violet seam seal flash
-      animTimeline.to(
-        shards,
-        {
-          filter: 'drop-shadow(0 0 0px transparent)',
-          duration: 0.25,
-        },
-        '+=0.04',
-      );
     }
 
     return () => {
@@ -329,6 +319,18 @@ export default function WebsiteShatter({ active, phase, onRestored }: WebsiteSha
         transformStyle: 'preserve-3d',
       }}
     >
+      {/* Strip expensive backdrop-filters and shadows from cloned DOM for buttery 60fps */}
+      <style>{`
+        .shatter-clone, .shatter-clone * {
+          backdrop-filter: none !important;
+          -webkit-backdrop-filter: none !important;
+          box-shadow: none !important;
+          text-shadow: none !important;
+          animation: none !important;
+          transition: none !important;
+        }
+      `}</style>
+
       {SHARDS.map((shard, idx) => (
         <div
           key={shard.id}
@@ -339,12 +341,13 @@ export default function WebsiteShatter({ active, phase, onRestored }: WebsiteSha
           style={{
             clipPath: shard.polygon,
             transformStyle: 'preserve-3d',
-            willChange: 'transform, filter',
+            willChange: 'transform',
+            backfaceVisibility: 'hidden',
           }}
         >
           {/* Cloned view of the website positioned to match the exact scroll & width */}
           <div
-            className="relative min-h-screen bg-ink-950 text-cream"
+            className="shatter-clone relative min-h-screen bg-ink-950 text-cream"
             style={{
               position: 'absolute',
               top: 0,
@@ -356,7 +359,16 @@ export default function WebsiteShatter({ active, phase, onRestored }: WebsiteSha
             dangerouslySetInnerHTML={{ __html: snapshotHtml }}
           />
 
-          {/* SVG Glass Bevel Edge that glows violet and catches light as it tumbles */}
+          {/* Realistic tinted glass refraction sheen */}
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background:
+                'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(192, 132, 252, 0.12) 50%, rgba(147, 51, 234, 0.18) 100%)',
+            }}
+          />
+
+          {/* SVG Glass Bevel Edge that glows violet and catches specular light */}
           <svg
             className="absolute inset-0 pointer-events-none w-full h-full z-10"
             viewBox="0 0 100 100"
@@ -374,7 +386,7 @@ export default function WebsiteShatter({ active, phase, onRestored }: WebsiteSha
             <polygon
               points={shard.svgPoints}
               fill="none"
-              stroke="rgba(255, 255, 255, 0.9)"
+              stroke="rgba(255, 255, 255, 0.95)"
               strokeWidth="0.3"
             />
           </svg>
