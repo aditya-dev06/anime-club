@@ -170,7 +170,7 @@ export default function Verify() {
           <div className="leading-none">
             <h1 className="font-display text-3xl tracking-[0.14em] text-cream">GATE CONTROL</h1>
             <p className="mt-1 text-[9px] font-bold uppercase tracking-[0.42em] text-straw-300/80">
-              Anime Club · VIT Bhopal
+              Otaku Club · VIT Bhopal
             </p>
           </div>
         </header>

@@ -153,7 +153,7 @@ export default function Events({ reduced, events, onBook }: Props) {
                 THE CREW OF VIT BHOPAL
               </h3>
               <p className="mt-5 max-w-lg text-[15px] leading-relaxed text-cream/65">
-                The Anime Club is VIT Bhopal’s home for everyone who has ever argued about the best
+                The Otaku Club is VIT Bhopal’s home for everyone who has ever argued about the best
                 opening sequence, stayed up for a finale, or hand-stitched a costume three nights
                 before a con. We run weekly screenings, manga circles, cosplay builds, quiz leagues
                 and esports brackets through the year — and every autumn we put the whole thing on

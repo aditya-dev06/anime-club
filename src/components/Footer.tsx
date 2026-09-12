@@ -4,7 +4,7 @@ import LogoHat from './LogoHat';
 
 const HANDLES = [
   { label: '@animeclub.vitb', label2: 'Instagram' },
-  { label: 'Anime Club VIT Bhopal', label2: 'YouTube' },
+  { label: 'Otaku Club VIT Bhopal', label2: 'YouTube' },
   { label: 'animeclub-vitb', label2: 'Discord' },
 ];
 
@@ -122,7 +122,7 @@ export default function Footer() {
           <div className="flex items-center gap-3">
             <LogoHat className="h-9 w-12" />
             <div className="leading-none">
-              <span className="block font-display text-2xl tracking-[0.12em] text-cream">ANIME CLUB</span>
+              <span className="block font-display text-2xl tracking-[0.12em] text-cream">Otaku Club</span>
               <span className="mt-1 block text-[9px] font-bold uppercase tracking-[0.42em] text-straw-300/80">
                 VIT Bhopal
               </span>
@@ -168,7 +168,7 @@ export default function Footer() {
 
         <div className="border-t border-white/5">
         <div className="mx-auto flex w-[min(92vw,1120px)] flex-col items-center justify-between gap-2 py-5 text-[11px] text-cream/35 sm:flex-row">
-          <span>© 2026 Anime Club — VIT Bhopal University. A fan community.</span>
+          <span>© 2026 Otaku Club — VIT Bhopal University. A fan community.</span>
           <span className="text-cream/30">
             This site hides secrets. The wise know: ↑↑↓↓←→←→BA, and the words <span className="text-straw-300/50">return</span> · <span className="text-straw-300/50">atomic</span>.
           </span>

@@ -148,7 +148,7 @@ export default function MangaPanelArt({ event, hover = false, className = '' }: 
           fontFamily="'Bebas Neue', sans-serif"
           letterSpacing="3"
         >
-          ANIME CLUB
+          Otaku Club
         </text>
         <text x="30" y="254" fontSize="8" fill={a1} fontFamily="Manrope, sans-serif" fontWeight="700" letterSpacing="3">
           VIT BHOPAL · EST. 2021

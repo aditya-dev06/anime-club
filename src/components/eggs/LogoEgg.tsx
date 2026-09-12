@@ -19,8 +19,8 @@ export default function LogoEgg() {
       if (clicks.current.length >= 5) {
         clicks.current = [];
         cooldownUntil.current = now + 20_000;
-        const hat = document.querySelector('header a svg');
-        if (hat instanceof SVGElement) {
+        const hat = document.querySelector('header a img');
+        if (hat instanceof HTMLImageElement) {
           setSpinning(true);
           hat.style.transformOrigin = '50% 60%';
           timers.current.push(window.setTimeout(() => setSpinning(false), 1500));
@@ -44,7 +44,7 @@ export default function LogoEgg() {
 
   return (
     <style>{`
-      header a svg { animation: hat-spin 1.4s cubic-bezier(0.34, 1.2, 0.4, 1); }
+      header a img { animation: hat-spin 1.4s cubic-bezier(0.34, 1.2, 0.4, 1); }
       @keyframes hat-spin {
         0%   { transform: rotate(0deg) scale(1); }
         40%  { transform: rotate(360deg) scale(1.35); }

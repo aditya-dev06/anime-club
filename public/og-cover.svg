@@ -37,7 +37,7 @@
     <ellipse cx="-38" cy="-22" rx="16" ry="20" fill="#f9dc9a" opacity="0.65"/>
   </g>
 
-  <text x="600" y="452" text-anchor="middle" font-family="'Bebas Neue', Impact, sans-serif" font-size="128" letter-spacing="10" fill="url(#title)">ANIME CLUB</text>
+  <text x="600" y="452" text-anchor="middle" font-family="'Bebas Neue', Impact, sans-serif" font-size="128" letter-spacing="10" fill="url(#title)">OTAKU CLUB</text>
   <text x="600" y="508" text-anchor="middle" font-family="Manrope, Arial, sans-serif" font-size="26" font-weight="800" letter-spacing="14" fill="#f2ecdd" opacity="0.85">VIT BHOPAL · EST. 2021</text>
   <text x="600" y="560" text-anchor="middle" font-family="Manrope, Arial, sans-serif" font-size="20" font-weight="600" letter-spacing="2" fill="#e2a94a" opacity="0.9">Screenings · Cosplay · Quiz Battles · E-Tickets</text>
 </svg>

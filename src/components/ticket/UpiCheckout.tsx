@@ -4,7 +4,7 @@ import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 import type { EventItem, TicketRecord } from '../../types';
 
 const UPI_ID = 'animeclubvitb@upi';
-const UPI_NAME = 'Anime Club VIT Bhopal';
+const UPI_NAME = 'Otaku Club VIT Bhopal';
 
 /**
  * Booking flow step 2: the guest pays the club's UPI ID. The host verifies the
@@ -70,7 +70,7 @@ export default function UpiCheckout({ record, event, onVerified, onBack }: {
           <div className="relative flex items-center justify-between gap-3 px-5 py-4">
             <div>
               <p className="text-[9px] font-extrabold uppercase tracking-[0.34em] text-straw-400">
-                Anime Club · VIT Bhopal
+                Otaku Club · VIT Bhopal
               </p>
               <h3 className="mt-1 font-display text-4xl leading-none tracking-wide text-cream">
                 {free ? 'FREE ENTRY' : 'UPI CHECKOUT'}

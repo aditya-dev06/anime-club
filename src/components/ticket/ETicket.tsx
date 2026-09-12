@@ -81,7 +81,7 @@ export default function ETicket({
             <div className="relative flex items-center justify-between gap-2">
               <div className="min-w-0">
                 <div className="text-[9px] font-extrabold tracking-[0.3em] text-straw-400">
-                  ANIME CLUB
+                  Otaku Club
                 </div>
                 <div className="mt-1.5 font-display text-[30px] leading-[0.9] tracking-[0.05em] text-cream">
                   E-TICKET
@@ -179,7 +179,7 @@ export default function ETicket({
         {/* ===== straw footer strip ===== */}
         <div className="relative mt-4 flex items-center justify-between gap-2 rounded-b-[14px] bg-[linear-gradient(160deg,#f6d98b,#e2a94a_55%,#c9862d)] px-4 py-2.5">
           <span className="font-display text-[15px] leading-none tracking-[0.12em] text-ink-950">
-            ANIME CLUB · VIT BHOPAL
+            Otaku Club · VIT BHOPAL
           </span>
           <span className="shrink-0 text-[8.5px] font-extrabold tracking-[0.2em] text-ink-950/70">
             NON-TRANSFERABLE

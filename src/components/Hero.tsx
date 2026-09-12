@@ -509,8 +509,8 @@ export default function Hero({ reduced, events, onBook }: HeroProps) {
             className="absolute left-0 right-0 text-center will-change-transform"
           >
             <div ref={titleInnerRef} className="relative inline-block will-change-transform" style={{ transformOrigin: '50% 0%' }}>
-              <h1 className="title-warp relative select-none font-display text-[clamp(4.5rem,15vw,11rem)]" aria-label="ANIME CLUB">
-                {"ANIME CLUB".split("").map((ch, i) => (
+              <h1 className="title-warp relative select-none font-display text-[clamp(4.5rem,15vw,11rem)]" aria-label="OTAKU CLUB">
+                {"OTAKU CLUB".split("").map((ch, i) => (
                   <span
                     key={i}
                     aria-hidden="true"

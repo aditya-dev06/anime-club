@@ -60,7 +60,7 @@ export function parseTicketCode(
   const raw = code.trim();
   const parts = raw.split('.');
   if (parts.length !== 3 || parts[0] !== VERSION) {
-    return { ok: false, reason: 'Not an Anime Club ticket code.' };
+    return { ok: false, reason: 'Not an Otaku Club ticket code.' };
   }
   const [, payload, sig] = parts;
   if (keyedHash(payload) !== sig.toLowerCase()) {

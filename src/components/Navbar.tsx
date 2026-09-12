@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import LogoHat from './LogoHat';
+
 
 const SECTION_IDS = ['hero', 'events', 'about'] as const;
 
@@ -83,12 +83,12 @@ export default function Navbar() {
         <a
           href="#hero"
           className="flex items-center gap-3"
-          aria-label="Anime Club home"
+          aria-label="Otaku Club home"
           onClick={() => document.dispatchEvent(new CustomEvent('ac:logo-click'))}
         >
-          <LogoHat className="h-8 w-10" />
+          <img src="/favicon.ico" alt="Otaku Club Logo" className="h-8 w-10 object-contain" />
           <span className="leading-none">
-            <span className="block font-display text-xl tracking-[0.12em] text-cream">ANIME CLUB</span>
+            <span className="block font-display text-xl tracking-[0.12em] text-cream">OTAKU CLUB</span>
             <span className="mt-1 block text-[9px] font-bold uppercase tracking-[0.42em] text-straw-300/80">
               VIT Bhopal
             </span>

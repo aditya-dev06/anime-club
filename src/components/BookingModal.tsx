@@ -259,7 +259,7 @@ export default function BookingModal({ event, onClose, onBooked }: Props) {
           <div key={step} className={slideDir === 'forward' ? 'bm-slide-fwd' : 'bm-slide-back'}>
             {step === 'form' && (
               <form onSubmit={submit} className="p-6 sm:p-8">
-                <p className="text-[10px] font-extrabold uppercase tracking-[0.34em] text-straw-300/80">Anime Club · VIT Bhopal</p>
+                <p className="text-[10px] font-extrabold uppercase tracking-[0.34em] text-straw-300/80">Otaku Club · VIT Bhopal</p>
                 <h3 className="mt-1 font-display text-4xl leading-none tracking-wide text-cream">{event.title}</h3>
                 <p className="mt-2 text-xs text-cream/55">
                   {event.date} · {event.venue}

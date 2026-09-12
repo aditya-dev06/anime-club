@@ -57,7 +57,7 @@ function draftToEvent(d: Draft): EventItem {
   return {
     id: d.editId ?? d.id,
     title: d.title.trim() || 'Untitled Event',
-    tagline: d.tagline.trim() || 'Anime Club · VIT Bhopal',
+    tagline: d.tagline.trim() || 'Otaku Club · VIT Bhopal',
     date: d.date || 'TBA',
     time: d.time || 'TBA',
     venue: d.venue || 'VIT Bhopal',

@@ -181,7 +181,7 @@ export default function Admin({
                   ADMIN CONSOLE
                 </h1>
                 <p className="mt-1 text-[11px] font-bold uppercase tracking-[0.28em] text-cream/50 sm:text-xs">
-                  Anime Club · VIT Bhopal
+                  Otaku Club · VIT Bhopal
                 </p>
                 <p className="mt-4 text-sm leading-relaxed text-cream/60">
                   Crew only. Enter the club passcode to manage events and gate bookings.
@@ -243,7 +243,7 @@ export default function Admin({
                   ADMIN CONSOLE
                 </h1>
                 <p className="mt-0.5 truncate text-[10px] font-bold uppercase tracking-[0.24em] text-cream/50 sm:text-xs">
-                  Anime Club · VIT Bhopal
+                  Otaku Club · VIT Bhopal
                 </p>
               </div>
               <div className="flex shrink-0 items-center gap-2 sm:gap-3">

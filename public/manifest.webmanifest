@@ -1,6 +1,6 @@
 {
-  "name": "Anime Club — VIT Bhopal",
-  "short_name": "Anime Club",
+  "name": "Otaku Club — VIT Bhopal",
+  "short_name": "Otaku Club",
   "description": "Screenings, cosplay, quiz battles and esports at VIT Bhopal — book your seat with UPI and get an e-ticket instantly.",
   "start_url": "/",
   "display": "standalone",
@@ -8,16 +8,10 @@
   "theme_color": "#07070c",
   "icons": [
     {
-      "src": "/favicon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
+      "src": "/favicon.ico",
+      "sizes": "256x256",
+      "type": "image/x-icon",
       "purpose": "any"
-    },
-    {
-      "src": "/favicon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "maskable"
     }
   ]
 }

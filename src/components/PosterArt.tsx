@@ -141,7 +141,7 @@ export default function PosterArt({ event, className = '' }: Props) {
         fill="#0b0b13"
         fontFamily="Manrope, sans-serif"
       >
-        ANIME CLUB
+        Otaku Club
       </text>
 
       {/* icon medallion */}
