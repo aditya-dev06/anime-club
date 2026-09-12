@@ -217,52 +217,39 @@ class SoundManager {
   }
 
   /**
-   * Re:Zero Awakening Audio: Diaphragmatic inspiratory sub-bass shock
+   * Re:Zero Awakening Audio: Authentic Subaru respawn audio clip
    * paired with high-frequency sinusoidal tinnitus whistle (5.1 kHz) decaying exponentially.
    */
   public playAwakeningGasp(delay = 0) {
+    // 1. Play authentic Re:Zero respawn gasp & rush
+    this.play('/sounds/awakening.webm', { volume: 1.0, delay });
+
     const ctx = this.getContext();
     if ((ctx.state as string) !== 'running') return;
 
     try {
       const now = ctx.currentTime + Math.max(0, delay);
 
-      // 1. Tinnitus Generator (5.1 kHz sinusoidal whistle)
+      // 2. Tinnitus Generator (5.1 kHz sinusoidal whistle)
       const tinnitusOsc = ctx.createOscillator();
       const tinnitusGain = ctx.createGain();
       tinnitusOsc.type = 'sine';
       tinnitusOsc.frequency.setValueAtTime(5120, now);
-      tinnitusOsc.frequency.exponentialRampToValueAtTime(4600, now + 1.8);
+      tinnitusOsc.frequency.exponentialRampToValueAtTime(4600, now + 2.0);
 
       tinnitusGain.gain.setValueAtTime(0.001, now);
-      tinnitusGain.gain.linearRampToValueAtTime(0.28, now + 0.05); // sharp piercing onset
-      tinnitusGain.gain.exponentialRampToValueAtTime(0.0001, now + 2.0); // gradual decay
+      tinnitusGain.gain.linearRampToValueAtTime(0.18, now + 0.05); // sharp piercing onset
+      tinnitusGain.gain.exponentialRampToValueAtTime(0.0001, now + 2.2); // gradual decay
 
       tinnitusOsc.connect(tinnitusGain);
       tinnitusGain.connect(this.masterGain || ctx.destination);
       tinnitusOsc.start(now);
-      tinnitusOsc.stop(now + 2.1);
-
-      // 2. Diaphragmatic inspiratory gasp sub-bass drop (115 Hz -> 32 Hz)
-      const subOsc = ctx.createOscillator();
-      const subGain = ctx.createGain();
-      subOsc.type = 'sine';
-      subOsc.frequency.setValueAtTime(115, now);
-      subOsc.frequency.exponentialRampToValueAtTime(32, now + 0.40);
-
-      subGain.gain.setValueAtTime(0.55, now);
-      subGain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
-
-      subOsc.connect(subGain);
-      subGain.connect(this.masterGain || ctx.destination);
-      subOsc.start(now);
-      subOsc.stop(now + 0.50);
+      tinnitusOsc.stop(now + 2.3);
 
       const handle = {
         stop: () => {
           try {
             tinnitusOsc.stop();
-            subOsc.stop();
           } catch {}
         },
       };
@@ -277,6 +264,7 @@ class SoundManager {
     const queue = [...this.pendingQueue];
     this.pendingQueue = [];
     queue.forEach(({ src, options, timestamp }) => {
+      // Discard items older than 1.2s to prevent bursts
       if (now - timestamp < 1200) {
         this.play(src, options);
       }
@@ -286,9 +274,10 @@ class SoundManager {
 
 export const audioManager = new SoundManager();
 
-// Preload the essential sound effects
+// Automatically preload key audio
 if (typeof window !== 'undefined') {
   audioManager.preload('/sounds/return-by-death.webm');
   audioManager.preload('/sounds/aishiteru.mp3');
+  audioManager.preload('/sounds/awakening.webm');
   audioManager.preload('/sounds/atomic.webm');
 }

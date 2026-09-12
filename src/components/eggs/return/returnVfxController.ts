@@ -89,38 +89,8 @@ export function createReturnVfxController(reduced = false): ReturnVfxController 
   };
 
   const triggerAwakening = (onComplete?: () => void) => {
-    const root = getSiteRoot();
-    if (!root) {
-      onComplete?.();
-      return;
-    }
-
-    if (reduced) {
-      root.style.filter = '';
-      root.style.transform = '';
-      onComplete?.();
-      return;
-    }
-
-    // Restore vibrant color with a warm golden morning sunlight bloom
-    const tl = gsap.timeline({
-      onComplete: () => {
-        gsap.set(root, { clearProps: 'all' });
-        root.style.filter = '';
-        root.style.transform = '';
-        onComplete?.();
-      },
-    });
-
-    tl.to(root, {
-      filter: 'brightness(1.5) saturate(1.4) contrast(1.1)',
-      duration: 0.35,
-      ease: 'power2.out',
-    }).to(root, {
-      filter: 'none',
-      duration: 0.65,
-      ease: 'power2.inOut',
-    });
+    // EyelidAwakening.tsx manages the authentic first-person awakening POV exclusively
+    onComplete?.();
   };
 
   const cleanup = () => {

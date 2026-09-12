@@ -59,9 +59,10 @@ export default function ReturnByDeath() {
   }, [reduced]);
 
   useEffect(() => {
-    // Preload authentic Satella whisper & Call of the Witch audio
+    // Preload authentic Satella whisper, Call of the Witch, and awakening audio
     audioManager.preload('/sounds/return-by-death.webm');
     audioManager.preload('/sounds/aishiteru.mp3');
+    audioManager.preload('/sounds/awakening.webm');
 
     const onVisibilityChange = () => {
       if (document.hidden && phaseRef.current !== 'idle') {
@@ -161,19 +162,19 @@ export default function ReturnByDeath() {
       controller.startRewindScroll(1.65);
     }, 4500);
 
-    // 6.20s: Subaru gasps awake! First-person curved anatomical eyelid awakening & blinks!
+    // 6.20s: Subaru gasps awake! Authentic Re:Zero respawn gasp & first-person cinematic awakening!
     later(() => {
       setPhase('reawaken');
       audioManager.playAwakeningGasp();
       controller.triggerAwakening();
     }, 6200);
 
-    // 7.20s: Full restoration & Save Point Victory Toast
+    // 9.10s: Full restoration & Save Point Victory Toast (gives full 2.90s for awakening POV)
     later(() => {
       setPhase('idle');
       fireEgg(EGG);
       controller.cleanup();
-    }, 7250);
+    }, 9100);
   };
 
   useEffect(() => {
