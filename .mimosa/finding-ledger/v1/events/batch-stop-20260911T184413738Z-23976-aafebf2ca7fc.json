@@ -1,0 +1,39 @@
+{
+  "schemaVersion": "mimosa-finding-ledger-batch/v1",
+  "batchId": "stop-20260911T184413738Z-23976-aafebf2ca7fc",
+  "runId": "20260911T184413738Z-23976-aafebf2ca7fc",
+  "runStatus": "completed",
+  "coverage": {
+    "status": "complete",
+    "reasons": []
+  },
+  "source": {
+    "component": "zcode-hook",
+    "operationId": "Stop"
+  },
+  "revision": null,
+  "diffHash": "0986494ef74079dbfef27d5b440a25c19bdc2d3c6193efbfc9716dac03fd7493",
+  "rulesVersion": "unavailable",
+  "sessionHash": "c6e0a78782b3855aefe494f68a5655eddc11ebb63a1366b141f8a0ead623596f",
+  "reportRef": ".mimosa/reports/task-review-sess_65da49a5-f02c-42cb-9ef9-c516a65b6ce4-20260911T184413738Z-23976-aafebf2ca7fc.json",
+  "events": [],
+  "observedFindingIds": [],
+  "verifiedFiles": [
+    {
+      "file": "src/components/hat/HatRenderer.ts",
+      "direct": "complete",
+      "projectContext": "partial"
+    },
+    {
+      "file": "src/components/Hero.tsx",
+      "direct": "complete",
+      "projectContext": "partial"
+    },
+    {
+      "file": "src/components/BookingModal.tsx",
+      "direct": "complete",
+      "projectContext": "partial"
+    }
+  ],
+  "recordedAt": "2026-09-11T18:44:14.247Z"
+}

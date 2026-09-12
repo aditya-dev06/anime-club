@@ -1,0 +1,23 @@
+{
+  "name": "Anime Club — VIT Bhopal",
+  "short_name": "Anime Club",
+  "description": "Screenings, cosplay, quiz battles and esports at VIT Bhopal — book your seat with UPI and get an e-ticket instantly.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#07070c",
+  "theme_color": "#07070c",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}

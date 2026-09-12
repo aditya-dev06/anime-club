@@ -1,0 +1,1097 @@
+{
+  "schema_version": "mimosa-task-review/v2",
+  "run_id": "20260911T230152939Z-28528-65485c4e65fa",
+  "run_status": "completed",
+  "errors": [],
+  "coverage": {
+    "schema_version": "mimosa-hook-coverage/v1",
+    "status": "complete",
+    "scope": "hook_observed_diff",
+    "baseline": {
+      "complete": true,
+      "captured_files": 41,
+      "candidate_limit": 5000,
+      "truncated": false,
+      "enumeration_error_count": 0,
+      "snapshot_error_count": 0,
+      "compensated_target_count": 11
+    },
+    "change_tracking": {
+      "touched_observed": 3,
+      "touched_retained": 3,
+      "truncated": false,
+      "bash_mutation": true,
+      "bash_discovered": 11,
+      "bash_discovery_limit": 80,
+      "bash_discovery_truncated": false
+    },
+    "candidates": {
+      "eligible_files": 11,
+      "selected_files": 11,
+      "limit": 20,
+      "truncated": false
+    },
+    "scanning": {
+      "required_files": 11,
+      "scanned_files": 11,
+      "skipped_files": 0,
+      "failed_files": 0,
+      "project_checks_required": 0,
+      "project_checks_completed": 0
+    },
+    "notification": {
+      "eligible_findings": 13,
+      "detailed_findings": 0,
+      "detail_limit": 3,
+      "truncated": true
+    },
+    "reason_counts": {},
+    "reasons": [],
+    "reasons_truncated": false
+  },
+  "generated_at": "2026-09-11T23:01:52.939Z",
+  "session_id": "sess_65da49a5-f02c-42cb-9ef9-c516a65b6ce4",
+  "target": ".",
+  "revision": null,
+  "rules_version": "unavailable",
+  "diff_hash": "c6cff32d1a33cf80929a4c37aed2a7afe701ca13886edc1569438d58b692c6b5",
+  "diff": {
+    "algorithm": "sha256",
+    "changed_file_count": 11,
+    "changed_files": [
+      {
+        "file": "src/admin/Admin.tsx",
+        "ranges": [
+          {
+            "start": 7,
+            "end": 38
+          },
+          {
+            "start": 78,
+            "end": 84
+          },
+          {
+            "start": 89,
+            "end": 89
+          },
+          {
+            "start": 98,
+            "end": 112
+          },
+          {
+            "start": 267,
+            "end": 295
+          }
+        ],
+        "before_hash": "a65462bfa9a65fc790a3a003cc9d72567ccb7e0dd6ff8c124c117842cf88484d",
+        "after_hash": "e0def15c63890a07f066a4a5e8e7ddc06621f0289d695ab7727c52894cf02cd0"
+      },
+      {
+        "file": "src/components/BookingModal.tsx",
+        "ranges": [
+          {
+            "start": 13,
+            "end": 19
+          },
+          {
+            "start": 56,
+            "end": 67
+          },
+          {
+            "start": 105,
+            "end": 109
+          },
+          {
+            "start": 154,
+            "end": 176
+          },
+          {
+            "start": 183,
+            "end": 185
+          },
+          {
+            "start": 187,
+            "end": 187
+          },
+          {
+            "start": 192,
+            "end": 218
+          },
+          {
+            "start": 220,
+            "end": 240
+          },
+          {
+            "start": 242,
+            "end": 315
+          },
+          {
+            "start": 318,
+            "end": 344
+          },
+          {
+            "start": 347,
+            "end": 349
+          }
+        ],
+        "before_hash": "e64891bb6007dbaa765f853a3540c6e41983b2088b51a2686713af58a5bbbd20",
+        "after_hash": "dfd5ccc7fc15b5335773ad351de7bfd6f6d225df13398fc90e9a70f5a6ee446c"
+      },
+      {
+        "file": "src/components/eggs/CursorGlow.tsx",
+        "ranges": [
+          {
+            "start": 6,
+            "end": 7
+          },
+          {
+            "start": 9,
+            "end": 14
+          },
+          {
+            "start": 31,
+            "end": 31
+          },
+          {
+            "start": 51,
+            "end": 68
+          }
+        ],
+        "before_hash": "dd339f4abd8b70fa34afd222b29eabafaa84ae39e6dd2c4e9e93ecbc666d6ff6",
+        "after_hash": "603ad37d9c2816f54ac16bf99ca56b4a352e2c6bc74a697ea8885e5c1f14f875"
+      },
+      {
+        "file": "src/components/EventCard.tsx",
+        "ranges": [
+          {
+            "start": 2,
+            "end": 2
+          },
+          {
+            "start": 11,
+            "end": 65
+          },
+          {
+            "start": 84,
+            "end": 110
+          },
+          {
+            "start": 135,
+            "end": 136
+          },
+          {
+            "start": 139,
+            "end": 155
+          },
+          {
+            "start": 159,
+            "end": 160
+          },
+          {
+            "start": 162,
+            "end": 162
+          },
+          {
+            "start": 169,
+            "end": 182
+          },
+          {
+            "start": 206,
+            "end": 215
+          },
+          {
+            "start": 219,
+            "end": 228
+          }
+        ],
+        "before_hash": "27180f2b8ac2f0349c7106ba19546972188c08ffd833ad9ff8946c104fbd1ceb",
+        "after_hash": "246f97cafa838cf793b1e51de9139f29fd1e7b4bd5a924e90ff8887412808698"
+      },
+      {
+        "file": "src/components/Events.tsx",
+        "ranges": [
+          {
+            "start": 4,
+            "end": 4
+          },
+          {
+            "start": 28,
+            "end": 28
+          },
+          {
+            "start": 32,
+            "end": 45
+          },
+          {
+            "start": 93,
+            "end": 118
+          },
+          {
+            "start": 121,
+            "end": 121
+          },
+          {
+            "start": 127,
+            "end": 134
+          },
+          {
+            "start": 137,
+            "end": 137
+          }
+        ],
+        "before_hash": "69b624d8a86c4604061e7b544641199fb886e6347518d9639cb777f4fe7a870c",
+        "after_hash": "290e9fcc18dfc0cb163bf497e6c5edd506d20017129ce01319a7d8888482c0bf"
+      },
+      {
+        "file": "src/components/FeaturedCard.tsx",
+        "ranges": [
+          {
+            "start": 18,
+            "end": 53
+          },
+          {
+            "start": 56,
+            "end": 60
+          },
+          {
+            "start": 123,
+            "end": 137
+          },
+          {
+            "start": 147,
+            "end": 147
+          }
+        ],
+        "before_hash": "23bdd5b200a1a4527b1a6bdb6332954868226c6ec93a72077ed1b2da3c79097d",
+        "after_hash": "d8f01637e34536b1fb2b4c9f50683393a9217acca291e3b33420e584ac16cf69"
+      },
+      {
+        "file": "src/components/Footer.tsx",
+        "ranges": [
+          {
+            "start": 1,
+            "end": 2
+          },
+          {
+            "start": 11,
+            "end": 72
+          },
+          {
+            "start": 74,
+            "end": 97
+          },
+          {
+            "start": 100,
+            "end": 119
+          },
+          {
+            "start": 177,
+            "end": 201
+          }
+        ],
+        "before_hash": "a3ab41ee0604cc872adb5b3fcbb7a207399af4b4d3ab91b27498fa2abd95e44b",
+        "after_hash": "dd32a261073d7f243564c755355f61393f19e70e3bc57d38778c54174e504a34"
+      },
+      {
+        "file": "src/components/hat/HatRenderer.ts",
+        "ranges": [
+          {
+            "start": 124,
+            "end": 126
+          },
+          {
+            "start": 138,
+            "end": 142
+          },
+          {
+            "start": 145,
+            "end": 152
+          },
+          {
+            "start": 154,
+            "end": 155
+          },
+          {
+            "start": 157,
+            "end": 158
+          },
+          {
+            "start": 161,
+            "end": 167
+          },
+          {
+            "start": 169,
+            "end": 175
+          },
+          {
+            "start": 177,
+            "end": 180
+          },
+          {
+            "start": 182,
+            "end": 183
+          },
+          {
+            "start": 363,
+            "end": 365
+          },
+          {
+            "start": 367,
+            "end": 398
+          }
+        ],
+        "before_hash": "72e95b3d7e80693356bb939a6a9752c9052866f50dafab769930da2bcd94a009",
+        "after_hash": "60ee365379e321c12ea3dbe98a654557e05a3f8a6894e34e1d21f2dc13fff242"
+      },
+      {
+        "file": "src/components/MangaPanelArt.tsx",
+        "ranges": [
+          {
+            "start": 9,
+            "end": 18
+          },
+          {
+            "start": 21,
+            "end": 23
+          },
+          {
+            "start": 28,
+            "end": 28
+          },
+          {
+            "start": 33,
+            "end": 44
+          },
+          {
+            "start": 66,
+            "end": 68
+          },
+          {
+            "start": 193,
+            "end": 193
+          }
+        ],
+        "before_hash": "69d491c8708c874a42ffeadda5201ba14be62a1078c4ac9af15e4423fdd3cb34",
+        "after_hash": "6cc197dcf8f3787ae46cc1b137ae7ba6da089d3d949d2a5b0bf3bb8e4488e6c6"
+      },
+      {
+        "file": "src/components/Navbar.tsx",
+        "ranges": [
+          {
+            "start": 1,
+            "end": 1
+          },
+          {
+            "start": 4,
+            "end": 10
+          },
+          {
+            "start": 13,
+            "end": 14
+          },
+          {
+            "start": 17,
+            "end": 30
+          },
+          {
+            "start": 32,
+            "end": 65
+          },
+          {
+            "start": 74,
+            "end": 81
+          },
+          {
+            "start": 98,
+            "end": 115
+          }
+        ],
+        "before_hash": "93f288817e54af8a4387ba41c845427567dad26d27763f7ddcbb8bd34122900a",
+        "after_hash": "46ed3a8de793d73058afb97b567bbd16777dd1e6a496cd2ee31a7900e453b6cc"
+      },
+      {
+        "file": "src/components/Particles.tsx",
+        "ranges": [
+          {
+            "start": 14,
+            "end": 18
+          },
+          {
+            "start": 23,
+            "end": 32
+          },
+          {
+            "start": 43,
+            "end": 44
+          },
+          {
+            "start": 46,
+            "end": 46
+          },
+          {
+            "start": 57,
+            "end": 60
+          },
+          {
+            "start": 63,
+            "end": 82
+          },
+          {
+            "start": 91,
+            "end": 93
+          },
+          {
+            "start": 98,
+            "end": 100
+          },
+          {
+            "start": 102,
+            "end": 102
+          },
+          {
+            "start": 104,
+            "end": 104
+          },
+          {
+            "start": 112,
+            "end": 125
+          },
+          {
+            "start": 135,
+            "end": 135
+          },
+          {
+            "start": 142,
+            "end": 149
+          }
+        ],
+        "before_hash": "0b281d3e081ffd9491a2f989fa993c24468870ae2df7ec6778e57dbf4c346119",
+        "after_hash": "a0badada32af2f33cd6d3e398f32f367a2c737fcdd74fe9bafac500afa8cf52d"
+      }
+    ]
+  },
+  "timing": {
+    "started_at": "2026-09-11T23:01:50.898Z",
+    "completed_at": "2026-09-11T23:01:52.939Z",
+    "duration_ms": 2041,
+    "measurement": "hook_wall_clock"
+  },
+  "tokens": {
+    "input": 0,
+    "output": 0,
+    "total": 0,
+    "model_calls": 0,
+    "measurement": "known-zero"
+  },
+  "telemetry": {
+    "schemaVersion": "mimosa-gate-telemetry/v1",
+    "profile": "gate",
+    "operation": "Stop",
+    "outcome": "complete",
+    "latencyMs": 2041,
+    "peakMemoryBytes": 135454720,
+    "memoryMeasurement": "max-observed-process-rss",
+    "scannedFiles": 11,
+    "cache": {
+      "hits": 0,
+      "misses": 0,
+      "measurement": "not-applicable"
+    },
+    "denyCount": 0,
+    "tokens": {
+      "input": 0,
+      "output": 0,
+      "total": 0,
+      "modelCalls": 0,
+      "measurement": "known-zero"
+    }
+  },
+  "finding_count": 13,
+  "rewake_finding_count": 0,
+  "evidence_boundary": {
+    "scan": "candidate",
+    "static_fix_verification": "observed_static_only",
+    "runtime_verification": "not_performed"
+  },
+  "finding_events": [
+    {
+      "finding_id": "mimosa-a6545c1c38af67f898432cca",
+      "file": "src/components/Particles.tsx",
+      "line": 64,
+      "severity": "high",
+      "category": "弱随机数",
+      "status": "candidate",
+      "decision": "observe",
+      "at": "2026-09-11T23:01:52.939Z",
+      "evidence": {
+        "kind": "static_scan",
+        "boundary": "candidate",
+        "producer": "deterministic",
+        "source": "semgrep",
+        "evidence_hash": "07d0865bebb99b11ab8d9cd3fdf045050b7116c38751acc8e7416708407323d4",
+        "runtime_oracle": false
+      }
+    },
+    {
+      "finding_id": "mimosa-91bb46ade477db893c94c643",
+      "file": "src/components/Particles.tsx",
+      "line": 66,
+      "severity": "high",
+      "category": "弱随机数",
+      "status": "candidate",
+      "decision": "observe",
+      "at": "2026-09-11T23:01:52.939Z",
+      "evidence": {
+        "kind": "static_scan",
+        "boundary": "candidate",
+        "producer": "deterministic",
+        "source": "semgrep",
+        "evidence_hash": "91eeff5bbf092de2518c106154108b030c3a84b50c67058d777b4022083c95cb",
+        "runtime_oracle": false
+      }
+    },
+    {
+      "finding_id": "mimosa-b0854084a96a69991432101b",
+      "file": "src/components/Particles.tsx",
+      "line": 67,
+      "severity": "high",
+      "category": "弱随机数",
+      "status": "candidate",
+      "decision": "observe",
+      "at": "2026-09-11T23:01:52.939Z",
+      "evidence": {
+        "kind": "static_scan",
+        "boundary": "candidate",
+        "producer": "deterministic",
+        "source": "semgrep",
+        "evidence_hash": "3216d8433fbaa89d15f802ad31f6cb09bae825195cbcfc6ba545771746ce2b3f",
+        "runtime_oracle": false
+      }
+    },
+    {
+      "finding_id": "mimosa-ff9254c5cd7b946d8dac5780",
+      "file": "src/components/Particles.tsx",
+      "line": 69,
+      "severity": "high",
+      "category": "弱随机数",
+      "status": "candidate",
+      "decision": "observe",
+      "at": "2026-09-11T23:01:52.939Z",
+      "evidence": {
+        "kind": "static_scan",
+        "boundary": "candidate",
+        "producer": "deterministic",
+        "source": "semgrep",
+        "evidence_hash": "23d304d658fd3203015ee6b9fc357acf055cbdfa758ebc32e7885a5f41354465",
+        "runtime_oracle": false
+      }
+    },
+    {
+      "finding_id": "mimosa-553ec77e2d6696d0b2143d43",
+      "file": "src/components/Particles.tsx",
+      "line": 70,
+      "severity": "high",
+      "category": "弱随机数",
+      "status": "candidate",
+      "decision": "observe",
+      "at": "2026-09-11T23:01:52.939Z",
+      "evidence": {
+        "kind": "static_scan",
+        "boundary": "candidate",
+        "producer": "deterministic",
+        "source": "semgrep",
+        "evidence_hash": "8880ad4da6978a1c23801eacb515b2fa20f7dd9260c16dc041e7f7e8e93e1b92",
+        "runtime_oracle": false
+      }
+    },
+    {
+      "finding_id": "mimosa-cfcfc7f0d4513da67317e803",
+      "file": "src/components/Particles.tsx",
+      "line": 71,
+      "severity": "high",
+      "category": "弱随机数",
+      "status": "candidate",
+      "decision": "observe",
+      "at": "2026-09-11T23:01:52.939Z",
+      "evidence": {
+        "kind": "static_scan",
+        "boundary": "candidate",
+        "producer": "deterministic",
+        "source": "semgrep",
+        "evidence_hash": "28e1bd2eb4395697cb1cd8f13a291cba4121c05f0f6e9958b542d7a9e30864ff",
+        "runtime_oracle": false
+      }
+    },
+    {
+      "finding_id": "mimosa-b4398d08666f3b4df997c9fb",
+      "file": "src/components/Particles.tsx",
+      "line": 72,
+      "severity": "high",
+      "category": "弱随机数",
+      "status": "candidate",
+      "decision": "observe",
+      "at": "2026-09-11T23:01:52.939Z",
+      "evidence": {
+        "kind": "static_scan",
+        "boundary": "candidate",
+        "producer": "deterministic",
+        "source": "semgrep",
+        "evidence_hash": "556b8c98d998ab97e528a5b1f1d14a3d7d481c4915a5933bffa009b2b3fcb635",
+        "runtime_oracle": false
+      }
+    },
+    {
+      "finding_id": "mimosa-1ffb4308ed5d152fbcd3d01e",
+      "file": "src/components/Particles.tsx",
+      "line": 73,
+      "severity": "high",
+      "category": "弱随机数",
+      "status": "candidate",
+      "decision": "observe",
+      "at": "2026-09-11T23:01:52.939Z",
+      "evidence": {
+        "kind": "static_scan",
+        "boundary": "candidate",
+        "producer": "deterministic",
+        "source": "semgrep",
+        "evidence_hash": "4f3d1270f3a254d6f5d52bf9e4b453bdca4d6b4a5fc3f774d7a7397c4deeff32",
+        "runtime_oracle": false
+      }
+    },
+    {
+      "finding_id": "mimosa-97947d5dc2caf7b81a44f227",
+      "file": "src/components/Particles.tsx",
+      "line": 74,
+      "severity": "high",
+      "category": "弱随机数",
+      "status": "candidate",
+      "decision": "observe",
+      "at": "2026-09-11T23:01:52.939Z",
+      "evidence": {
+        "kind": "static_scan",
+        "boundary": "candidate",
+        "producer": "deterministic",
+        "source": "semgrep",
+        "evidence_hash": "02c061c9f1bc8773cabc44127de27d04827569c565ba719818968b468451b842",
+        "runtime_oracle": false
+      }
+    },
+    {
+      "finding_id": "mimosa-db7dfce5b894d6149c437e2a",
+      "file": "src/components/Particles.tsx",
+      "line": 75,
+      "severity": "high",
+      "category": "弱随机数",
+      "status": "candidate",
+      "decision": "observe",
+      "at": "2026-09-11T23:01:52.939Z",
+      "evidence": {
+        "kind": "static_scan",
+        "boundary": "candidate",
+        "producer": "deterministic",
+        "source": "semgrep",
+        "evidence_hash": "686b60e015163a01807bbdd65852061b317bcc5395966141d5473f335c74bec5",
+        "runtime_oracle": false
+      }
+    },
+    {
+      "finding_id": "mimosa-0712f81a2e130fed14ae0736",
+      "file": "src/components/Particles.tsx",
+      "line": 76,
+      "severity": "high",
+      "category": "弱随机数",
+      "status": "candidate",
+      "decision": "observe",
+      "at": "2026-09-11T23:01:52.939Z",
+      "evidence": {
+        "kind": "static_scan",
+        "boundary": "candidate",
+        "producer": "deterministic",
+        "source": "semgrep",
+        "evidence_hash": "fd4844b7da7a8cf1ec20be3623445ea7f58f6420d94df49968fdfd75f4b44639",
+        "runtime_oracle": false
+      }
+    },
+    {
+      "finding_id": "mimosa-759d1f7c298b74a032b7f303",
+      "file": "src/components/Particles.tsx",
+      "line": 77,
+      "severity": "high",
+      "category": "弱随机数",
+      "status": "candidate",
+      "decision": "observe",
+      "at": "2026-09-11T23:01:52.939Z",
+      "evidence": {
+        "kind": "static_scan",
+        "boundary": "candidate",
+        "producer": "deterministic",
+        "source": "semgrep",
+        "evidence_hash": "67dd69605b56e00b911cdb03c327bcd9041961ae69025dfc60c53a49f08258fd",
+        "runtime_oracle": false
+      }
+    },
+    {
+      "finding_id": "mimosa-bc3eedeb938bffe897f17288",
+      "file": "src/components/Particles.tsx",
+      "line": 147,
+      "severity": "high",
+      "category": "弱随机数",
+      "status": "candidate",
+      "decision": "observe",
+      "at": "2026-09-11T23:01:52.939Z",
+      "evidence": {
+        "kind": "static_scan",
+        "boundary": "candidate",
+        "producer": "deterministic",
+        "source": "semgrep",
+        "evidence_hash": "084c83cfbfe4852b2c49a30f1df060206ec21c095f4ddf355760c5d91e3450b7",
+        "runtime_oracle": false
+      }
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "mimosa-a6545c1c38af67f898432cca",
+      "file": "src/components/Particles.tsx",
+      "line": 64,
+      "end_line": 64,
+      "severity": "high",
+      "category": "弱随机数",
+      "kind": "semgrep",
+      "advisory": true,
+      "status": "candidate",
+      "evidence_boundary": "candidate",
+      "evidence": [
+        {
+          "kind": "static_scan",
+          "boundary": "candidate",
+          "producer": "deterministic",
+          "source": "semgrep",
+          "file": "src/components/Particles.tsx",
+          "line": 64,
+          "evidence_hash": "07d0865bebb99b11ab8d9cd3fdf045050b7116c38751acc8e7416708407323d4",
+          "runtime_oracle": false
+        }
+      ],
+      "already_reported_to_agent": false,
+      "selected_for_rewake": false
+    },
+    {
+      "finding_id": "mimosa-91bb46ade477db893c94c643",
+      "file": "src/components/Particles.tsx",
+      "line": 66,
+      "end_line": 66,
+      "severity": "high",
+      "category": "弱随机数",
+      "kind": "semgrep",
+      "advisory": true,
+      "status": "candidate",
+      "evidence_boundary": "candidate",
+      "evidence": [
+        {
+          "kind": "static_scan",
+          "boundary": "candidate",
+          "producer": "deterministic",
+          "source": "semgrep",
+          "file": "src/components/Particles.tsx",
+          "line": 66,
+          "evidence_hash": "91eeff5bbf092de2518c106154108b030c3a84b50c67058d777b4022083c95cb",
+          "runtime_oracle": false
+        }
+      ],
+      "already_reported_to_agent": false,
+      "selected_for_rewake": false
+    },
+    {
+      "finding_id": "mimosa-b0854084a96a69991432101b",
+      "file": "src/components/Particles.tsx",
+      "line": 67,
+      "end_line": 67,
+      "severity": "high",
+      "category": "弱随机数",
+      "kind": "semgrep",
+      "advisory": true,
+      "status": "candidate",
+      "evidence_boundary": "candidate",
+      "evidence": [
+        {
+          "kind": "static_scan",
+          "boundary": "candidate",
+          "producer": "deterministic",
+          "source": "semgrep",
+          "file": "src/components/Particles.tsx",
+          "line": 67,
+          "evidence_hash": "3216d8433fbaa89d15f802ad31f6cb09bae825195cbcfc6ba545771746ce2b3f",
+          "runtime_oracle": false
+        }
+      ],
+      "already_reported_to_agent": false,
+      "selected_for_rewake": false
+    },
+    {
+      "finding_id": "mimosa-ff9254c5cd7b946d8dac5780",
+      "file": "src/components/Particles.tsx",
+      "line": 69,
+      "end_line": 69,
+      "severity": "high",
+      "category": "弱随机数",
+      "kind": "semgrep",
+      "advisory": true,
+      "status": "candidate",
+      "evidence_boundary": "candidate",
+      "evidence": [
+        {
+          "kind": "static_scan",
+          "boundary": "candidate",
+          "producer": "deterministic",
+          "source": "semgrep",
+          "file": "src/components/Particles.tsx",
+          "line": 69,
+          "evidence_hash": "23d304d658fd3203015ee6b9fc357acf055cbdfa758ebc32e7885a5f41354465",
+          "runtime_oracle": false
+        }
+      ],
+      "already_reported_to_agent": false,
+      "selected_for_rewake": false
+    },
+    {
+      "finding_id": "mimosa-553ec77e2d6696d0b2143d43",
+      "file": "src/components/Particles.tsx",
+      "line": 70,
+      "end_line": 70,
+      "severity": "high",
+      "category": "弱随机数",
+      "kind": "semgrep",
+      "advisory": true,
+      "status": "candidate",
+      "evidence_boundary": "candidate",
+      "evidence": [
+        {
+          "kind": "static_scan",
+          "boundary": "candidate",
+          "producer": "deterministic",
+          "source": "semgrep",
+          "file": "src/components/Particles.tsx",
+          "line": 70,
+          "evidence_hash": "8880ad4da6978a1c23801eacb515b2fa20f7dd9260c16dc041e7f7e8e93e1b92",
+          "runtime_oracle": false
+        }
+      ],
+      "already_reported_to_agent": false,
+      "selected_for_rewake": false
+    },
+    {
+      "finding_id": "mimosa-cfcfc7f0d4513da67317e803",
+      "file": "src/components/Particles.tsx",
+      "line": 71,
+      "end_line": 71,
+      "severity": "high",
+      "category": "弱随机数",
+      "kind": "semgrep",
+      "advisory": true,
+      "status": "candidate",
+      "evidence_boundary": "candidate",
+      "evidence": [
+        {
+          "kind": "static_scan",
+          "boundary": "candidate",
+          "producer": "deterministic",
+          "source": "semgrep",
+          "file": "src/components/Particles.tsx",
+          "line": 71,
+          "evidence_hash": "28e1bd2eb4395697cb1cd8f13a291cba4121c05f0f6e9958b542d7a9e30864ff",
+          "runtime_oracle": false
+        }
+      ],
+      "already_reported_to_agent": false,
+      "selected_for_rewake": false
+    },
+    {
+      "finding_id": "mimosa-b4398d08666f3b4df997c9fb",
+      "file": "src/components/Particles.tsx",
+      "line": 72,
+      "end_line": 72,
+      "severity": "high",
+      "category": "弱随机数",
+      "kind": "semgrep",
+      "advisory": true,
+      "status": "candidate",
+      "evidence_boundary": "candidate",
+      "evidence": [
+        {
+          "kind": "static_scan",
+          "boundary": "candidate",
+          "producer": "deterministic",
+          "source": "semgrep",
+          "file": "src/components/Particles.tsx",
+          "line": 72,
+          "evidence_hash": "556b8c98d998ab97e528a5b1f1d14a3d7d481c4915a5933bffa009b2b3fcb635",
+          "runtime_oracle": false
+        }
+      ],
+      "already_reported_to_agent": false,
+      "selected_for_rewake": false
+    },
+    {
+      "finding_id": "mimosa-1ffb4308ed5d152fbcd3d01e",
+      "file": "src/components/Particles.tsx",
+      "line": 73,
+      "end_line": 73,
+      "severity": "high",
+      "category": "弱随机数",
+      "kind": "semgrep",
+      "advisory": true,
+      "status": "candidate",
+      "evidence_boundary": "candidate",
+      "evidence": [
+        {
+          "kind": "static_scan",
+          "boundary": "candidate",
+          "producer": "deterministic",
+          "source": "semgrep",
+          "file": "src/components/Particles.tsx",
+          "line": 73,
+          "evidence_hash": "4f3d1270f3a254d6f5d52bf9e4b453bdca4d6b4a5fc3f774d7a7397c4deeff32",
+          "runtime_oracle": false
+        }
+      ],
+      "already_reported_to_agent": false,
+      "selected_for_rewake": false
+    },
+    {
+      "finding_id": "mimosa-97947d5dc2caf7b81a44f227",
+      "file": "src/components/Particles.tsx",
+      "line": 74,
+      "end_line": 74,
+      "severity": "high",
+      "category": "弱随机数",
+      "kind": "semgrep",
+      "advisory": true,
+      "status": "candidate",
+      "evidence_boundary": "candidate",
+      "evidence": [
+        {
+          "kind": "static_scan",
+          "boundary": "candidate",
+          "producer": "deterministic",
+          "source": "semgrep",
+          "file": "src/components/Particles.tsx",
+          "line": 74,
+          "evidence_hash": "02c061c9f1bc8773cabc44127de27d04827569c565ba719818968b468451b842",
+          "runtime_oracle": false
+        }
+      ],
+      "already_reported_to_agent": false,
+      "selected_for_rewake": false
+    },
+    {
+      "finding_id": "mimosa-db7dfce5b894d6149c437e2a",
+      "file": "src/components/Particles.tsx",
+      "line": 75,
+      "end_line": 75,
+      "severity": "high",
+      "category": "弱随机数",
+      "kind": "semgrep",
+      "advisory": true,
+      "status": "candidate",
+      "evidence_boundary": "candidate",
+      "evidence": [
+        {
+          "kind": "static_scan",
+          "boundary": "candidate",
+          "producer": "deterministic",
+          "source": "semgrep",
+          "file": "src/components/Particles.tsx",
+          "line": 75,
+          "evidence_hash": "686b60e015163a01807bbdd65852061b317bcc5395966141d5473f335c74bec5",
+          "runtime_oracle": false
+        }
+      ],
+      "already_reported_to_agent": false,
+      "selected_for_rewake": false
+    },
+    {
+      "finding_id": "mimosa-0712f81a2e130fed14ae0736",
+      "file": "src/components/Particles.tsx",
+      "line": 76,
+      "end_line": 76,
+      "severity": "high",
+      "category": "弱随机数",
+      "kind": "semgrep",
+      "advisory": true,
+      "status": "candidate",
+      "evidence_boundary": "candidate",
+      "evidence": [
+        {
+          "kind": "static_scan",
+          "boundary": "candidate",
+          "producer": "deterministic",
+          "source": "semgrep",
+          "file": "src/components/Particles.tsx",
+          "line": 76,
+          "evidence_hash": "fd4844b7da7a8cf1ec20be3623445ea7f58f6420d94df49968fdfd75f4b44639",
+          "runtime_oracle": false
+        }
+      ],
+      "already_reported_to_agent": false,
+      "selected_for_rewake": false
+    },
+    {
+      "finding_id": "mimosa-759d1f7c298b74a032b7f303",
+      "file": "src/components/Particles.tsx",
+      "line": 77,
+      "end_line": 77,
+      "severity": "high",
+      "category": "弱随机数",
+      "kind": "semgrep",
+      "advisory": true,
+      "status": "candidate",
+      "evidence_boundary": "candidate",
+      "evidence": [
+        {
+          "kind": "static_scan",
+          "boundary": "candidate",
+          "producer": "deterministic",
+          "source": "semgrep",
+          "file": "src/components/Particles.tsx",
+          "line": 77,
+          "evidence_hash": "67dd69605b56e00b911cdb03c327bcd9041961ae69025dfc60c53a49f08258fd",
+          "runtime_oracle": false
+        }
+      ],
+      "already_reported_to_agent": false,
+      "selected_for_rewake": false
+    },
+    {
+      "finding_id": "mimosa-bc3eedeb938bffe897f17288",
+      "file": "src/components/Particles.tsx",
+      "line": 147,
+      "end_line": 147,
+      "severity": "high",
+      "category": "弱随机数",
+      "kind": "semgrep",
+      "advisory": true,
+      "status": "candidate",
+      "evidence_boundary": "candidate",
+      "evidence": [
+        {
+          "kind": "static_scan",
+          "boundary": "candidate",
+          "producer": "deterministic",
+          "source": "semgrep",
+          "file": "src/components/Particles.tsx",
+          "line": 147,
+          "evidence_hash": "084c83cfbfe4852b2c49a30f1df060206ec21c095f4ddf355760c5d91e3450b7",
+          "runtime_oracle": false
+        }
+      ],
+      "already_reported_to_agent": false,
+      "selected_for_rewake": false
+    }
+  ],
+  "artifacts": {
+    "immutable_report": ".mimosa/reports/task-review-sess_65da49a5-f02c-42cb-9ef9-c516a65b6ce4-20260911T230152939Z-28528-65485c4e65fa.json",
+    "latest_report": ".mimosa/reports/task-review-sess_65da49a5-f02c-42cb-9ef9-c516a65b6ce4.json",
+    "history_summary": ".mimosa/history/run-20260911T230152939Z-28528-65485c4e65fa.json"
+  }
+}

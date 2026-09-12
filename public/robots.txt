@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+# /admin.html and /verify.html carry noindex meta tags.

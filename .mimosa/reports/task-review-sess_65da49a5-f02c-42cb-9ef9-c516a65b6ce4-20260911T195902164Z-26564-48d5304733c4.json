@@ -1,0 +1,210 @@
+{
+  "schema_version": "mimosa-task-review/v2",
+  "run_id": "20260911T195902164Z-26564-48d5304733c4",
+  "run_status": "completed",
+  "errors": [],
+  "coverage": {
+    "schema_version": "mimosa-hook-coverage/v1",
+    "status": "complete",
+    "scope": "hook_observed_diff",
+    "baseline": {
+      "complete": true,
+      "captured_files": 32,
+      "candidate_limit": 5000,
+      "truncated": false,
+      "enumeration_error_count": 0,
+      "snapshot_error_count": 0,
+      "compensated_target_count": 8
+    },
+    "change_tracking": {
+      "touched_observed": 8,
+      "touched_retained": 8,
+      "truncated": false,
+      "bash_mutation": false,
+      "bash_discovered": 0,
+      "bash_discovery_limit": 80,
+      "bash_discovery_truncated": false
+    },
+    "candidates": {
+      "eligible_files": 8,
+      "selected_files": 8,
+      "limit": 20,
+      "truncated": false
+    },
+    "scanning": {
+      "required_files": 8,
+      "scanned_files": 8,
+      "skipped_files": 0,
+      "failed_files": 0,
+      "project_checks_required": 0,
+      "project_checks_completed": 0
+    },
+    "notification": {
+      "eligible_findings": 0,
+      "detailed_findings": 0,
+      "detail_limit": 3,
+      "truncated": false
+    },
+    "reason_counts": {},
+    "reasons": [],
+    "reasons_truncated": false
+  },
+  "generated_at": "2026-09-11T19:59:02.164Z",
+  "session_id": "sess_65da49a5-f02c-42cb-9ef9-c516a65b6ce4",
+  "target": ".",
+  "revision": null,
+  "rules_version": "unavailable",
+  "diff_hash": "f7f5a849e22a4df8f5b10bde85de230b75119589943792d3a9581c6259652d90",
+  "diff": {
+    "algorithm": "sha256",
+    "changed_file_count": 8,
+    "changed_files": [
+      {
+        "file": "src/App.tsx",
+        "ranges": [
+          {
+            "start": 8,
+            "end": 13
+          },
+          {
+            "start": 49,
+            "end": 54
+          }
+        ],
+        "before_hash": "edc47ecd7b91d21d2d86edfa96478f0f3bc72f6d76e0b8cb51e8a1f0bc58b02d",
+        "after_hash": "c2d026251ab1180dce7347a6e2bfa949a96ecdbf92020cc3679d9db956565994"
+      },
+      {
+        "file": "src/components/eggs/CursorGlow.tsx",
+        "ranges": [
+          {
+            "start": 1,
+            "end": 73
+          }
+        ],
+        "before_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "after_hash": "dd339f4abd8b70fa34afd222b29eabafaa84ae39e6dd2c4e9e93ecbc666d6ff6"
+      },
+      {
+        "file": "src/components/eggs/KonamiEgg.tsx",
+        "ranges": [
+          {
+            "start": 1,
+            "end": 102
+          }
+        ],
+        "before_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "after_hash": "3f9ff64220fbf35656c7a60caeff57415cb67161f23a354b2ecbbcabe4809cfd"
+      },
+      {
+        "file": "src/components/eggs/LogoEgg.tsx",
+        "ranges": [
+          {
+            "start": 1,
+            "end": 56
+          }
+        ],
+        "before_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "after_hash": "b683c27aebda62fdb710b945f9d70aba2929e6c880475b8abb536d910b2411dc"
+      },
+      {
+        "file": "src/components/EggToast.tsx",
+        "ranges": [
+          {
+            "start": 1,
+            "end": 59
+          }
+        ],
+        "before_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "after_hash": "bd35d3ed60962afe222b6571a3bfd8e58a94ed04551eb44d9a86210c31fb3e32"
+      },
+      {
+        "file": "src/components/Footer.tsx",
+        "ranges": [
+          {
+            "start": 61,
+            "end": 61
+          },
+          {
+            "start": 64,
+            "end": 66
+          }
+        ],
+        "before_hash": "ebf66fde2eff4816bd4348f5536a5092ad27028834e7a82e400622f5820c4604",
+        "after_hash": "a3ab41ee0604cc872adb5b3fcbb7a207399af4b4d3ab91b27498fa2abd95e44b"
+      },
+      {
+        "file": "src/components/Navbar.tsx",
+        "ranges": [
+          {
+            "start": 21,
+            "end": 26
+          }
+        ],
+        "before_hash": "95e444275afff3945fd0fafb4f90234b8bf5f7cbd6e9af5121d9776f1cd21895",
+        "after_hash": "93f288817e54af8a4387ba41c845427567dad26d27763f7ddcbb8bd34122900a"
+      },
+      {
+        "file": "src/lib/eggBus.ts",
+        "ranges": [
+          {
+            "start": 1,
+            "end": 32
+          }
+        ],
+        "before_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "after_hash": "29a0cf558cba33ed24f6ed60b7725252eb6884e527096f20ccd00b605a8eea95"
+      }
+    ]
+  },
+  "timing": {
+    "started_at": "2026-09-11T19:58:59.250Z",
+    "completed_at": "2026-09-11T19:59:02.164Z",
+    "duration_ms": 2914,
+    "measurement": "hook_wall_clock"
+  },
+  "tokens": {
+    "input": 0,
+    "output": 0,
+    "total": 0,
+    "model_calls": 0,
+    "measurement": "known-zero"
+  },
+  "telemetry": {
+    "schemaVersion": "mimosa-gate-telemetry/v1",
+    "profile": "gate",
+    "operation": "Stop",
+    "outcome": "complete",
+    "latencyMs": 2914,
+    "peakMemoryBytes": 128884736,
+    "memoryMeasurement": "max-observed-process-rss",
+    "scannedFiles": 8,
+    "cache": {
+      "hits": 0,
+      "misses": 0,
+      "measurement": "not-applicable"
+    },
+    "denyCount": 0,
+    "tokens": {
+      "input": 0,
+      "output": 0,
+      "total": 0,
+      "modelCalls": 0,
+      "measurement": "known-zero"
+    }
+  },
+  "finding_count": 0,
+  "rewake_finding_count": 0,
+  "evidence_boundary": {
+    "scan": "candidate",
+    "static_fix_verification": "observed_static_only",
+    "runtime_verification": "not_performed"
+  },
+  "finding_events": [],
+  "findings": [],
+  "artifacts": {
+    "immutable_report": ".mimosa/reports/task-review-sess_65da49a5-f02c-42cb-9ef9-c516a65b6ce4-20260911T195902164Z-26564-48d5304733c4.json",
+    "latest_report": ".mimosa/reports/task-review-sess_65da49a5-f02c-42cb-9ef9-c516a65b6ce4.json",
+    "history_summary": ".mimosa/history/run-20260911T195902164Z-26564-48d5304733c4.json"
+  }
+}
