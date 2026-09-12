@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { flushSync } from 'react-dom';
 import jsQR from 'jsqr';
 import {
   loadCheckins,
@@ -57,13 +56,19 @@ export default function Verify() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const rafRef = useRef(0);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => setCheckins(loadCheckins()), []);
 
   const stopCamera = useCallback(() => {
     cancelAnimationFrame(rafRef.current);
-    streamRef.current?.getTracks().forEach((t) => t.stop());
-    streamRef.current = null;
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach((t) => t.stop());
+      streamRef.current = null;
+    }
+    if (videoRef.current) {
+      videoRef.current.srcObject = null;
+    }
   }, []);
 
   useEffect(() => stopCamera, [stopCamera]);
@@ -78,36 +83,72 @@ export default function Verify() {
   const startScanner = async () => {
     setScanError('');
     try {
-      let stream: MediaStream;
-      try {
-        stream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: 'environment' },
-        });
-      } catch (err) {
-        // Fallback for desktops or laptops without an environment camera
-        stream = await navigator.mediaDevices.getUserMedia({
-          video: true,
-        });
-      }
-      streamRef.current = stream;
-      flushSync(() => {
-        setPhase('scanning');
-      });
-      const video = videoRef.current!;
-      video.srcObject = stream;
-      await video.play();
+      const getStream = async (): Promise<MediaStream> => {
+        if (typeof navigator !== 'undefined' && navigator.mediaDevices?.getUserMedia) {
+          try {
+            return await navigator.mediaDevices.getUserMedia({
+              video: { facingMode: { ideal: 'environment' } },
+            });
+          } catch {
+            return await navigator.mediaDevices.getUserMedia({
+              video: true,
+            });
+          }
+        }
 
-      const canvas = canvasRef.current!;
-      const ctx = canvas.getContext('2d', { willReadFrequently: true })!;
+        const nav = typeof navigator !== 'undefined' ? (navigator as any) : null;
+        const legacy =
+          nav?.getUserMedia ||
+          nav?.webkitGetUserMedia ||
+          nav?.mozGetUserMedia ||
+          nav?.msGetUserMedia;
+
+        if (legacy) {
+          return new Promise((resolve, reject) => {
+            legacy.call(navigator, { video: true }, resolve, reject);
+          });
+        }
+
+        throw new Error(
+          'Camera API is not supported in this browser. Please use Chrome, Edge, or Safari, or enter the code manually.',
+        );
+      };
+
+      const stream = await getStream();
+      streamRef.current = stream;
+
+      const video = videoRef.current;
+      if (!video) {
+        throw new Error('Video player element is not mounted');
+      }
+
+      video.srcObject = stream;
+      video.setAttribute('playsinline', 'true');
+      video.muted = true;
+
+      try {
+        await video.play();
+      } catch (playErr) {
+        console.warn('video.play() warning:', playErr);
+      }
+
+      setPhase('scanning');
+
+      const canvas = canvasRef.current || document.createElement('canvas');
+      const ctx = canvas.getContext('2d', { willReadFrequently: true });
+      if (!ctx) {
+        throw new Error('Unable to create 2D canvas context');
+      }
+
       let lastDecode = 0;
       let alive = true;
 
       const tick = (t: number) => {
         if (!alive || !streamRef.current) return;
-        if (video.readyState >= 2 && t - lastDecode > 125) {
+        if (video.readyState >= 2 && t - lastDecode > 120) {
           lastDecode = t;
           const w = 480;
-          const h = Math.max(1, Math.round((video.videoHeight / video.videoWidth) * w) || 360);
+          const h = Math.max(1, Math.round((video.videoHeight / (video.videoWidth || 1)) * w) || 360);
           canvas.width = w;
           canvas.height = h;
           ctx.drawImage(video, 0, 0, w, h);
@@ -124,12 +165,20 @@ export default function Verify() {
       rafRef.current = requestAnimationFrame(tick);
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
-      const errName = err instanceof Error ? err.name : 'Unknown';
-      setScanError(
-        msg.includes('Permission') || msg.includes('denied')
-          ? 'Camera permission denied — use manual entry below.'
-          : `Camera unavailable on this device (${errName}) — use manual entry below.`,
-      );
+      const errName = err instanceof Error ? err.name : 'Error';
+      console.error('Camera scanner error:', err);
+
+      if (errName === 'NotAllowedError' || msg.includes('Permission') || msg.includes('denied')) {
+        setScanError('Camera permission denied — check your browser URL bar (lock/camera icon) to grant access.');
+      } else if (errName === 'NotFoundError' || errName === 'DevicesNotFoundError') {
+        setScanError('No camera found on this device — connect a webcam or use image upload below.');
+      } else if (errName === 'NotReadableError' || errName === 'TrackStartError') {
+        setScanError('Camera is currently in use by another application (Zoom/Teams/OBS).');
+      } else {
+        setScanError(`Camera error (${errName}: ${msg}) — try manual entry or upload below.`);
+      }
+
+      stopCamera();
       setPhase('idle');
     }
   };
@@ -157,6 +206,38 @@ export default function Verify() {
     setPhase('valid');
   }
 
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setScanError('');
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = canvasRef.current || document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext('2d', { willReadFrequently: true });
+        if (!ctx) {
+          setScanError('Unable to process image context.');
+          return;
+        }
+        ctx.drawImage(img, 0, 0);
+        const imgData = ctx.getImageData(0, 0, img.width, img.height);
+        const found = jsQR(imgData.data, img.width, img.height);
+        if (found?.data) {
+          handleVerify(found.data);
+        } else {
+          setScanError('No ticket QR code detected in this image. Ensure the QR code is clear.');
+        }
+      };
+      img.src = reader.result as string;
+    };
+    reader.readAsDataURL(file);
+    e.target.value = '';
+  };
+
   const checkIn = () => {
     if (!valid || valid.alreadyCheckedIn) return;
     setCheckins(
@@ -166,8 +247,10 @@ export default function Verify() {
   };
 
   const reset = () => {
+    stopCamera();
     setValid(null);
     setManual('');
+    setScanError('');
     setPhase('idle');
   };
 
