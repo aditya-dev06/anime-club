@@ -95,10 +95,10 @@ export default function AtomicEgg() {
     setVignetteActive(true);
     controller.startTremor();
 
-    // 2. Reality Cracks Phase (4.50s)
+    // 2. Reality Cracks Phase (3.60s) — Progressive spiderweb fracture spreads across viewport
     later(() => {
       setPhase('crack');
-    }, 4500);
+    }, 3600);
 
     // 3. ATOMIC DETONATION (6.37s) — SEARING VIOLET LIGHT BLAST & ACTUAL WEBSITE SHATTER!
     later(() => {
@@ -115,20 +115,20 @@ export default function AtomicEgg() {
       setPhase('ruins');
     }, 7800);
 
-    // 5. Magical Rewind & Reconstruction Phase (8.70s)
+    // 5. Magical Rewind & Reconstruction Phase (8.20s) — Smooth, cinematic, graceful rewind
     later(() => {
       setPhase('restore');
       setVignetteActive(false);
       controller.triggerRestoration();
-    }, 8700);
+    }, 8200);
 
-    // 6. Complete restoration & Victory Toast (10.20s)
+    // 6. Complete restoration & Victory Toast (10.80s)
     later(() => {
       setPhase('idle');
       setShatterActive(false);
       fireEgg(TOAST);
       controller.cleanup();
-    }, 10200);
+    }, 10800);
   }, [clearTimers, later]);
 
   /* Keyboard sequence detector: "atomic" */
