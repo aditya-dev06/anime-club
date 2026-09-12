@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 
 export type AtomicVfxPhase = 'idle' | 'rune' | 'crack' | 'detonate' | 'ruins' | 'restore';
 
-interface GlassShardParticle {
+interface FlyingGlassShard {
   x: number;
   y: number;
   vx: number;
@@ -13,7 +13,9 @@ interface GlassShardParticle {
   decay: number;
   rot: number;
   vRot: number;
-  specular: number;
+  size: number;
+  flipSpeed: number;
+  flipPhase: number;
 }
 
 interface RadialCrack {
@@ -43,8 +45,8 @@ interface AtomicCanvasProps {
 
 export default function AtomicCanvas({ phase, reduced }: AtomicCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const particlesRef = useRef<GlassShardParticle[]>([]);
   const fractureRef = useRef<GlassFractureNetwork | null>(null);
+  const shardsRef = useRef<FlyingGlassShard[]>([]);
   const shockwavesRef = useRef<{ r: number; maxR: number; opacity: number; width: number }[]>([]);
   const lightningsRef = useRef<LightningBolt[]>([]);
   const runeAngleRef = useRef(0);
@@ -52,36 +54,35 @@ export default function AtomicCanvas({ phase, reduced }: AtomicCanvasProps) {
   const animFrameRef = useRef(0);
   const lastTimeRef = useRef(performance.now());
 
-  // Generate an authentic tempered glass fracture network
+  // Generate authentic tempered glass fracture network for the crack phase
   const generateRealisticFracture = (w: number, h: number): GlassFractureNetwork => {
     const cx = w / 2;
     const cy = h / 2;
-    const numRadials = 16;
-    const ringRadii = [35, 80, 150, 240, 360, 520, 720];
+    const numRadials = 18;
+    const ringRadii = [35, 85, 160, 260, 390, 560, 760];
     const radials: RadialCrack[] = [];
     const rings: RingCrack[] = [];
 
-    // 1. Generate radial zigzag fissure rays from center to edge
+    // Radial fissure rays
     for (let r = 0; r < numRadials; r++) {
-      const baseAngle = (r / numRadials) * Math.PI * 2 + (Math.random() - 0.5) * 0.2;
+      const baseAngle = (r / numRadials) * Math.PI * 2 + (Math.random() - 0.5) * 0.18;
       const points: { x: number; y: number }[] = [{ x: cx, y: cy }];
       const splinters: { x1: number; y1: number; x2: number; y2: number }[] = [];
 
       let curDist = 0;
-      const maxDist = Math.hypot(w, h) * 0.75;
+      const maxDist = Math.hypot(w, h) * 0.8;
       let curAngle = baseAngle;
 
       while (curDist < maxDist) {
-        curDist += 25 + Math.random() * 45;
-        curAngle += (Math.random() - 0.5) * 0.25;
+        curDist += 26 + Math.random() * 45;
+        curAngle += (Math.random() - 0.5) * 0.22;
         const px = cx + Math.cos(curAngle) * curDist;
         const py = cy + Math.sin(curAngle) * curDist;
         points.push({ x: px, y: py });
 
-        // Micro splinters branching off at ~55-degree angles
-        if (Math.random() > 0.45 && curDist > 50) {
-          const splinterAng = curAngle + (Math.random() > 0.5 ? 1 : -1) * (0.8 + Math.random() * 0.4);
-          const splinterLen = 12 + Math.random() * 26;
+        if (Math.random() > 0.4 && curDist > 40) {
+          const splinterAng = curAngle + (Math.random() > 0.5 ? 1 : -1) * (0.8 + Math.random() * 0.35);
+          const splinterLen = 14 + Math.random() * 26;
           splinters.push({
             x1: px,
             y1: py,
@@ -94,13 +95,13 @@ export default function AtomicCanvas({ phase, reduced }: AtomicCanvasProps) {
       radials.push({ points, splinters });
     }
 
-    // 2. Generate concentric polygonal stress fracture rings
+    // Concentric stress fracture rings
     for (const radius of ringRadii) {
       const ringPts: { x: number; y: number }[] = [];
       const segments = numRadials * 2;
       for (let s = 0; s <= segments; s++) {
         const a = (s / segments) * Math.PI * 2;
-        const jitter = radius * (0.88 + Math.random() * 0.24);
+        const jitter = radius * (0.9 + Math.random() * 0.2);
         ringPts.push({
           x: cx + Math.cos(a) * jitter,
           y: cy + Math.sin(a) * jitter,
@@ -112,65 +113,68 @@ export default function AtomicCanvas({ phase, reduced }: AtomicCanvasProps) {
     return { center: { x: cx, y: cy }, rings, radials };
   };
 
-  // Spawn realistic glass shard debris polygons that tumble in 3D
-  const spawnGlassShards = (w: number, h: number) => {
+  // Explode the shattered glass into 400+ flying pieces that blast away in 3D!
+  const explodeGlassShards = (w: number, h: number) => {
     const cx = w / 2;
     const cy = h / 2;
-    const count = reduced ? 35 : 360;
-    const shards: GlassShardParticle[] = [];
+    const count = reduced ? 40 : 420;
+    const shards: FlyingGlassShard[] = [];
 
-    const tintColors = [
-      'rgba(216, 180, 254, 0.75)', // violet glass
-      'rgba(192, 132, 252, 0.8)',  // purple glass
-      'rgba(240, 171, 252, 0.75)', // fuchsia glint
-      'rgba(255, 255, 255, 0.95)', // pure specular crystal
-      'rgba(251, 191, 36, 0.8)',   // molten gold spark
-      'rgba(30, 27, 75, 0.85)',    // charred dark glass
+    const glassTints = [
+      'rgba(240, 171, 252, 0.85)', // neon violet glass
+      'rgba(216, 180, 254, 0.8)',  // light lavender
+      'rgba(192, 132, 252, 0.85)', // rich purple
+      'rgba(255, 255, 255, 0.95)', // crystal white specular
+      'rgba(56, 189, 248, 0.8)',   // electric cyan tint
+      'rgba(251, 191, 36, 0.9)',   // molten gold spark
     ];
 
     for (let i = 0; i < count; i++) {
       const angle = Math.random() * Math.PI * 2;
-      const speed = 7 + Math.random() * 32;
-      const shardSize = 4 + Math.random() * 16;
+      // High explosive velocity outward!
+      const speed = 9 + Math.random() * 36;
+      const shardSize = 6 + Math.random() * 22;
 
-      // Realistic irregular sharp triangular/quad shard geometry
+      // Realistic sharp triangular and trapezoid glass shard geometry
       const points: { x: number; y: number }[] = [];
       const numPts = Math.floor(3 + Math.random() * 2);
       for (let p = 0; p < numPts; p++) {
-        const pa = (p / numPts) * Math.PI * 2 + (Math.random() - 0.5) * 0.7;
+        const pa = (p / numPts) * Math.PI * 2 + (Math.random() - 0.5) * 0.8;
         const pr = shardSize * (0.5 + Math.random() * 0.8);
         points.push({ x: Math.cos(pa) * pr, y: Math.sin(pa) * pr });
       }
 
       shards.push({
-        x: cx + (Math.random() - 0.5) * 50,
-        y: cy + (Math.random() - 0.5) * 50,
+        x: cx + (Math.random() - 0.5) * 60,
+        y: cy + (Math.random() - 0.5) * 60,
         vx: Math.cos(angle) * speed,
         vy: Math.sin(angle) * speed,
         points,
-        color: tintColors[Math.floor(Math.random() * tintColors.length)],
-        alpha: 1,
-        decay: 0.009 + Math.random() * 0.016,
+        color: glassTints[Math.floor(Math.random() * glassTints.length)],
+        alpha: 1.0,
+        decay: 0.005 + Math.random() * 0.009, // stays visible longer
         rot: Math.random() * Math.PI * 2,
-        vRot: (Math.random() - 0.5) * 0.4,
-        specular: Math.random(),
+        vRot: (Math.random() - 0.5) * 0.45,
+        size: shardSize,
+        flipSpeed: 2 + Math.random() * 6,
+        flipPhase: Math.random() * Math.PI * 2,
       });
     }
 
-    particlesRef.current = shards;
+    shardsRef.current = shards;
 
-    // Shockwaves
+    // Searing violet shockwaves
     shockwavesRef.current = [
-      { r: 20, maxR: Math.hypot(w, h) * 0.9, opacity: 1, width: 22 },
-      { r: 10, maxR: Math.hypot(w, h) * 0.8, opacity: 0.85, width: 14 },
-      { r: 4, maxR: Math.hypot(w, h) * 0.65, opacity: 0.7, width: 8 },
+      { r: 25, maxR: Math.hypot(w, h) * 0.95, opacity: 1, width: 26 },
+      { r: 12, maxR: Math.hypot(w, h) * 0.85, opacity: 0.9, width: 16 },
+      { r: 5, maxR: Math.hypot(w, h) * 0.7, opacity: 0.75, width: 10 },
     ];
 
     beamOpacityRef.current = 1.0;
 
-    // Violet lightning
+    // Electric violet lightning
     const bolts: LightningBolt[] = [];
-    for (let b = 0; b < 6; b++) {
+    for (let b = 0; b < 7; b++) {
       const tx = Math.random() * w;
       const ty = Math.random() * h;
       const segs = [{ x: cx, y: cy }];
@@ -191,10 +195,10 @@ export default function AtomicCanvas({ phase, reduced }: AtomicCanvasProps) {
     if (phase === 'crack') {
       fractureRef.current = generateRealisticFracture(window.innerWidth, window.innerHeight);
     } else if (phase === 'detonate') {
-      spawnGlassShards(window.innerWidth, window.innerHeight);
+      explodeGlassShards(window.innerWidth, window.innerHeight);
     } else if (phase === 'idle') {
-      particlesRef.current = [];
       fractureRef.current = null;
+      shardsRef.current = [];
       shockwavesRef.current = [];
       lightningsRef.current = [];
       beamOpacityRef.current = 0;
@@ -263,7 +267,7 @@ export default function AtomicCanvas({ phase, reduced }: AtomicCanvasProps) {
         ctx.arc(0, 0, radius * 1.3, 0, Math.PI * 2);
         ctx.fill();
 
-        // Rings
+        // Concentric Rings
         ctx.strokeStyle = `rgba(232, 121, 249, ${alpha})`;
         ctx.lineWidth = 3;
         ctx.shadowColor = '#d946ef';
@@ -317,17 +321,15 @@ export default function AtomicCanvas({ phase, reduced }: AtomicCanvasProps) {
       }
 
       // ─────────────────────────────────────────────────────────────
-      // 2. REALISTIC TEMPERED GLASS CRACK SHATTER (Phase: 'crack', 'detonate', 'ruins')
+      // 2. TEMPERED GLASS CRACK NETWORK (Visible during 'crack' phase before explosion)
       // ─────────────────────────────────────────────────────────────
-      if (fractureRef.current && (phase === 'crack' || phase === 'detonate' || phase === 'ruins')) {
+      if (fractureRef.current && phase === 'crack') {
         const net = fractureRef.current;
-        const crackAlpha = phase === 'ruins' ? 0.5 : phase === 'detonate' ? 1.0 : 0.85;
-
         ctx.save();
 
-        // 1. First pass: Dark refractive drop shadow (creates depth in the glass)
+        // 1. Dark refractive drop shadow
         ctx.shadowBlur = 0;
-        ctx.strokeStyle = `rgba(0, 0, 0, ${0.7 * crackAlpha})`;
+        ctx.strokeStyle = 'rgba(0, 0, 0, 0.75)';
         ctx.lineWidth = 2.5;
         for (const rad of net.radials) {
           ctx.beginPath();
@@ -352,10 +354,10 @@ export default function AtomicCanvas({ phase, reduced }: AtomicCanvasProps) {
           ctx.stroke();
         }
 
-        // 2. Second pass: Glowing violet magical energy seam
+        // 2. Glowing violet energy seam
         ctx.shadowColor = '#d946ef';
-        ctx.shadowBlur = phase === 'detonate' ? 24 : 14;
-        ctx.strokeStyle = `rgba(216, 180, 254, ${0.9 * crackAlpha})`;
+        ctx.shadowBlur = 18;
+        ctx.strokeStyle = 'rgba(216, 180, 254, 0.9)';
         ctx.lineWidth = 2.0;
         for (const rad of net.radials) {
           ctx.beginPath();
@@ -380,9 +382,9 @@ export default function AtomicCanvas({ phase, reduced }: AtomicCanvasProps) {
           ctx.stroke();
         }
 
-        // 3. Third pass: Crisp 1px razor-sharp white specular highlight (realistic glass reflection)
+        // 3. Crisp 1px white specular reflection
         ctx.shadowBlur = 0;
-        ctx.strokeStyle = `rgba(255, 255, 255, ${0.95 * crackAlpha})`;
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.95)';
         ctx.lineWidth = 1.0;
         for (const rad of net.radials) {
           ctx.beginPath();
@@ -393,10 +395,10 @@ export default function AtomicCanvas({ phase, reduced }: AtomicCanvasProps) {
           ctx.stroke();
         }
 
-        // Central crushed impact point (white pulverized glass core)
+        // Central impact core
         const impactGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, 38);
-        impactGrad.addColorStop(0, `rgba(255, 255, 255, ${0.9 * crackAlpha})`);
-        impactGrad.addColorStop(0.4, `rgba(240, 171, 252, ${0.6 * crackAlpha})`);
+        impactGrad.addColorStop(0, 'rgba(255, 255, 255, 0.95)');
+        impactGrad.addColorStop(0.4, 'rgba(240, 171, 252, 0.65)');
         impactGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
         ctx.fillStyle = impactGrad;
         ctx.beginPath();
@@ -475,57 +477,69 @@ export default function AtomicCanvas({ phase, reduced }: AtomicCanvasProps) {
       }
 
       // ─────────────────────────────────────────────────────────────
-      // 6. REALISTIC 3D GLASS SHARDS & DEBRIS PARTICLES
+      // 6. SHATTERED GLASS FLYING AWAY & REWINDING BACK!
       // ─────────────────────────────────────────────────────────────
-      if (particlesRef.current.length > 0) {
+      if (shardsRef.current.length > 0) {
         ctx.save();
-        const activeParticles: GlassShardParticle[] = [];
+        const activeShards: FlyingGlassShard[] = [];
 
-        for (const p of particlesRef.current) {
+        for (const shard of shardsRef.current) {
           if (phase === 'restore') {
-            // Reverse gravitational vortex
-            const dx = cx - p.x;
-            const dy = cy - p.y;
+            // Magical Singularity: All flying glass pieces accelerate and fly BACK to center!
+            const dx = cx - shard.x;
+            const dy = cy - shard.y;
             const dist = Math.hypot(dx, dy) || 1;
-            const pullForce = 1400 * dt;
-            p.vx += (dx / dist) * pullForce;
-            p.vy += (dy / dist) * pullForce;
-            p.vx *= 0.91;
-            p.vy *= 0.91;
-            p.alpha = Math.min(1, p.alpha + dt * 0.8);
+            const pullForce = 1500 * dt;
+            shard.vx += (dx / dist) * pullForce;
+            shard.vy += (dy / dist) * pullForce;
+            shard.vx *= 0.91;
+            shard.vy *= 0.91;
+            shard.alpha = Math.min(1, shard.alpha + dt * 0.7);
+
+            // Shards dissolve as they snap into the center
+            if (dist < 35) {
+              shard.alpha -= dt * 4;
+            }
           } else {
-            p.vx *= 0.985;
-            p.vy *= 0.985;
-            p.vy += dt * 45; // gravity
-            p.alpha -= p.decay * (dt * 60);
+            // Normal blast physics: shards fly outward across the screen
+            shard.vx *= 0.985;
+            shard.vy *= 0.985;
+            shard.vy += dt * 45; // subtle gravity
+            shard.alpha -= shard.decay * (dt * 60);
           }
 
-          p.x += p.vx;
-          p.y += p.vy;
-          p.rot += p.vRot;
+          shard.x += shard.vx;
+          shard.y += shard.vy;
+          shard.rot += shard.vRot;
+          shard.flipPhase += dt * shard.flipSpeed;
 
-          if (p.alpha > 0.01) {
-            activeParticles.push(p);
+          if (shard.alpha > 0.01) {
+            activeShards.push(shard);
 
             ctx.save();
-            ctx.translate(p.x, p.y);
-            ctx.rotate(p.rot);
-            ctx.globalAlpha = Math.max(0, Math.min(1, p.alpha));
+            ctx.translate(shard.x, shard.y);
+            ctx.rotate(shard.rot);
 
-            // Draw sharp glass polygon
+            // 3D tumble flip scale (realistic glass shard spinning in air)
+            const scaleX = Math.cos(shard.flipPhase);
+            ctx.scale(Math.abs(scaleX) < 0.1 ? 0.1 : scaleX, 1);
+
+            ctx.globalAlpha = Math.max(0, Math.min(1, shard.alpha));
+
+            // Glass polygon
             ctx.beginPath();
-            ctx.moveTo(p.points[0].x, p.points[0].y);
-            for (let i = 1; i < p.points.length; i++) {
-              ctx.lineTo(p.points[i].x, p.points[i].y);
+            ctx.moveTo(shard.points[0].x, shard.points[0].y);
+            for (let i = 1; i < shard.points.length; i++) {
+              ctx.lineTo(shard.points[i].x, shard.points[i].y);
             }
             ctx.closePath();
 
-            ctx.fillStyle = p.color;
+            ctx.fillStyle = shard.color;
             ctx.fill();
 
-            // Crisp specular bevel reflection along shard edge
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.9)';
-            ctx.lineWidth = 1;
+            // Crisp specular white bevel along shard edge (catches light as it flips!)
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.95)';
+            ctx.lineWidth = 1.2;
             ctx.shadowColor = '#c084fc';
             ctx.shadowBlur = 8;
             ctx.stroke();
@@ -534,7 +548,7 @@ export default function AtomicCanvas({ phase, reduced }: AtomicCanvasProps) {
           }
         }
 
-        particlesRef.current = activeParticles;
+        shardsRef.current = activeShards;
         ctx.restore();
       }
 

@@ -121,10 +121,11 @@ export default function Verify() {
       rafRef.current = requestAnimationFrame(tick);
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
+      const errName = err instanceof Error ? err.name : 'Unknown';
       setScanError(
         msg.includes('Permission') || msg.includes('denied')
           ? 'Camera permission denied — use manual entry below.'
-          : 'Camera unavailable on this device — use manual entry below.',
+          : `Camera unavailable on this device (${errName}) — use manual entry below.`,
       );
       setPhase('idle');
     }
